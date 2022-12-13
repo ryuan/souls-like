@@ -12,6 +12,8 @@ namespace RY
 
         [HideInInspector]
         public Transform myTransform;
+        [HideInInspector]
+        public AnimatorHandler animatorHandler;
 
         public new Rigidbody rigidbody;
         public GameObject normalCamera;
@@ -26,8 +28,10 @@ namespace RY
         {
             rigidbody = GetComponent<Rigidbody>();
             inputHandler = GetComponent<InputHandler>();
+            animatorHandler = GetComponentInChildren<AnimatorHandler>();
             cameraObject = Camera.main.transform;
             myTransform = transform;
+            animatorHandler.Initialize();
         }
 
         public void Update()
@@ -45,6 +49,11 @@ namespace RY
 
             Vector3 projectedVelocity = Vector3.ProjectOnPlane(moveDirection, normalVector);
             rigidbody.velocity = projectedVelocity;
+
+            if (animatorHandler.canRotate)
+            {
+                HandleRotation(delta);
+            }
         }
 
         #region Movement

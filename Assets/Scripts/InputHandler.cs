@@ -22,7 +22,7 @@ namespace RY
             if (inputActions == null)
             {
                 inputActions = new PlayerControls();
-                inputActions.PlayerMovement.Movement.performed += inputActions => movementInput = inputActions.ReadValue<Vector2>();
+                inputActions.PlayerMovement.Movement.performed += i => movementInput = i.ReadValue<Vector2>();
                 inputActions.PlayerMovement.Camera.performed += i => i.ReadValue<Vector2>();
             }
 
