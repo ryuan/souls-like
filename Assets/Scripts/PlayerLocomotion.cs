@@ -50,6 +50,8 @@ namespace RY
             Vector3 projectedVelocity = Vector3.ProjectOnPlane(moveDirection, normalVector);
             rigidbody.velocity = projectedVelocity;
 
+            animatorHandler.UpdateAnimatorValues(0, inputHandler.moveAmount);
+
             if (animatorHandler.canRotate)
             {
                 HandleRotation(delta);
