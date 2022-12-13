@@ -13,9 +13,26 @@ namespace RY
         public float mouseY;
 
         PlayerControls inputActions;
+        CameraHandler cameraHandler;
 
         Vector2 movementInput;
         Vector2 cameraInput;
+
+        private void Awake()
+        {
+            cameraHandler = CameraHandler.singleton;
+        }
+
+        private void FixedUpdate()
+        {
+            float delta = Time.fixedDeltaTime;
+
+            if (cameraHandler != null)
+            {
+                cameraHandler.FollowTarget(delta);
+                cameraHandler.HandleCameraRotation(delta, mouseX, mouseY);
+            }
+        }
 
         public void OnEnable()
         {
@@ -23,7 +40,7 @@ namespace RY
             {
                 inputActions = new PlayerControls();
                 inputActions.PlayerMovement.Movement.performed += i => movementInput = i.ReadValue<Vector2>();
-                inputActions.PlayerMovement.Camera.performed += i => i.ReadValue<Vector2>();
+                inputActions.PlayerMovement.Camera.performed += i => cameraInput = i.ReadValue<Vector2>();
             }
 
             inputActions.Enable();

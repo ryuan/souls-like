@@ -42,6 +42,7 @@ namespace RY
 
             moveDirection = cameraObject.forward * inputHandler.vertical;
             moveDirection += cameraObject.right * inputHandler.horizontal;
+            moveDirection.y = 0;
             moveDirection.Normalize();
 
             float speed = movementSpeed;
