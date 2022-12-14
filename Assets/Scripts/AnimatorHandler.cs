@@ -7,6 +7,9 @@ namespace RY
     public class AnimatorHandler : MonoBehaviour
     {
         public Animator anim;
+        public InputHandler inputHandler;
+        public PlayerLocomotion playerLocomotion;
+
         int horizontal;
         int vertical;
         public bool canRotate;
@@ -14,6 +17,8 @@ namespace RY
         public void Initialize()
         {
             anim = GetComponent<Animator>();
+            inputHandler = GetComponent<InputHandler>();
+            playerLocomotion = GetComponent<PlayerLocomotion>();
             horizontal = Animator.StringToHash("Horizontal");
             vertical= Animator.StringToHash("Vertical");
         }
@@ -74,6 +79,13 @@ namespace RY
             anim.SetFloat(vertical, v, 0.1f, Time.deltaTime);
         }
 
+        public void PlayTargetAnimation(string targetAnim, bool isInteracting)
+        {
+            anim.applyRootMotion = isInteracting;
+            anim.SetBool("isInteracting", isInteracting);
+            anim.CrossFade(targetAnim, 0.2f);
+        }
+
         public void CanRotate()
         {
             canRotate = true;
@@ -82,6 +94,21 @@ namespace RY
         public void StopRotate()
         {
             canRotate = false;
+        }
+
+        private void OnAnimatorMove()
+        {
+            if (inputHandler.isInteracting == false)
+            {
+                return;
+            }
+
+            float delta = Time.deltaTime;
+            playerLocomotion.myRigidbody.drag = 0;
+            Vector3 deltaPosition = anim.deltaPosition;
+            deltaPosition.y = 0;
+            Vector3 velocity = deltaPosition / delta;
+            playerLocomotion.myRigidbody.velocity = velocity;
         }
     }
 }

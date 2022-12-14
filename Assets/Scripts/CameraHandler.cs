@@ -42,11 +42,11 @@ namespace RY
 
         public void FollowTarget(float delta)
         {
-            Vector3 targetPosition = Vector3.SmoothDamp(
+            Vector3 followPosition = Vector3.SmoothDamp(
                 myTransform.position, targetTransform.position, ref cameraFollowVelocity, delta / followSpeed
                 );
 
-            myTransform.position = targetPosition;
+            myTransform.position = followPosition;
             HandleCameraCollisions(delta);
         }
 
