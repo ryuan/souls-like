@@ -19,6 +19,7 @@ namespace RY
         {
             inputHandler.isInteracting = anim.GetBool("isInteracting");
             inputHandler.rollFlag = false;
+            anim.applyRootMotion = anim.GetBool("isInteracting");
         }
     }
 }

@@ -17,8 +17,8 @@ namespace RY
         public void Initialize()
         {
             anim = GetComponent<Animator>();
-            inputHandler = GetComponent<InputHandler>();
-            playerLocomotion = GetComponent<PlayerLocomotion>();
+            inputHandler = GetComponentInParent<InputHandler>();
+            playerLocomotion = GetComponentInParent<PlayerLocomotion>();
             horizontal = Animator.StringToHash("Horizontal");
             vertical= Animator.StringToHash("Vertical");
         }
@@ -83,7 +83,7 @@ namespace RY
         {
             anim.applyRootMotion = isInteracting;
             anim.SetBool("isInteracting", isInteracting);
-            anim.CrossFade(targetAnim, 0.2f);
+            anim.CrossFade(targetAnim, 0.1f);
         }
 
         public void CanRotate()
@@ -102,7 +102,7 @@ namespace RY
             {
                 return;
             }
-
+            
             float delta = Time.deltaTime;
             playerLocomotion.myRigidbody.drag = 0;
             Vector3 deltaPosition = anim.deltaPosition;
