@@ -15,7 +15,7 @@ namespace RY
         [HideInInspector]
         public AnimatorHandler animatorHandler;
 
-        public new Rigidbody rigidbody;
+        public Rigidbody myRigidbody;
         public GameObject normalCamera;
 
         [Header("Stats")]
@@ -26,7 +26,7 @@ namespace RY
 
         private void Start()
         {
-            rigidbody = GetComponent<Rigidbody>();
+            myRigidbody = GetComponent<Rigidbody>();
             inputHandler = GetComponent<InputHandler>();
             animatorHandler = GetComponentInChildren<AnimatorHandler>();
             cameraObject = Camera.main.transform;
@@ -42,14 +42,14 @@ namespace RY
 
             moveDirection = cameraObject.forward * inputHandler.vertical;
             moveDirection += cameraObject.right * inputHandler.horizontal;
-            moveDirection.y = 0;
             moveDirection.Normalize();
+            moveDirection.y = 0;
 
             float speed = movementSpeed;
             moveDirection *= speed;
 
             Vector3 projectedVelocity = Vector3.ProjectOnPlane(moveDirection, normalVector);
-            rigidbody.velocity = projectedVelocity;
+            myRigidbody.velocity = projectedVelocity;
 
             animatorHandler.UpdateAnimatorValues(0, inputHandler.moveAmount);
 
@@ -70,7 +70,6 @@ namespace RY
 
             targetDir = cameraObject.forward * inputHandler.vertical;
             targetDir += cameraObject.right * inputHandler.horizontal;
-
             targetDir.Normalize();
             targetDir.y = 0;
 
