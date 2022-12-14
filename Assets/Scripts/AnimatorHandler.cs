@@ -23,7 +23,7 @@ namespace RY
             vertical= Animator.StringToHash("Vertical");
         }
 
-        public void UpdateAnimatorValues(float horizontalMovement, float verticalMovement)
+        public void UpdateAnimatorValues(float horizontalMovement, float verticalMovement, bool isSprinting)
         {
             #region Horizontal
             float h = 0;
@@ -74,6 +74,12 @@ namespace RY
                 v = 0;
             }
             #endregion
+
+            if (isSprinting)
+            {
+                h = horizontalMovement;
+                v = 2;
+            }
 
             anim.SetFloat(horizontal, h, 0.1f, Time.deltaTime);
             anim.SetFloat(vertical, v, 0.1f, Time.deltaTime);

@@ -14,6 +14,8 @@ namespace RY
 
         public bool b_Input;
         public bool rollFlag;
+        public bool sprintFlag;
+        public float rollInputTimer;
         public bool isInteracting;
 
         PlayerControls inputActions;
@@ -72,11 +74,26 @@ namespace RY
 
         private void HandleRollInput(float delta)
         {
-            b_Input = (inputActions.PlayerActions.Roll.phase == UnityEngine.InputSystem.InputActionPhase.Performed);
+            b_Input = inputActions.PlayerActions.Roll.IsPressed();
 
             if (b_Input)
             {
-                rollFlag = true;
+                rollInputTimer += delta;
+
+                if (moveAmount > 0)
+                {
+                    sprintFlag = true;
+                }
+            }
+            else
+            {
+                if (rollInputTimer > 0 && rollInputTimer < 0.5f)
+                {
+                    rollFlag = true;
+                    sprintFlag = false;
+                }
+
+                rollInputTimer = 0;
             }
         }
     }

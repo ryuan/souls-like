@@ -22,7 +22,11 @@ namespace RY
         [SerializeField]
         float movementSpeed = 5;
         [SerializeField]
+        float sprintSpeed = 7;
+        [SerializeField]
         float rotationSpeed = 10;
+
+        public bool isSprinting;
 
         private void Start()
         {
@@ -38,6 +42,7 @@ namespace RY
         {
             float delta = Time.deltaTime;
 
+            isSprinting = inputHandler.sprintFlag;
             inputHandler.TickInput(delta);
             HandleMovement(delta);
             HandleRollAndSprint(delta);
@@ -72,18 +77,33 @@ namespace RY
 
         private void HandleMovement(float delta)
         {
+            if (inputHandler.rollFlag)
+            {
+                return;
+            }
+
             moveDirection = cameraObject.forward * inputHandler.vertical;
             moveDirection += cameraObject.right * inputHandler.horizontal;
             moveDirection.Normalize();
             moveDirection.y = 0;
 
             float speed = movementSpeed;
-            moveDirection *= speed;
+
+            if (inputHandler.sprintFlag)
+            {
+                speed = sprintSpeed;
+                isSprinting = true;
+                moveDirection *= speed;
+            }
+            else
+            {
+                moveDirection *= speed;
+            }
 
             Vector3 projectedVelocity = Vector3.ProjectOnPlane(moveDirection, normalVector);
             myRigidbody.velocity = projectedVelocity;
 
-            animatorHandler.UpdateAnimatorValues(0, inputHandler.moveAmount);
+            animatorHandler.UpdateAnimatorValues(0, inputHandler.moveAmount, isSprinting);
 
             if (animatorHandler.canRotate)
             {
