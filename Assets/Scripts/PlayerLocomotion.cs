@@ -6,6 +6,7 @@ namespace RY
 {
     public class PlayerLocomotion : MonoBehaviour
     {
+        PlayerManager playerManager;
         Transform cameraObject;
         InputHandler inputHandler;
         Vector3 moveDirection;
@@ -18,7 +19,7 @@ namespace RY
         public Rigidbody myRigidbody;
         public GameObject normalCamera;
 
-        [Header("Stats")]
+        [Header("Movement Stats")]
         [SerializeField]
         float movementSpeed = 5;
         [SerializeField]
@@ -26,10 +27,11 @@ namespace RY
         [SerializeField]
         float rotationSpeed = 10;
 
-        public bool isSprinting;
+
 
         private void Start()
         {
+            playerManager = GetComponent<PlayerManager>();
             myRigidbody = GetComponent<Rigidbody>();
             inputHandler = GetComponent<InputHandler>();
             animatorHandler = GetComponentInChildren<AnimatorHandler>();
@@ -38,21 +40,11 @@ namespace RY
             animatorHandler.Initialize();
         }
 
-        private void Update()
-        {
-            float delta = Time.deltaTime;
-
-            isSprinting = inputHandler.sprintFlag;
-            inputHandler.TickInput(delta);
-            HandleMovement(delta);
-            HandleRollAndSprint(delta);
-        }
-
         #region Movement
         Vector3 normalVector;
         Vector3 targetPosition;
 
-        private void HandleRotation(float delta)
+        public void HandleRotation(float delta)
         {
             Vector3 targetDir = Vector3.zero;
             float moveOverride = inputHandler.moveAmount;
@@ -75,7 +67,7 @@ namespace RY
             myTransform.rotation = targetRotation;
         }
 
-        private void HandleMovement(float delta)
+        public void HandleMovement(float delta)
         {
             if (inputHandler.rollFlag)
             {
@@ -92,7 +84,7 @@ namespace RY
             if (inputHandler.sprintFlag)
             {
                 speed = sprintSpeed;
-                isSprinting = true;
+                playerManager.isSprinting = true;
                 moveDirection *= speed;
             }
             else
@@ -103,7 +95,7 @@ namespace RY
             Vector3 projectedVelocity = Vector3.ProjectOnPlane(moveDirection, normalVector);
             myRigidbody.velocity = projectedVelocity;
 
-            animatorHandler.UpdateAnimatorValues(0, inputHandler.moveAmount, isSprinting);
+            animatorHandler.UpdateAnimatorValues(0, inputHandler.moveAmount, playerManager.isSprinting);
 
             if (animatorHandler.canRotate)
             {
@@ -111,7 +103,7 @@ namespace RY
             }
         }
 
-        private void HandleRollAndSprint(float delta)
+        public void HandleRollAndSprint(float delta)
         {
             if (animatorHandler.anim.GetBool("isInteracting"))
             {
