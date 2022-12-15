@@ -15,6 +15,8 @@ namespace RY
 
         [Header("Player Flags")]
         public bool isSprinting;
+        public bool isInAir;
+        public bool isGrounded;
 
 
 
@@ -35,11 +37,12 @@ namespace RY
             float delta = Time.deltaTime;
 
             isInteracting = anim.GetBool("isInteracting");
-            anim.applyRootMotion = anim.GetBool("isInteracting");
+            anim.applyRootMotion = isInteracting;
 
             inputHandler.TickInput(delta);
             playerLocomotion.HandleMovement(delta);
             playerLocomotion.HandleRollAndSprint(delta);
+            playerLocomotion.HandleFalling(delta);
         }
 
         private void FixedUpdate()
@@ -58,6 +61,11 @@ namespace RY
             inputHandler.rollFlag = false;
             inputHandler.sprintFlag = false;
             isSprinting = inputHandler.sprintFlag;
+
+            if (isInAir)
+            {
+                playerLocomotion.inAirTimer = playerLocomotion.inAirTimer + Time.deltaTime;
+            }
         }
     }
 }

@@ -9,15 +9,26 @@ namespace RY
         PlayerManager playerManager;
         Transform cameraObject;
         InputHandler inputHandler;
-        Vector3 moveDirection;
 
+        [HideInInspector]
+        public Vector3 moveDirection;
         [HideInInspector]
         public Transform myTransform;
         [HideInInspector]
         public AnimatorHandler animatorHandler;
 
-        public Rigidbody myRigidbody;
+        public Rigidbody rb;
         public GameObject normalCamera;
+
+        [Header("Ground & Air Detection Stats")]
+        [SerializeField]
+        float groundDetectionRayStartPoint = 0.5f;
+        [SerializeField]
+        float minDistanceNeededToBeginFall = 1f;
+        [SerializeField]
+        float groundDirectionRayDistance = 0.2f;
+        LayerMask ignoreForGroundCheck;
+        public float inAirTimer;
 
         [Header("Movement Stats")]
         [SerializeField]
@@ -26,18 +37,23 @@ namespace RY
         float sprintSpeed = 7;
         [SerializeField]
         float rotationSpeed = 10;
+        [SerializeField]
+        float fallingSpeed = 80;
 
 
 
         private void Start()
         {
             playerManager = GetComponent<PlayerManager>();
-            myRigidbody = GetComponent<Rigidbody>();
+            rb = GetComponent<Rigidbody>();
             inputHandler = GetComponent<InputHandler>();
             animatorHandler = GetComponentInChildren<AnimatorHandler>();
             cameraObject = Camera.main.transform;
             myTransform = transform;
             animatorHandler.Initialize();
+
+            playerManager.isGrounded = true;
+            ignoreForGroundCheck = ~(1 << 8 | 1 << 11);
         }
 
         #region Movement
@@ -74,6 +90,11 @@ namespace RY
                 return;
             }
 
+            if (playerManager.isInteracting)
+            {
+                return;
+            }
+
             moveDirection = cameraObject.forward * inputHandler.vertical;
             moveDirection += cameraObject.right * inputHandler.horizontal;
             moveDirection.Normalize();
@@ -93,7 +114,7 @@ namespace RY
             }
 
             Vector3 projectedVelocity = Vector3.ProjectOnPlane(moveDirection, normalVector);
-            myRigidbody.velocity = projectedVelocity;
+            rb.velocity = projectedVelocity;
 
             animatorHandler.UpdateAnimatorValues(0, inputHandler.moveAmount, playerManager.isSprinting);
 
@@ -105,7 +126,7 @@ namespace RY
 
         public void HandleRollAndSprint(float delta)
         {
-            if (animatorHandler.anim.GetBool("isInteracting"))
+            if (playerManager.isInteracting)
             {
                 return;
             }
@@ -127,7 +148,90 @@ namespace RY
                     animatorHandler.PlayTargetAnimation("Backstep", true);
                 }
             }
-        } 
+        }
+
+        public void HandleFalling(float delta)
+        {
+            playerManager.isGrounded = false;
+            RaycastHit hit;
+            Vector3 origin = myTransform.position;
+            origin.y += groundDetectionRayStartPoint;
+
+            if (Physics.Raycast(origin, myTransform.forward, out hit, 0.2f))
+            {
+                moveDirection = Vector3.zero;
+            }
+
+            if (playerManager.isInAir)
+            {
+                rb.AddForce(-Vector3.up * fallingSpeed);
+                rb.AddForce(moveDirection * fallingSpeed / 10f);
+            }
+
+            Vector3 dir = moveDirection;
+            dir.Normalize();
+            origin = origin + dir * groundDirectionRayDistance;
+
+            targetPosition = myTransform.position;
+
+            Debug.DrawRay(origin, -Vector3.up * minDistanceNeededToBeginFall, Color.red, 0.1f, false);
+            if (Physics.Raycast(origin, -Vector3.up, out hit, minDistanceNeededToBeginFall, ignoreForGroundCheck))
+            {
+                normalVector = hit.normal;
+                Vector3 tp = hit.point;
+                playerManager.isGrounded = true;
+                targetPosition.y = tp.y;
+
+                if (playerManager.isInAir)
+                {
+                    if (inAirTimer > 0.5f)
+                    {
+                        Debug.Log("You were in the air for " + inAirTimer);
+                        animatorHandler.PlayTargetAnimation("Land", true);
+                        inAirTimer = 0;
+                    }
+                    else
+                    {
+                        animatorHandler.PlayTargetAnimation("Locomotion", false);
+                        inAirTimer = 0;
+                    }
+
+                    playerManager.isInAir = false;
+                }
+            }
+            else
+            {
+                if (playerManager.isGrounded)
+                {
+                    playerManager.isGrounded = false;
+                }
+
+                if (playerManager.isInAir == false)
+                {
+                    if (playerManager.isInteracting == false)
+                    {
+                        animatorHandler.PlayTargetAnimation("Falling", true);
+                    }
+
+                    Vector3 vel = rb.velocity;
+                    vel.Normalize();
+                    rb.velocity = vel * (movementSpeed / 2);
+                    playerManager.isInAir = true;
+                }
+            }
+
+            if (playerManager.isGrounded)
+            {
+                if (playerManager.isInteracting || inputHandler.moveAmount > 0)
+                {
+                    myTransform.position = Vector3.Lerp(myTransform.position, targetPosition, Time.deltaTime);
+                }
+                else
+                {
+                    myTransform.position = targetPosition;
+                }
+            }
+        }
 
         #endregion
     }

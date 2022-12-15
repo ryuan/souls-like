@@ -92,8 +92,9 @@ namespace RY
         public void PlayTargetAnimation(string targetAnim, bool isInteracting)
         {
             anim.applyRootMotion = isInteracting;
-            anim.SetBool("isInteracting", isInteracting);
+            //anim.SetBool("isInteracting", isInteracting);
             anim.CrossFade(targetAnim, 0.1f);
+            Debug.Log("Animation: " + targetAnim + ", isInteracting: " + isInteracting + ", playerManager: " + playerManager.isInteracting + ", anim: " + anim.GetBool("isInteracting"));
         }
 
         public void CanRotate()
@@ -114,11 +115,11 @@ namespace RY
             }
             
             float delta = Time.deltaTime;
-            playerLocomotion.myRigidbody.drag = 0;
+            playerLocomotion.rb.drag = 0;
             Vector3 deltaPosition = anim.deltaPosition;
             deltaPosition.y = 0;
             Vector3 velocity = deltaPosition / delta;
-            playerLocomotion.myRigidbody.velocity = velocity;
+            playerLocomotion.rb.velocity = velocity;
         }
     }
 }
