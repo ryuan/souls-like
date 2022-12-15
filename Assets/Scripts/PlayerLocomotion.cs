@@ -165,7 +165,7 @@ namespace RY
             if (playerManager.isInAir)
             {
                 rb.AddForce(-Vector3.up * fallingSpeed);
-                rb.AddForce(moveDirection * fallingSpeed / 10f);
+                rb.AddForce(moveDirection * fallingSpeed / 7.5f);
             }
 
             Vector3 dir = moveDirection;
@@ -192,7 +192,7 @@ namespace RY
                     }
                     else
                     {
-                        animatorHandler.PlayTargetAnimation("Locomotion", false);
+                        animatorHandler.PlayTargetAnimation("Empty", false);
                         inAirTimer = 0;
                     }
 

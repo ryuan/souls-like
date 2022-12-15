@@ -64,7 +64,7 @@ namespace RY
             {
                 rollInputTimer += delta;
 
-                if (moveAmount > 0)
+                if (moveAmount > 0 && rollInputTimer > 0.5f)
                 {
                     sprintFlag = true;
                 }
