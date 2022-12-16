@@ -60,6 +60,8 @@ namespace RY
         {
             inputHandler.rollFlag = false;
             inputHandler.sprintFlag = false;
+            inputHandler.rb_Input = false;
+            inputHandler.rt_Input = false;
             isSprinting = inputHandler.sprintFlag;
 
             if (isInAir)

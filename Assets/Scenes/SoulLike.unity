@@ -46276,10 +46276,11 @@ GameObject:
   - component: {fileID: 1473557460}
   - component: {fileID: 1473557462}
   - component: {fileID: 1473557461}
+  - component: {fileID: 1473557465}
   - component: {fileID: 1473557464}
   - component: {fileID: 1473557463}
-  - component: {fileID: 1473557465}
   - component: {fileID: 1473557466}
+  - component: {fileID: 1473557467}
   m_Layer: 10
   m_Name: Player
   m_TagString: Untagged
@@ -46409,6 +46410,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rightWeapon: {fileID: 11400000, guid: 976828ac627b54672800870595513c47, type: 2}
   leftWeapon: {fileID: 11400000, guid: 976828ac627b54672800870595513c47, type: 2}
+--- !u!114 &1473557467
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1473557459}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 94c6d9799b5d342a29d03ce0c4a5a8f3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &1473648362 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 433524, guid: 9154d83fdcda70f4f84028ccd30286a2,
