@@ -17,12 +17,13 @@ namespace RY
         public bool isSprinting;
         public bool isInAir;
         public bool isGrounded;
+        public bool canDoCombo;
 
 
 
         private void Awake()
         {
-            cameraHandler = CameraHandler.singleton;
+            cameraHandler = FindObjectOfType<CameraHandler>();
         }
 
         private void Start()
@@ -38,6 +39,7 @@ namespace RY
 
             isInteracting = anim.GetBool("isInteracting");
             anim.applyRootMotion = isInteracting;
+            canDoCombo = anim.GetBool("canDoCombo");
 
             inputHandler.TickInput(delta);
             playerLocomotion.HandleMovement(delta);

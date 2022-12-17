@@ -11,7 +11,8 @@ namespace RY
         public bool isUnarmed;
 
         [Header("One-Handed Attack Animations")]
-        public string OH_Light_Attack_1;
-        public string OH_Heavy_Attack_1;
+        public string ohLightAtk1;
+        public string ohLightAtk2;
+        public string ohHeavyAtk1;
     }
 }
