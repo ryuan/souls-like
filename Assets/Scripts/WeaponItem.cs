@@ -10,6 +10,10 @@ namespace RY
         public GameObject modelPrefab;
         public bool isUnarmed;
 
+        [Header("Idle Animations")]
+        public string leftHandIdle;
+        public string rightHandIdle;
+
         [Header("One-Handed Attack Animations")]
         public string ohLightAtk1;
         public string ohLightAtk2;

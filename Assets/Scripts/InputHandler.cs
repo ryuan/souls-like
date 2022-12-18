@@ -15,6 +15,10 @@ namespace RY
         public bool b_Input;
         public bool rb_Input;
         public bool rt_Input;
+        public bool dPad_Up_Input;
+        public bool dPad_Down_Input;
+        public bool dPad_Left_Input;
+        public bool dPad_Right_Input;
 
         public bool rollFlag;
         public bool sprintFlag;
@@ -60,6 +64,7 @@ namespace RY
             MoveInput(delta);
             HandleRollInput(delta);
             HandleAttackInput(delta);
+            HandleQuickSlotInput();
         }
 
         private void MoveInput(float delta)
@@ -124,6 +129,21 @@ namespace RY
             if (rt_Input)
             {
                 playerAttacker.HandleHeavyAttack(playerInventory.rightWeapon);
+            }
+        }
+
+        private void HandleQuickSlotInput()
+        {
+            inputActions.PlayerQuickSlots.DPadLeft.performed += context => dPad_Left_Input = true;
+            inputActions.PlayerQuickSlots.DPadRight.performed += context => dPad_Right_Input = true;
+
+            if (dPad_Left_Input)
+            {
+                playerInventory.ChangeLeftWeapon();
+            }
+            else if (dPad_Right_Input)
+            {
+                playerInventory.ChangeRightWeapon();
             }
         }
     }

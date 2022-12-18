@@ -24,9 +24,15 @@ namespace RY
             {
                 animatorHandler.anim.SetBool("canDoCombo", false);
 
+                Debug.Log("Combo activated!");
                 if (lastattack == weapon.ohLightAtk1)
                 {
                     animatorHandler.PlayTargetAnimation(weapon.ohLightAtk2, true);
+                    lastattack = weapon.ohLightAtk2;
+                }
+                else
+                {
+                    HandleLightAttack(weapon);
                 }
             }
         }

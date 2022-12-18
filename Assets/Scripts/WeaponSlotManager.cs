@@ -12,11 +12,16 @@ namespace RY
         DamageCollider leftHandDamageCollider;
         DamageCollider rightHandDamageCollider;
 
+        Animator animator;
+        QuickSlotsUI quickSlotsUI;
+
 
 
         private void Awake()
         {
             WeaponHolderSlot[] weaponHolderSlots = GetComponentsInChildren<WeaponHolderSlot>();
+            animator = GetComponent<Animator>();
+            quickSlotsUI = FindObjectOfType<QuickSlotsUI>();
 
             foreach (WeaponHolderSlot weaponSlot in weaponHolderSlots)
             {
@@ -37,11 +42,35 @@ namespace RY
             {
                 leftHandSlot.LoadWeaponModel(weaponItem);
                 LoadLeftWeaponDamageCollider();
+                quickSlotsUI.UpdateWeaponQuickSlotsUI(weaponItem, true);
+
+                #region Handle Left Weapon Idle Animations
+                if (weaponItem != null)
+                {
+                    animator.CrossFade(weaponItem.leftHandIdle, 0.2f);
+                }
+                else
+                {
+                    animator.CrossFade("Left_Arm_Empty", 0.2f);
+                }
+                #endregion
             }
             else
             {
                 rightHandSlot.LoadWeaponModel(weaponItem);
                 LoadRightWeaponDamageCollider();
+                quickSlotsUI.UpdateWeaponQuickSlotsUI(weaponItem, false);
+
+                #region Handle Right Weapon Idle Animations
+                if (weaponItem != null)
+                {
+                    animator.CrossFade(weaponItem.rightHandIdle, 0.2f);
+                }
+                else
+                {
+                    animator.CrossFade("Right_Arm_Empty", 0.2f);
+                }
+                #endregion
             }
         }
 

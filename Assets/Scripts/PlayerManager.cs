@@ -65,6 +65,10 @@ namespace RY
             inputHandler.rb_Input = false;
             inputHandler.rt_Input = false;
             isSprinting = inputHandler.sprintFlag;
+            inputHandler.dPad_Up_Input = false;
+            inputHandler.dPad_Down_Input = false;
+            inputHandler.dPad_Left_Input = false;
+            inputHandler.dPad_Right_Input = false;
 
             if (isInAir)
             {
