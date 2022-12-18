@@ -19,6 +19,9 @@ MonoBehaviour:
   isUnarmed: 1
   leftHandIdle: Left_Arm_Empty
   rightHandIdle: Right_Arm_Empty
-  ohLightAtk1: 
-  ohLightAtk2: 
-  ohHeavyAtk1: 
+  ohLightAtk1: OH_Light_Attack_01
+  ohLightAtk2: OH_Light_Attack_02
+  ohHeavyAtk1: OH_Heavy_Attack_01
+  baseStamina: 5
+  lightAtkMultipler: 1
+  heavyAtkMultipler: 2

@@ -10,14 +10,20 @@ namespace RY
         public int maxHealth;
         public int currentHealth;
 
-        public HealthBar healthBar;
+        public int staminaLevel = 10;
+        public int maxStamina;
+        public int currentStamina;
 
+        HealthBar healthBar;
+        StaminaBar staminaBar;
         AnimatorHandler animatorHandler;
 
 
 
         private void Awake()
         {
+            healthBar = FindObjectOfType<HealthBar>();
+            staminaBar = FindObjectOfType<StaminaBar>();
             animatorHandler = GetComponentInChildren<AnimatorHandler>();
         }
 
@@ -26,6 +32,10 @@ namespace RY
             maxHealth = SetMaxHealthFromHealthLevel();
             currentHealth = maxHealth;
             healthBar.SetMaxHealth(maxHealth);
+
+            maxStamina = SetMaxStaminaFromHealthLevel();
+            currentStamina = maxStamina;
+            staminaBar.SetMaxStamina(maxStamina);
         }
 
         private int SetMaxHealthFromHealthLevel()
@@ -34,10 +44,15 @@ namespace RY
             return maxHealth;
         }
 
+        private int SetMaxStaminaFromHealthLevel()
+        {
+            maxStamina = staminaLevel * 10;
+            return maxStamina;
+        }
+
         public void TakeDamage(int damage)
         {
-            currentHealth = currentHealth - damage;
-
+            currentHealth -= damage;
             healthBar.SetCurrentHealth(currentHealth);
 
             if (currentHealth <= 0)
@@ -48,6 +63,12 @@ namespace RY
             {
                 animatorHandler.PlayTargetAnimation("Damage_01", true);
             }
+        }
+
+        public void DrainStamina(int cost)
+        {
+            currentStamina -= cost;
+            staminaBar.SetCurrentStamina(currentStamina);
         }
     }
 }

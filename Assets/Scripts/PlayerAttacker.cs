@@ -8,6 +8,8 @@ namespace RY
     {
         AnimatorHandler animatorHandler;
         InputHandler inputHandler;
+        PlayerStats playerStats;
+        WeaponSlotManager weaponSlotManager;
         public string lastattack;
 
 
@@ -16,6 +18,8 @@ namespace RY
         {
             animatorHandler = GetComponentInChildren<AnimatorHandler>();
             inputHandler = GetComponent<InputHandler>();
+            playerStats = GetComponentInParent<PlayerStats>();
+            weaponSlotManager = GetComponentInChildren<WeaponSlotManager>();
         }
 
         public void HandleWeaponCombo(WeaponItem weapon)
@@ -39,12 +43,14 @@ namespace RY
 
         public void HandleLightAttack(WeaponItem weapon)
         {
+            weaponSlotManager.currentWeapon = weapon;
             animatorHandler.PlayTargetAnimation(weapon.ohLightAtk1, true);
             lastattack = weapon.ohLightAtk1;
         }
 
         public void HandleHeavyAttack(WeaponItem weapon)
         {
+            weaponSlotManager.currentWeapon = weapon;
             animatorHandler.PlayTargetAnimation(weapon.ohHeavyAtk1, true);
             lastattack = weapon.ohHeavyAtk1;
         }

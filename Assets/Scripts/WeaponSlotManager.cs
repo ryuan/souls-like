@@ -12,8 +12,11 @@ namespace RY
         DamageCollider leftHandDamageCollider;
         DamageCollider rightHandDamageCollider;
 
+        public WeaponItem currentWeapon;
+
         Animator animator;
         QuickSlotsUI quickSlotsUI;
+        PlayerStats playerStats;
 
 
 
@@ -22,6 +25,7 @@ namespace RY
             WeaponHolderSlot[] weaponHolderSlots = GetComponentsInChildren<WeaponHolderSlot>();
             animator = GetComponent<Animator>();
             quickSlotsUI = FindObjectOfType<QuickSlotsUI>();
+            playerStats = GetComponentInParent<PlayerStats>();
 
             foreach (WeaponHolderSlot weaponSlot in weaponHolderSlots)
             {
@@ -106,6 +110,18 @@ namespace RY
             rightHandDamageCollider.DisableDamageCollider();
         }
 
+        #endregion
+
+        #region Handle Weapon's Stamina Drain
+        public void DrainStaminaLightAttack()
+        {
+            playerStats.DrainStamina(Mathf.RoundToInt(currentWeapon.baseStamina * currentWeapon.lightAtkMultipler));
+        }
+
+        public void DrainStaminaHeavyAttack()
+        {
+            playerStats.DrainStamina(Mathf.RoundToInt(currentWeapon.baseStamina * currentWeapon.heavyAtkMultipler));
+        }
         #endregion
     }
 }
