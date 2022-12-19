@@ -12,25 +12,31 @@ namespace RY
 
         public void UpdateWeaponQuickSlotsUI(WeaponItem weapon, bool isLeft)
         {
-            if (weapon.itemIcon != null)
+            if (isLeft == true)
             {
-                if (isLeft == true)
+                if (weapon.itemIcon != null)
                 {
                     leftWeaponIcon.sprite = weapon.itemIcon;
                     leftWeaponIcon.enabled = true;
                 }
                 else
                 {
-                    rightWeaponIcon.sprite = weapon.itemIcon;
-                    rightWeaponIcon.enabled = true;
+                    leftWeaponIcon.sprite = null;
+                    leftWeaponIcon.enabled = false;
                 }
             }
             else
             {
-                leftWeaponIcon.sprite = null;
-                leftWeaponIcon.enabled = false;
-                rightWeaponIcon.sprite = null;
-                rightWeaponIcon.enabled = false;
+                if (weapon.itemIcon != null)
+                {
+                    rightWeaponIcon.sprite = weapon.itemIcon;
+                    rightWeaponIcon.enabled = true;
+                }
+                else
+                {
+                    rightWeaponIcon.sprite = null;
+                    rightWeaponIcon.enabled = false;
+                }
             }
         }
     }
