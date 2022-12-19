@@ -45,6 +45,8 @@ namespace RY
             playerLocomotion.HandleMovement(delta);
             playerLocomotion.HandleRollAndSprint(delta);
             playerLocomotion.HandleFalling(delta);
+
+            CheckForInteractables();
         }
 
         private void FixedUpdate()
@@ -69,10 +71,36 @@ namespace RY
             inputHandler.dPad_Down_Input = false;
             inputHandler.dPad_Left_Input = false;
             inputHandler.dPad_Right_Input = false;
+            inputHandler.a_Input = false;
 
             if (isInAir)
             {
                 playerLocomotion.inAirTimer = playerLocomotion.inAirTimer + Time.deltaTime;
+            }
+        }
+
+        public void CheckForInteractables()
+        {
+            RaycastHit hit;
+
+            if (Physics.SphereCast(transform.position, 0.4f, transform.forward, out hit, 1f, cameraHandler.ignoreLayers))
+            {
+                if (hit.collider.tag == "Interactable")
+                {
+                    Interactable interactable = hit.collider.GetComponent<Interactable>();
+
+                    if (interactable != null)
+                    {
+                        string interactableTest = interactable.interactableText;
+                        // Set the UI Text to Interactable's text
+                        // Set the text pop up to true
+
+                        if (inputHandler.a_Input)
+                        {
+                            hit.collider.GetComponent<Interactable>().Interact(this);
+                        }
+                    }
+                }
             }
         }
     }

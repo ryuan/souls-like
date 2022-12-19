@@ -13,6 +13,7 @@ namespace RY
         public float mouseY;
 
         public bool b_Input;
+        public bool a_Input;
         public bool rb_Input;
         public bool rt_Input;
         public bool dPad_Up_Input;
@@ -65,6 +66,7 @@ namespace RY
             HandleRollInput(delta);
             HandleAttackInput(delta);
             HandleQuickSlotInput();
+            HandleInteractableInput();
         }
 
         private void MoveInput(float delta)
@@ -145,6 +147,11 @@ namespace RY
             {
                 playerInventory.ChangeRightWeapon();
             }
+        }
+
+        private void HandleInteractableInput()
+        {
+            inputActions.PlayerActions.A.performed += context => a_Input = true;
         }
     }
 }
