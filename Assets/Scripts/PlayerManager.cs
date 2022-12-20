@@ -80,6 +80,7 @@ namespace RY
             inputHandler.dPad_Right_Input = false;
             inputHandler.a_Input = false;
             inputHandler.jump_Input = false;
+            inputHandler.inventory_Input = false;
 
             if (isInAir)
             {
