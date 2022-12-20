@@ -16,6 +16,8 @@ namespace RY
         public bool a_Input;
         public bool rb_Input;
         public bool rt_Input;
+        public bool jump_Input;
+
         public bool dPad_Up_Input;
         public bool dPad_Down_Input;
         public bool dPad_Left_Input;
@@ -66,7 +68,8 @@ namespace RY
             HandleRollInput(delta);
             HandleAttackInput(delta);
             HandleQuickSlotInput();
-            HandleInteractableInput();
+            HandleInteractionInput();
+            HandleJumpInput();
         }
 
         private void MoveInput(float delta)
@@ -149,9 +152,14 @@ namespace RY
             }
         }
 
-        private void HandleInteractableInput()
+        private void HandleInteractionInput()
         {
             inputActions.PlayerActions.A.performed += context => a_Input = true;
+        }
+
+        private void HandleJumpInput()
+        {
+            inputActions.PlayerActions.Jump.performed += context => jump_Input = true;
         }
     }
 }

@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace RY
 {
@@ -27,6 +29,9 @@ namespace RY
             playerLocomotion.rb.velocity = Vector3.zero;    // stops player from moving whilst picking up item
             animatorHandler.PlayTargetAnimation("Pick_Up_Item", true);
             playerInventory.weaponsInventory.Add(weapon);
+            playerManager.itemInteractableUIGameObject.GetComponentInChildren<TextMeshProUGUI>().text = weapon.itemName;
+            playerManager.itemInteractableUIGameObject.GetComponentInChildren<RawImage>().texture = weapon.itemIcon.texture;
+            playerManager.itemInteractableUIGameObject.SetActive(true);
             Destroy(gameObject);
         }
     }

@@ -11,6 +11,10 @@ namespace RY
         PlayerLocomotion playerLocomotion;
         Animator anim;
 
+        InteractableUI interactableUI;
+        public GameObject interactableUIGameObject;
+        public GameObject itemInteractableUIGameObject;
+
         public bool isInteracting;
 
         [Header("Player Flags")]
@@ -31,6 +35,7 @@ namespace RY
             inputHandler = GetComponent<InputHandler>();
             playerLocomotion = GetComponent<PlayerLocomotion>();
             anim = GetComponentInChildren<Animator>();
+            interactableUI = FindObjectOfType<InteractableUI>();
         }
 
         private void Update()
@@ -40,11 +45,13 @@ namespace RY
             isInteracting = anim.GetBool("isInteracting");
             anim.applyRootMotion = isInteracting;
             canDoCombo = anim.GetBool("canDoCombo");
+            anim.SetBool("isInAir", isInAir);
 
             inputHandler.TickInput(delta);
             playerLocomotion.HandleMovement(delta);
             playerLocomotion.HandleRollAndSprint(delta);
             playerLocomotion.HandleFalling(delta);
+            playerLocomotion.HandleJumping(delta);
 
             CheckForInteractables();
         }
@@ -72,6 +79,7 @@ namespace RY
             inputHandler.dPad_Left_Input = false;
             inputHandler.dPad_Right_Input = false;
             inputHandler.a_Input = false;
+            inputHandler.jump_Input = false;
 
             if (isInAir)
             {
@@ -91,9 +99,9 @@ namespace RY
 
                     if (interactable != null)
                     {
-                        string interactableTest = interactable.interactableText;
-                        // Set the UI Text to Interactable's text
-                        // Set the text pop up to true
+                        string interactableText = interactable.interactableText;
+                        interactableUI.interactableText.text = interactableText;
+                        interactableUIGameObject.SetActive(true);
 
                         if (inputHandler.a_Input)
                         {
@@ -102,6 +110,25 @@ namespace RY
                     }
                 }
             }
+            else
+            {
+                if (interactableUIGameObject != null)
+                {
+                    interactableUIGameObject.SetActive(false);
+                }
+
+                if (itemInteractableUIGameObject != null && inputHandler.a_Input)
+                {
+                    itemInteractableUIGameObject.SetActive(false);
+                }
+            }
+        }
+
+        private void OnDrawGizmos()
+        {
+            // For debugging CheckForInteractables function and its SphereCast collision against interactable colliders
+            Gizmos.color = Color.blue;
+            Gizmos.DrawWireSphere(transform.position + transform.forward, 0.4f);
         }
     }
 }
