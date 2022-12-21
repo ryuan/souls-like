@@ -56,6 +56,13 @@ namespace RY
                 inputActions = new PlayerControls();
                 inputActions.PlayerMovement.Movement.performed += context => movementInput = context.ReadValue<Vector2>();
                 inputActions.PlayerMovement.Camera.performed += context => cameraInput = context.ReadValue<Vector2>();
+                inputActions.PlayerActions.RB.performed += context => rb_Input = true;
+                inputActions.PlayerActions.RT.performed += context => rt_Input = true;
+                inputActions.PlayerQuickSlots.DPadLeft.performed += context => dPad_Left_Input = true;
+                inputActions.PlayerQuickSlots.DPadRight.performed += context => dPad_Right_Input = true;
+                inputActions.PlayerActions.A.performed += context => a_Input = true;
+                inputActions.PlayerActions.Jump.performed += context => jump_Input = true;
+                inputActions.PlayerActions.Inventory.performed += context => inventory_Input = true;
             }
 
             inputActions.Enable();
@@ -69,11 +76,9 @@ namespace RY
         public void TickInput(float delta)
         {
             MoveInput(delta);
-            HandleRollInput(delta);
+            HandleRollAndSprintInput(delta);
             HandleAttackInput(delta);
             HandleQuickSlotInput();
-            HandleInteractionInput();
-            HandleJumpInput();
             HandleInventoryInput();
         }
 
@@ -86,7 +91,7 @@ namespace RY
             mouseY = cameraInput.y;
         }
 
-        private void HandleRollInput(float delta)
+        private void HandleRollAndSprintInput(float delta)
         {
             b_Input = inputActions.PlayerActions.Roll.IsPressed();
 
@@ -113,9 +118,6 @@ namespace RY
 
         private void HandleAttackInput(float delta)
         {
-            inputActions.PlayerActions.RB.performed += context => rb_Input = true;
-            inputActions.PlayerActions.RT.performed += context => rt_Input = true;
-
             // RB input handles the RIGHT hand weapon's light attack
             if (rb_Input)
             {
@@ -144,9 +146,6 @@ namespace RY
 
         private void HandleQuickSlotInput()
         {
-            inputActions.PlayerQuickSlots.DPadLeft.performed += context => dPad_Left_Input = true;
-            inputActions.PlayerQuickSlots.DPadRight.performed += context => dPad_Right_Input = true;
-
             if (dPad_Left_Input)
             {
                 playerInventory.ChangeLeftWeapon();
@@ -157,20 +156,8 @@ namespace RY
             }
         }
 
-        private void HandleInteractionInput()
-        {
-            inputActions.PlayerActions.A.performed += context => a_Input = true;
-        }
-
-        private void HandleJumpInput()
-        {
-            inputActions.PlayerActions.Jump.performed += context => jump_Input = true;
-        }
-
         private void HandleInventoryInput()
         {
-            inputActions.PlayerActions.Inventory.performed += context => inventory_Input = true;
-
             if (inventory_Input)
             {
                 inventoryFlag = !inventoryFlag;

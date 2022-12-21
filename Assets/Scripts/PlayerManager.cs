@@ -48,9 +48,7 @@ namespace RY
             anim.SetBool("isInAir", isInAir);
 
             inputHandler.TickInput(delta);
-            playerLocomotion.HandleMovement(delta);
             playerLocomotion.HandleRollAndSprint(delta);
-            playerLocomotion.HandleFalling(delta);
             playerLocomotion.HandleJumping(delta);
 
             CheckForInteractables();
@@ -58,19 +56,18 @@ namespace RY
 
         private void FixedUpdate()
         {
-            float delta = Time.fixedDeltaTime;
+            float delta = Time.deltaTime;
 
-            if (cameraHandler != null)
-            {
-                cameraHandler.FollowTarget(delta);
-                cameraHandler.HandleCameraRotation(delta, inputHandler.mouseX, inputHandler.mouseY);
-            }
+            playerLocomotion.HandleMovement(delta);
+            playerLocomotion.HandleFalling(delta);
+            inputHandler.sprintFlag = false;
         }
 
         private void LateUpdate()
         {
+            float delta = Time.fixedDeltaTime;
+
             inputHandler.rollFlag = false;
-            inputHandler.sprintFlag = false;
             inputHandler.rb_Input = false;
             inputHandler.rt_Input = false;
             isSprinting = inputHandler.sprintFlag;
@@ -81,6 +78,12 @@ namespace RY
             inputHandler.a_Input = false;
             inputHandler.jump_Input = false;
             inputHandler.inventory_Input = false;
+
+            if (cameraHandler != null)
+            {
+                cameraHandler.FollowTarget(delta);
+                cameraHandler.HandleCameraRotation(delta, inputHandler.mouseX, inputHandler.mouseY);
+            }
 
             if (isInAir)
             {
