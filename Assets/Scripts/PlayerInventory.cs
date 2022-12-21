@@ -1,4 +1,4 @@
-using System.Collections;
+ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -56,6 +56,26 @@ namespace RY
                 currentLeftWeaponIndex += 1;
             }
 
+            if (currentLeftWeaponIndex == 2 && weaponsInLeftHandSlot[2] != null)
+            {
+                leftWeapon = weaponsInLeftHandSlot[currentLeftWeaponIndex];
+                weaponSlotManager.LoadWeaponOnSlot(leftWeapon, true);
+            }
+            else if (currentLeftWeaponIndex == 2 && weaponsInLeftHandSlot[2] == null)
+            {
+                currentLeftWeaponIndex += 1;
+            }
+
+            if (currentLeftWeaponIndex == 3 && weaponsInLeftHandSlot[3] != null)
+            {
+                leftWeapon = weaponsInLeftHandSlot[currentLeftWeaponIndex];
+                weaponSlotManager.LoadWeaponOnSlot(leftWeapon, true);
+            }
+            else if (currentLeftWeaponIndex == 3 && weaponsInLeftHandSlot[3] == null)
+            {
+                currentLeftWeaponIndex += 1;
+            }
+
             if (currentLeftWeaponIndex > weaponsInLeftHandSlot.Length - 1)
             {
                 currentLeftWeaponIndex = -1;
@@ -88,6 +108,25 @@ namespace RY
                 currentRightWeaponIndex += 1;
             }
 
+            if (currentRightWeaponIndex == 2 && weaponsInRightHandSlot[2] != null)
+            {
+                rightWeapon = weaponsInRightHandSlot[currentRightWeaponIndex];
+                weaponSlotManager.LoadWeaponOnSlot(rightWeapon, true);
+            }
+            else if (currentRightWeaponIndex == 2 && weaponsInRightHandSlot[2] == null)
+            {
+                currentRightWeaponIndex += 1;
+            }
+
+            if (currentRightWeaponIndex == 3 && weaponsInRightHandSlot[3] != null)
+            {
+                rightWeapon = weaponsInRightHandSlot[currentRightWeaponIndex];
+                weaponSlotManager.LoadWeaponOnSlot(rightWeapon, true);
+            }
+            else if (currentRightWeaponIndex == 3 && weaponsInRightHandSlot[3] == null)
+            {
+                currentRightWeaponIndex += 1;
+            }
             if (currentRightWeaponIndex > weaponsInRightHandSlot.Length - 1)
             {
                 currentRightWeaponIndex = -1;
