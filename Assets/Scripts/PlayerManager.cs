@@ -48,7 +48,7 @@ namespace RY
             anim.SetBool("isInAir", isInAir);
 
             inputHandler.TickInput(delta);
-            playerLocomotion.HandleRollAndSprint(delta);
+            playerLocomotion.HandleRoll(delta);
             playerLocomotion.HandleJumping(delta);
 
             CheckForInteractables();
@@ -58,8 +58,9 @@ namespace RY
         {
             float delta = Time.deltaTime;
 
-            playerLocomotion.HandleMovement(delta);
+            playerLocomotion.HandleMovementAndSprint(delta);
             playerLocomotion.HandleFalling(delta);
+            // Need to reset flag in FixedUpdate to match update timing of HandleMovementAndSprint
             inputHandler.sprintFlag = false;
         }
 
@@ -70,7 +71,6 @@ namespace RY
             inputHandler.rollFlag = false;
             inputHandler.rb_Input = false;
             inputHandler.rt_Input = false;
-            isSprinting = inputHandler.sprintFlag;
             inputHandler.dPad_Up_Input = false;
             inputHandler.dPad_Down_Input = false;
             inputHandler.dPad_Left_Input = false;

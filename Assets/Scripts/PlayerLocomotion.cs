@@ -83,7 +83,7 @@ namespace RY
             myTransform.rotation = targetRotation;
         }
 
-        public void HandleMovement(float delta)
+        public void HandleMovementAndSprint(float delta)
         {
             if (inputHandler.rollFlag)
             {
@@ -110,13 +110,14 @@ namespace RY
             }
             else
             {
+                playerManager.isSprinting = false;
                 moveDirection *= speed;
             }
 
             Vector3 projectedVelocity = Vector3.ProjectOnPlane(moveDirection, normalVector);
             rb.velocity = projectedVelocity;
 
-            animatorHandler.UpdateAnimatorValues(0, inputHandler.moveAmount, playerManager.isSprinting);
+            animatorHandler.UpdateAnimatorValues(0, inputHandler.moveAmount, inputHandler.sprintFlag);
 
             if (animatorHandler.canRotate)
             {
@@ -124,7 +125,7 @@ namespace RY
             }
         }
 
-        public void HandleRollAndSprint(float delta)
+        public void HandleRoll(float delta)
         {
             if (playerManager.isInteracting)
             {
@@ -133,11 +134,11 @@ namespace RY
 
             if (inputHandler.rollFlag)
             {
-                moveDirection = cameraObject.forward * inputHandler.vertical;
-                moveDirection += cameraObject.right * inputHandler.horizontal;
-
                 if (inputHandler.moveAmount > 0)
                 {
+                    moveDirection = cameraObject.forward * inputHandler.vertical;
+                    moveDirection += cameraObject.right * inputHandler.horizontal;
+
                     animatorHandler.PlayTargetAnimation("Rolling", true);
                     moveDirection.y = 0;
                     Quaternion rollRotation = Quaternion.LookRotation(moveDirection);
