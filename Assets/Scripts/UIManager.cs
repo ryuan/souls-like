@@ -13,6 +13,7 @@ namespace RY
         public GameObject hudWindow;
         public GameObject selectWindow;
         public GameObject weaponInventoryWindow;
+        public GameObject equipmentWindow;
 
         [Header("Weapon Inventory")]
         public GameObject weaponInventorySlotPrefab;
@@ -72,6 +73,7 @@ namespace RY
         public void CloseAllInventoryWindows()
         {
             weaponInventoryWindow.SetActive(false);
+            equipmentWindow.SetActive(false);
         }
     }
 }

@@ -158,7 +158,8 @@ namespace RY
             Vector3 origin = myTransform.position;
             origin.y += groundDetectionRayStartPoint;
 
-            if (Physics.Raycast(origin, myTransform.forward, out hit, 0.2f))
+            Debug.DrawRay(origin, myTransform.forward * 0.15f, Color.red);
+            if (Physics.Raycast(origin, myTransform.forward, out hit, 0.15f))
             {
                 moveDirection = Vector3.zero;
             }
@@ -187,7 +188,6 @@ namespace RY
                 {
                     if (inAirTimer > 0.5f)
                     {
-                        Debug.Log("You were in the air for " + inAirTimer);
                         animatorHandler.PlayTargetAnimation("Land", true);
                         inAirTimer = 0;
                     }

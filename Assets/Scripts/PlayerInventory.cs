@@ -19,6 +19,8 @@ namespace RY
 
         public List<WeaponItem> weaponsInventory;
 
+
+
         private void Awake()
         {
             weaponSlotManager = GetComponentInChildren<WeaponSlotManager>();
