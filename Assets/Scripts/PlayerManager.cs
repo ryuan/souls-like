@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace RY
 {
-    public class PlayerManager : MonoBehaviour
+    public class PlayerManager : CharacterManager
     {
         CameraHandler cameraHandler;
         InputHandler inputHandler;
@@ -38,6 +38,8 @@ namespace RY
             interactableUI = FindObjectOfType<InteractableUI>();
         }
 
+        // Update is called every frame, before LateUpdate but after FixedUpdate.
+        // Put any functions that checks inputs and updates flags here.
         private void Update()
         {
             float delta = Time.deltaTime;
@@ -54,6 +56,9 @@ namespace RY
             CheckForInteractables();
         }
 
+        // FixedUpdate gets called every fixed frames.
+        // On frames where it's called, FixedUpdate executes before both Update and LateUpdate!
+        // Put any functions that call on Unity's physics engine to affect rigidbodies here.
         private void FixedUpdate()
         {
             float delta = Time.deltaTime;
@@ -64,6 +69,9 @@ namespace RY
             inputHandler.sprintFlag = false;
         }
 
+        // LateUpdate is called every frame after all other update functions have finished executing.
+        // Put any camera-related functions here so it tracks all objects after they've finished moving.
+        // Additionally, any flags/variables that were updated in Update should be reset here.
         private void LateUpdate()
         {
             float delta = Time.fixedDeltaTime;
@@ -78,6 +86,9 @@ namespace RY
             inputHandler.a_Input = false;
             inputHandler.jump_Input = false;
             inputHandler.inventory_Input = false;
+            inputHandler.lockOn_Input = false;
+            inputHandler.rStick_Left_Input = false;
+            inputHandler.rStick_Right_Input = false;
 
             if (cameraHandler != null)
             {
