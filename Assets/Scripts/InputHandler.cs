@@ -199,6 +199,8 @@ namespace RY
                     cameraHandler.currentLockOnTarget = cameraHandler.nearestLockOnTarget;
                     lockOnFlag = true;
                 }
+
+                cameraHandler.SetCameraHeight();
             }
             else if (lockOn_Input && lockOnFlag == true) {
                 lockOnFlag = false;
@@ -215,6 +217,8 @@ namespace RY
                     {
                         cameraHandler.currentLockOnTarget = cameraHandler.leftLockTarget;
                     }
+
+                    cameraHandler.SetCameraHeight();
                 }
                 else if (rStick_Right_Input)
                 {
@@ -224,6 +228,8 @@ namespace RY
                     {
                         cameraHandler.currentLockOnTarget = cameraHandler.rightLockTarget;
                     }
+
+                    cameraHandler.SetCameraHeight();
                 }
             }
         }

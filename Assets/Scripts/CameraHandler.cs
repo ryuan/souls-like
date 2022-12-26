@@ -7,11 +7,13 @@ namespace RY
     public class CameraHandler : MonoBehaviour
     {
         InputHandler inputHandler;
+        PlayerManager playerManager;
 
         public Transform targetTransform;
         public Transform cameraTransform;
         public Transform cameraPivotTransform;
         public LayerMask ignoreLayers;
+        public LayerMask environmentLayer;
 
         private Transform myTransform;
         private Vector3 cameraTransformPosition;
@@ -27,20 +29,21 @@ namespace RY
         private float defaultPosition;
         private float lookAngle;
         private float pivotAngle;
+        private float lockedPivotPosY;
+        private float unlockedPivotPosY;
 
         public float minPivot = -35;
         public float maxPivot = 35;
         public float cameraSphereRadius = 0.2f;
         public float cameraCollisionOffset = 0.2f;
         public float minCollisionOffset = 0.2f;
-        public float lockedPivotPosition = 2.25f;
-        public float unlockedPivotPosition = 1.65f;
+        public float lockedPivotPosYLift = 0.6f;
 
         List<CharacterManager> availableTargets = new List<CharacterManager>();
         public Transform nearestLockOnTarget;
+        public Transform currentLockOnTarget;
         public Transform leftLockTarget;
         public Transform rightLockTarget;
-        public Transform currentLockOnTarget;
         public float maxLockOnDistance = 30f;
 
 
@@ -48,12 +51,20 @@ namespace RY
         private void Awake()
         {
             inputHandler = FindObjectOfType<InputHandler>();
+            playerManager = FindObjectOfType<PlayerManager>();
 
             singleton = this;
             myTransform = transform;
             defaultPosition = cameraTransform.localPosition.z;
             ignoreLayers = ~(1 << 8 | 1 << 9 | 1 << 10);
             targetTransform = FindObjectOfType<PlayerManager>().transform;
+            unlockedPivotPosY = cameraPivotTransform.position.y;
+            lockedPivotPosY = unlockedPivotPosY + lockedPivotPosYLift;
+        }
+
+        private void Start()
+        {
+            environmentLayer = LayerMask.NameToLayer("Environment");
         }
 
         public void FollowTarget(float delta)
@@ -147,9 +158,24 @@ namespace RY
                     float viewableAngle = Vector3.Angle(lockTargetDirection, cameraTransform.forward);
 
                     if (character.transform.root != targetTransform.transform.root
-                        && viewableAngle > -50 && viewableAngle < 50 && distanceFromTarget <= maxLockOnDistance)
+                        && viewableAngle > -50
+                        && viewableAngle < 50
+                        && distanceFromTarget <= maxLockOnDistance)
                     {
-                        availableTargets.Add(character);
+                        RaycastHit hit;
+
+                        if (Physics.Linecast(playerManager.lockOnTransform.position, character.lockOnTransform.position, out hit))
+                        {
+                            Debug.DrawLine(playerManager.lockOnTransform.position, character.lockOnTransform.position);
+                            if (hit.transform.gameObject.layer == environmentLayer)
+                            {
+
+                            }
+                            else
+                            {
+                                availableTargets.Add(character);
+                            }
+                        }
                     }
                 }
             }
@@ -183,8 +209,6 @@ namespace RY
                     }
                 }
             }
-
-            SetCameraHeight();
         }
 
         public void ClearLockOnTargets()
@@ -194,19 +218,21 @@ namespace RY
             currentLockOnTarget = null;
         }
 
-        private void SetCameraHeight()
+        public void SetCameraHeight()
         {
             Vector3 velocity = Vector3.zero;
-            Vector3 newLockedPos = new Vector3(0, lockedPivotPosition);
-            Vector3 newUnlockedPos = new Vector3(0, unlockedPivotPosition);
+            Vector3 newLockedPos = new Vector3(0, lockedPivotPosY);
+            Vector3 newUnlockedPos = new Vector3(0, unlockedPivotPosY);
 
             if (currentLockOnTarget != null)
             {
                 cameraPivotTransform.transform.localPosition = Vector3.SmoothDamp(cameraPivotTransform.transform.localPosition, newLockedPos, ref velocity, Time.deltaTime);
+                Debug.Log("raising camera pivot on target lock");
             }
             else
             {
                 cameraPivotTransform.transform.localPosition = Vector3.SmoothDamp(cameraPivotTransform.transform.localPosition, newUnlockedPos, ref velocity, Time.deltaTime);
+                Debug.Log("lowering camera pivot on target lock");
             }
         }
     }

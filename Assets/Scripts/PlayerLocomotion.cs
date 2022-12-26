@@ -112,59 +112,31 @@ namespace RY
 
         public void HandleRotation(float delta)
         {
-            if (inputHandler.lockOnFlag)
+            Vector3 targetDir;
+
+            if (inputHandler.lockOnFlag == false || inputHandler.sprintFlag || inputHandler.rollFlag)
             {
-                if (inputHandler.sprintFlag || inputHandler.rollFlag)
-                {
-                    Vector3 targetDir = Vector3.zero;
-                    targetDir = cameraObject.forward * inputHandler.vertical;
-                    targetDir += cameraObject.right * inputHandler.horizontal;
-                    targetDir.Normalize();
-                    targetDir.y = 0;
-
-                    if (targetDir == Vector3.zero)
-                    {
-                        targetDir = myTransform.forward;
-                    }
-
-                    Quaternion tr = Quaternion.LookRotation(targetDir);
-                    Quaternion targetRotation = Quaternion.Slerp(myTransform.rotation, tr, rotationSpeed * delta);
-
-                    myTransform.rotation = targetRotation;
-                }
-                else
-                {
-                    Vector3 targetDir = moveDirection;
-                    targetDir = cameraHandler.currentLockOnTarget.position - transform.position;
-                    targetDir.y = 0;
-                    targetDir.Normalize();
-                    Quaternion tr = Quaternion.LookRotation(targetDir);
-                    Quaternion targetRotation = Quaternion.Slerp(myTransform.rotation, tr, rotationSpeed * delta);
-                    transform.rotation = targetRotation;
-                }
-            }
-            else
-            {
-                Vector3 targetDir = Vector3.zero;
-                float moveOverride = inputHandler.moveAmount;
-
                 targetDir = cameraObject.forward * inputHandler.vertical;
                 targetDir += cameraObject.right * inputHandler.horizontal;
-                targetDir.Normalize();
                 targetDir.y = 0;
+                targetDir.Normalize();
 
                 if (targetDir == Vector3.zero)
                 {
                     targetDir = myTransform.forward;
                 }
-
-                float rs = rotationSpeed;
-
-                Quaternion tr = Quaternion.LookRotation(targetDir);
-                Quaternion targetRotation = Quaternion.Slerp(myTransform.rotation, tr, rs * delta);
-
-                myTransform.rotation = targetRotation;
             }
+            else
+            {
+                targetDir = cameraHandler.currentLockOnTarget.position - transform.position;
+                targetDir.y = 0;
+                targetDir.Normalize();
+            }
+
+            Quaternion tr = Quaternion.LookRotation(targetDir);
+            Quaternion targetRotation = Quaternion.Slerp(myTransform.rotation, tr, rotationSpeed * delta);
+
+            myTransform.rotation = targetRotation;
         }
 
         public void HandleRoll(float delta)
