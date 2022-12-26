@@ -33,6 +33,8 @@ namespace RY
         public float cameraSphereRadius = 0.2f;
         public float cameraCollisionOffset = 0.2f;
         public float minCollisionOffset = 0.2f;
+        public float lockedPivotPosition = 2.25f;
+        public float unlockedPivotPosition = 1.65f;
 
         List<CharacterManager> availableTargets = new List<CharacterManager>();
         public Transform nearestLockOnTarget;
@@ -181,6 +183,8 @@ namespace RY
                     }
                 }
             }
+
+            SetCameraHeight();
         }
 
         public void ClearLockOnTargets()
@@ -188,6 +192,22 @@ namespace RY
             availableTargets.Clear();
             nearestLockOnTarget = null;
             currentLockOnTarget = null;
+        }
+
+        private void SetCameraHeight()
+        {
+            Vector3 velocity = Vector3.zero;
+            Vector3 newLockedPos = new Vector3(0, lockedPivotPosition);
+            Vector3 newUnlockedPos = new Vector3(0, unlockedPivotPosition);
+
+            if (currentLockOnTarget != null)
+            {
+                cameraPivotTransform.transform.localPosition = Vector3.SmoothDamp(cameraPivotTransform.transform.localPosition, newLockedPos, ref velocity, Time.deltaTime);
+            }
+            else
+            {
+                cameraPivotTransform.transform.localPosition = Vector3.SmoothDamp(cameraPivotTransform.transform.localPosition, newUnlockedPos, ref velocity, Time.deltaTime);
+            }
         }
     }
 }
