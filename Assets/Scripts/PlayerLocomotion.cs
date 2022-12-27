@@ -128,7 +128,7 @@ namespace RY
             }
             else
             {
-                targetDir = cameraHandler.currentLockOnTarget.position - transform.position;
+                targetDir = cameraHandler.currentLockOnTarget.transform.position - transform.position;
                 targetDir.y = 0;
                 targetDir.Normalize();
             }

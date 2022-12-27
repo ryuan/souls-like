@@ -6,6 +6,16 @@ namespace RY
 {
     public class InputHandler : MonoBehaviour
     {
+        PlayerControls inputActions;
+        PlayerAttacker playerAttacker;
+        PlayerInventory playerInventory;
+        PlayerManager playerManager;
+        CameraHandler cameraHandler;
+        UIManager uiManager;
+
+        Vector2 movementInput;
+        Vector2 cameraInput;
+
         public float horizontal;
         public float vertical;
         public float moveAmount;
@@ -34,16 +44,6 @@ namespace RY
         public bool comboFlag;
         public bool lockOnFlag;
         public bool inventoryFlag;
-
-        PlayerControls inputActions;
-        PlayerAttacker playerAttacker;
-        PlayerInventory playerInventory;
-        PlayerManager playerManager;
-        CameraHandler cameraHandler;
-        UIManager uiManager;
-
-        Vector2 movementInput;
-        Vector2 cameraInput;
 
 
 
