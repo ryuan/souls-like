@@ -6,45 +6,47 @@ namespace RY
 {
     public class CameraHandler : MonoBehaviour
     {
-        InputHandler inputHandler;
-        PlayerManager playerManager;
-
-        public Transform targetTransform;
-        public Transform cameraTransform;
-        public Transform cameraPivotTransform;
-        public LayerMask ignoreLayers;
-        public LayerMask environmentLayer;
-
-        private Transform myTransform;
-        private Vector3 cameraTransformPosition;
-        private Vector3 cameraFollowVelocity = Vector3.zero;
-
         public static CameraHandler singleton;
 
+        InputHandler inputHandler;
+        PlayerManager playerManager;
+        Transform playerTransform;
+        Transform mainCameraTransform;
+        Transform cameraPivotTransform;
+
+        [Header("Camera Movement Attributes")]
         public float lookSpeed = 0.1f;
         public float followSpeed = 0.1f;
         public float pivotSpeed = 0.03f;
-
-        private float targetPosition;
-        private float defaultPosition;
-        private float lookAngle;
-        private float pivotAngle;
-        private float lockedPivotPosY;
-        private float unlockedPivotPosY;
-
         public float minPivot = -35;
         public float maxPivot = 35;
-        public float cameraSphereRadius = 0.2f;
+
+        float lookAngle;
+        float pivotAngle;
+        Vector3 followVelocity = Vector3.zero;
+
+        [Header("Collision Controls")]
+        public float detectionSphereRadius = 0.2f;
         public float cameraCollisionOffset = 0.2f;
         public float minCollisionOffset = 0.2f;
-        public float lockedPivotPosYLift = 0.6f;
+        public LayerMask ignoreLayers;
 
-        List<CharacterManager> availableTargets = new List<CharacterManager>();
+        float defaultMainCamLocalPosZ;
+        float targetMainCamLocalPosZ;
+        Vector3 lerpingMainCamPos;
+        
+        [Header("Target Locked Camera")]
+        public float maxLockOnDistance = 30f;
+        public float lockedPivotPosYLift = 0.6f;
         public Transform nearestLockOnTarget;
         public Transform currentLockOnTarget;
         public Transform leftLockTarget;
         public Transform rightLockTarget;
-        public float maxLockOnDistance = 30f;
+
+        List<CharacterManager> availableTargets = new List<CharacterManager>();
+        Vector3 lockedPivotPos;
+        Vector3 unlockedPivotPos;
+        Vector3 pivotVelocity = Vector3.zero;
 
 
 
@@ -52,28 +54,24 @@ namespace RY
         {
             inputHandler = FindObjectOfType<InputHandler>();
             playerManager = FindObjectOfType<PlayerManager>();
+            playerTransform = FindObjectOfType<PlayerManager>().transform;
+            mainCameraTransform = Camera.main.transform;
+            cameraPivotTransform = this.transform.GetChild(0);
 
-            singleton = this;
-            myTransform = transform;
-            defaultPosition = cameraTransform.localPosition.z;
+            defaultMainCamLocalPosZ = mainCameraTransform.localPosition.z;
             ignoreLayers = ~(1 << 8 | 1 << 9 | 1 << 10);
-            targetTransform = FindObjectOfType<PlayerManager>().transform;
-            unlockedPivotPosY = cameraPivotTransform.position.y;
-            lockedPivotPosY = unlockedPivotPosY + lockedPivotPosYLift;
-        }
-
-        private void Start()
-        {
-            environmentLayer = LayerMask.NameToLayer("Environment");
+            unlockedPivotPos = cameraPivotTransform.position;
+            lockedPivotPos = unlockedPivotPos + new Vector3(0, lockedPivotPosYLift);
+            singleton = this;
         }
 
         public void FollowTarget(float delta)
         {
             Vector3 followPosition = Vector3.SmoothDamp(
-                myTransform.position, targetTransform.position, ref cameraFollowVelocity, delta / followSpeed
+                transform.position, playerTransform.position, ref followVelocity, delta / followSpeed
                 );
 
-            myTransform.position = followPosition;
+            transform.position = followPosition;
             HandleCameraCollisions(delta);
         }
 
@@ -88,7 +86,7 @@ namespace RY
                 Vector3 rotation = Vector3.zero;
                 rotation.y = lookAngle;
                 Quaternion targetRotation = Quaternion.Euler(rotation);
-                myTransform.rotation = targetRotation;
+                transform.rotation = targetRotation;
 
                 rotation = Vector3.zero;
                 rotation.x = pivotAngle;
@@ -116,31 +114,31 @@ namespace RY
 
         private void HandleCameraCollisions(float delta)
         {
-            targetPosition = defaultPosition;
+            targetMainCamLocalPosZ = defaultMainCamLocalPosZ;
             RaycastHit hit;
-            Vector3 direction = cameraTransform.position - cameraPivotTransform.position;
+            Vector3 direction = mainCameraTransform.position - cameraPivotTransform.position;
             direction.Normalize();
 
             if (Physics.SphereCast(
-                cameraPivotTransform.position, cameraSphereRadius, direction, out hit, Mathf.Abs(targetPosition), ignoreLayers
+                cameraPivotTransform.position, detectionSphereRadius, direction, out hit, Mathf.Abs(targetMainCamLocalPosZ), ignoreLayers
                 ))
             {
                 float dis = Vector3.Distance(cameraPivotTransform.position, hit.point);
-                targetPosition = -(dis - cameraCollisionOffset);
+                targetMainCamLocalPosZ = -(dis - cameraCollisionOffset);
 
-                if (Mathf.Abs(targetPosition) < minCollisionOffset)
+                if (Mathf.Abs(targetMainCamLocalPosZ) < minCollisionOffset)
                 {
-                    targetPosition = -minCollisionOffset;
+                    targetMainCamLocalPosZ = -minCollisionOffset;
                 }
             }
 
-            cameraTransformPosition.z = Mathf.Lerp(cameraTransform.localPosition.z, targetPosition, delta / 0.1f);
-            cameraTransform.localPosition = cameraTransformPosition;
+            lerpingMainCamPos.z = Mathf.Lerp(mainCameraTransform.localPosition.z, targetMainCamLocalPosZ, delta / 0.1f);
+            mainCameraTransform.localPosition = lerpingMainCamPos;
         }
 
         public void HandleLockOn()
         {
-            Collider[] colliders = Physics.OverlapSphere(targetTransform.position, 26);
+            Collider[] colliders = Physics.OverlapSphere(playerTransform.position, 26);
             float shortestDistance = Mathf.Infinity;
             float shortestDistOfLeftTarget = Mathf.Infinity;
             float shortestDistOfRightTarget = Mathf.Infinity;
@@ -151,11 +149,11 @@ namespace RY
 
                 if (character != null)
                 {
-                    Vector3 lockTargetDirection = character.transform.position - targetTransform.position;
-                    float distanceFromTarget = Vector3.Distance(targetTransform.position, character.transform.position);
-                    float viewableAngle = Vector3.Angle(lockTargetDirection, cameraTransform.forward);
+                    Vector3 lockTargetDirection = character.transform.position - playerTransform.position;
+                    float distanceFromTarget = Vector3.Distance(playerTransform.position, character.transform.position);
+                    float viewableAngle = Vector3.Angle(lockTargetDirection, mainCameraTransform.forward);
 
-                    if (character.transform.root != targetTransform.transform.root
+                    if (character.transform.root != playerTransform.transform.root
                         && viewableAngle > -50
                         && viewableAngle < 50
                         && distanceFromTarget <= maxLockOnDistance)
@@ -183,7 +181,7 @@ namespace RY
 
             for (int k = 0; k < availableTargets.Count; k++)
             {
-                float distanceFromTarget = Vector3.Distance(targetTransform.position, availableTargets[k].transform.position);
+                float distanceFromTarget = Vector3.Distance(playerTransform.position, availableTargets[k].transform.position);
 
                 if (distanceFromTarget < shortestDistance)
                 {
@@ -221,17 +219,17 @@ namespace RY
 
         public void SetCameraHeight()
         {
-            Vector3 velocity = Vector3.zero;
-            Vector3 newLockedPos = new Vector3(0, lockedPivotPosY);
-            Vector3 newUnlockedPos = new Vector3(0, unlockedPivotPosY);
-
             if (currentLockOnTarget != null)
             {
-                cameraPivotTransform.transform.localPosition = Vector3.SmoothDamp(cameraPivotTransform.transform.localPosition, newLockedPos, ref velocity, Time.deltaTime);
+                cameraPivotTransform.transform.localPosition = Vector3.SmoothDamp(
+                    cameraPivotTransform.transform.localPosition, lockedPivotPos, ref pivotVelocity, Time.deltaTime
+                    );
             }
             else
             {
-                cameraPivotTransform.transform.localPosition = Vector3.SmoothDamp(cameraPivotTransform.transform.localPosition, newUnlockedPos, ref velocity, Time.deltaTime);
+                cameraPivotTransform.transform.localPosition = Vector3.SmoothDamp(
+                    cameraPivotTransform.transform.localPosition, unlockedPivotPos, ref pivotVelocity, Time.deltaTime
+                    );
             }
         }
     }
