@@ -97,8 +97,6 @@ namespace RY
             }
             else
             {
-                //float velocity = 0;
-
                 Vector3 dir = currentLockOnTarget.position - transform.position;
                 dir.Normalize();
                 dir.y = 0;
@@ -164,16 +162,19 @@ namespace RY
                     {
                         RaycastHit hit;
 
+                        Debug.DrawLine(playerManager.lockOnTransform.position, character.lockOnTransform.position, Color.red, 2f);
                         if (Physics.Linecast(playerManager.lockOnTransform.position, character.lockOnTransform.position, out hit))
                         {
-                            Debug.DrawLine(playerManager.lockOnTransform.position, character.lockOnTransform.position);
-                            if (hit.transform.gameObject.layer == environmentLayer)
-                            {
+                            Debug.Log(hit.transform.gameObject.name);
 
+                            if (hit.transform.gameObject.GetComponent<CharacterManager>() != null)
+                            {
+                                availableTargets.Add(character);
                             }
                             else
                             {
-                                availableTargets.Add(character);
+                                // Pass
+                                Debug.Log("Linecast hit some non-enemy collider");
                             }
                         }
                     }
@@ -227,12 +228,10 @@ namespace RY
             if (currentLockOnTarget != null)
             {
                 cameraPivotTransform.transform.localPosition = Vector3.SmoothDamp(cameraPivotTransform.transform.localPosition, newLockedPos, ref velocity, Time.deltaTime);
-                Debug.Log("raising camera pivot on target lock");
             }
             else
             {
                 cameraPivotTransform.transform.localPosition = Vector3.SmoothDamp(cameraPivotTransform.transform.localPosition, newUnlockedPos, ref velocity, Time.deltaTime);
-                Debug.Log("lowering camera pivot on target lock");
             }
         }
     }
