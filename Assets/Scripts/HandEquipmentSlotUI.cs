@@ -7,17 +7,20 @@ namespace RY
 {
     public class HandEquipmentSlotUI : MonoBehaviour
     {
+        UIManager uIManager;
+
+        public Slot handSlot;
         public Image icon;
+
+        [SerializeField]
         WeaponItem weapon;
 
-        public bool rightHandSlot1;
-        public bool rightHandSlot2;
-        public bool rightHandSlot3;
-        public bool rightHandSlot4;
-        public bool leftHandSlot1;
-        public bool leftHandSlot2;
-        public bool leftHandSlot3;
-        public bool leftHandSlot4;
+
+
+        private void Awake()
+        {
+            uIManager = FindObjectOfType<UIManager>();
+        }
 
         public void AddItem(WeaponItem newWeapon)
         {
@@ -36,6 +39,11 @@ namespace RY
             icon.sprite = null;
             icon.enabled = false;
             gameObject.SetActive(false);
+        }
+
+        public void SelectThisSlot()
+        {
+            uIManager.selectedSlot = handSlot;
         }
     }
 

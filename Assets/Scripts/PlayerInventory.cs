@@ -1,4 +1,4 @@
- using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -12,10 +12,10 @@ namespace RY
         public WeaponItem rightWeapon;
         public WeaponItem unarmed;
 
-        public WeaponItem[] weaponsInLeftHandSlot;
-        public WeaponItem[] weaponsInRightHandSlot;
-        public int currentLeftWeaponIndex = -1;
-        public int currentRightWeaponIndex = -1;
+        public WeaponItem[] weaponsInLeftHandSlot = new WeaponItem[4];
+        public WeaponItem[] weaponsInRightHandSlot = new WeaponItem[4];
+        public int currentLeftWeaponIndex;
+        public int currentRightWeaponIndex;
 
         public List<WeaponItem> weaponsInventory;
 
@@ -29,7 +29,25 @@ namespace RY
         private void Start()
         {
             leftWeapon = unarmed;
+            currentLeftWeaponIndex = -1;
             rightWeapon = unarmed;
+            currentRightWeaponIndex = -1;
+
+            for (int i = 0; i < weaponsInLeftHandSlot.Length; i++)
+            {
+                if (weaponsInLeftHandSlot[i] != null)
+                {
+                    leftWeapon = weaponsInLeftHandSlot[i];
+                    currentLeftWeaponIndex = i;
+                }
+
+                if (weaponsInRightHandSlot[i] != null)
+                {
+                    rightWeapon = weaponsInRightHandSlot[i];
+                    currentRightWeaponIndex = i;
+                }
+            }
+
             weaponSlotManager.LoadWeaponOnSlot(leftWeapon, true);
             weaponSlotManager.LoadWeaponOnSlot(rightWeapon, false);
         }

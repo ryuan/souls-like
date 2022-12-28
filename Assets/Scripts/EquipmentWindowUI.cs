@@ -6,99 +6,89 @@ namespace RY
 {
     public class EquipmentWindowUI : MonoBehaviour
     {
-        public bool rightHandSlot1Selected;
-        public bool rightHandSlot2Selected;
-        public bool rightHandSlot3Selected;
-        public bool rightHandSlot4Selected;
-        public bool leftHandSlot1Selected;
-        public bool leftHandSlot2Selected;
-        public bool leftHandSlot3Selected;
-        public bool leftHandSlot4Selected;
+        public Slot selectedSlot;
 
         HandEquipmentSlotUI[] handEquipmentSlotUI;
 
-        private void Start()
-        {
-            handEquipmentSlotUI = GetComponentsInChildren<HandEquipmentSlotUI>();
-        }
+
 
         public void LoadWeaponsOnEquipmentScreen(PlayerInventory playerInventory)
         {
+            handEquipmentSlotUI = GetComponentsInChildren<HandEquipmentSlotUI>();
+
+            Debug.Log("Loading weapons to UI Equipment Screen Window");
             for (int i = 0; i < handEquipmentSlotUI.Length; i++)
             {
-                if (handEquipmentSlotUI[i].rightHandSlot1)
+                switch (handEquipmentSlotUI[i].handSlot)
                 {
-                    handEquipmentSlotUI[i].AddItem(playerInventory.weaponsInRightHandSlot[0]);
-                }
-                else if (handEquipmentSlotUI[i].rightHandSlot2)
-                {
-                    handEquipmentSlotUI[i].AddItem(playerInventory.weaponsInRightHandSlot[1]);
-                }
-                else if (handEquipmentSlotUI[i].rightHandSlot3)
-                {
-                    handEquipmentSlotUI[i].AddItem(playerInventory.weaponsInRightHandSlot[2]);
-                }
-                else if (handEquipmentSlotUI[i].rightHandSlot4)
-                {
-                    handEquipmentSlotUI[i].AddItem(playerInventory.weaponsInRightHandSlot[3]);
-                }
-                else if (handEquipmentSlotUI[i].leftHandSlot1)
-                {
-                    handEquipmentSlotUI[i].AddItem(playerInventory.weaponsInLeftHandSlot[0]);
-                }
-                else if (handEquipmentSlotUI[i].leftHandSlot2)
-                {
-                    handEquipmentSlotUI[i].AddItem(playerInventory.weaponsInLeftHandSlot[1]);
-                }
-                else if (handEquipmentSlotUI[i].leftHandSlot3)
-                {
-                    handEquipmentSlotUI[i].AddItem(playerInventory.weaponsInLeftHandSlot[2]);
-                }
-                else if (handEquipmentSlotUI[i].leftHandSlot4)
-                {
-                    handEquipmentSlotUI[i].AddItem(playerInventory.weaponsInLeftHandSlot[3]);
+                    case Slot.LEFT1:
+                        handEquipmentSlotUI[i].AddItem(playerInventory.weaponsInLeftHandSlot[0]);
+                        break;
+                    case Slot.LEFT2:
+                        handEquipmentSlotUI[i].AddItem(playerInventory.weaponsInLeftHandSlot[1]);
+                        break;
+                    case Slot.LEFT3:
+                        handEquipmentSlotUI[i].AddItem(playerInventory.weaponsInLeftHandSlot[2]);
+                        break;
+                    case Slot.LEFT4:
+                        handEquipmentSlotUI[i].AddItem(playerInventory.weaponsInLeftHandSlot[3]);
+                        break;
+                    case Slot.RIGHT1:
+                        handEquipmentSlotUI[i].AddItem(playerInventory.weaponsInRightHandSlot[0]);
+                        break;
+                    case Slot.RIGHT2:
+                        handEquipmentSlotUI[i].AddItem(playerInventory.weaponsInRightHandSlot[1]);
+                        break;
+                    case Slot.RIGHT3:
+                        handEquipmentSlotUI[i].AddItem(playerInventory.weaponsInRightHandSlot[2]);
+                        break;
+                    case Slot.RIGHT4:
+                        handEquipmentSlotUI[i].AddItem(playerInventory.weaponsInRightHandSlot[3]);
+                        break;
+                    default:
+                        break;
                 }
             }
         }
 
-        public void SelectRightHandSlot1()
-        {
-            rightHandSlot1Selected = true;
-        }
-
-        public void SelectRightHandSlot2()
-        {
-            rightHandSlot2Selected = true;
-        }
-
-        public void SelectRightHandSlot3()
-        {
-            rightHandSlot3Selected = true;
-        }
-
-        public void SelectRightHandSlot4()
-        {
-            rightHandSlot4Selected = true;
-        }
-
         public void SelectLeftHandSlot1()
         {
-            leftHandSlot1Selected = true;
+            selectedSlot = Slot.LEFT1;
         }
 
         public void SelectLeftHandSlot2()
         {
-            leftHandSlot2Selected = true;
+            selectedSlot = Slot.LEFT2;
         }
 
         public void SelectLeftHandSlot3()
         {
-            leftHandSlot3Selected = true;
+            selectedSlot = Slot.LEFT3;
         }
 
         public void SelectLeftHandSlot4()
         {
-            leftHandSlot4Selected = true;
+            selectedSlot = Slot.LEFT4;
+        }
+
+        public void SelectRightHandSlot1()
+        {
+            selectedSlot = Slot.RIGHT1;
+        }
+
+        public void SelectRightHandSlot2()
+        {
+            selectedSlot = Slot.RIGHT2;
+        }
+
+        public void SelectRightHandSlot3()
+        {
+            selectedSlot = Slot.RIGHT3;
+        }
+
+        public void SelectRightHandSlot4()
+        {
+            selectedSlot = Slot.RIGHT4;
         }
     }
 

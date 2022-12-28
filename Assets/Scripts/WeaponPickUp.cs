@@ -8,7 +8,14 @@ namespace RY
 {
     public class WeaponPickUp : Interactable
     {
+        UIManager uIManager;
+
         public WeaponItem weapon;
+
+        private void Awake()
+        {
+            uIManager = FindObjectOfType<UIManager>();
+        }
 
         public override void Interact(PlayerManager playerManager)
         {
@@ -32,6 +39,9 @@ namespace RY
             playerManager.itemInteractableUIGameObject.GetComponentInChildren<TextMeshProUGUI>().text = weapon.itemName;
             playerManager.itemInteractableUIGameObject.GetComponentInChildren<RawImage>().texture = weapon.itemIcon.texture;
             playerManager.itemInteractableUIGameObject.SetActive(true);
+
+            uIManager.UpdateUI();
+
             Destroy(gameObject);
         }
     }

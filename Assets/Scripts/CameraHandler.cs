@@ -160,7 +160,7 @@ namespace RY
                     {
                         RaycastHit hit;
 
-                        Debug.DrawLine(playerManager.lockOnTransform.position, character.lockOnTransform.position, Color.red, 2f);
+                        Debug.DrawLine(playerManager.lockOnTransform.position, character.lockOnTransform.position, Color.red, 1.5f);
                         if (Physics.Linecast(playerManager.lockOnTransform.position, character.lockOnTransform.position, out hit))
                         {
                             Debug.Log(hit.transform.gameObject.name);
@@ -191,20 +191,22 @@ namespace RY
 
                 if (inputHandler.lockOnFlag)
                 {
-                    //Vector3 relativeEnemyPosition = currentLockOnTarget.transform.InverseTransformPoint(availableTargets[k].transform.position);
-                    //var distanceFromLeftTarget = currentLockOnTarget.transform.position.x - availableTargets[k].transform.position.x;
-                    //var distanceFromRightTarget = currentLockOnTarget.transform.position.x + availableTargets[k].transform.position.x;
-
                     Vector3 relativeEnemyPosition = inputHandler.transform.InverseTransformPoint(availableTargets[k].transform.position);
                     var distanceFromLeftTarget = relativeEnemyPosition.x;
                     var distanceFromRightTarget = relativeEnemyPosition.x;
 
-                    if (relativeEnemyPosition.x <= 0 && distanceFromLeftTarget > shortestDistOfLeftTarget && availableTargets[k] != currentLockOnTarget)
+                    if (relativeEnemyPosition.x <= 0
+                        && distanceFromLeftTarget > shortestDistOfLeftTarget
+                        && availableTargets[k] != currentLockOnTarget
+                        )
                     {
                         shortestDistOfLeftTarget = distanceFromLeftTarget;
                         leftLockTarget = availableTargets[k];
                     }
-                    else if (relativeEnemyPosition.x >= 0 && distanceFromRightTarget < shortestDistOfRightTarget && availableTargets[k] != currentLockOnTarget)
+                    else if (relativeEnemyPosition.x >= 0
+                        && distanceFromRightTarget < shortestDistOfRightTarget
+                        && availableTargets[k] != currentLockOnTarget
+                        )
                     {
                         shortestDistOfRightTarget = distanceFromRightTarget;
                         rightLockTarget = availableTargets[k];
