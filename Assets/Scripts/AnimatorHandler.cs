@@ -7,6 +7,7 @@ namespace RY
     public class AnimatorHandler : MonoBehaviour
     {
         PlayerManager playerManager;
+        PlayerLocomotion playerLocomotion;
         Animator anim;
 
         int horizontal;
@@ -17,6 +18,7 @@ namespace RY
         public void Initialize()
         {
             playerManager = GetComponentInParent<PlayerManager>();
+            playerLocomotion = GetComponentInParent<PlayerLocomotion>();
             anim = GetComponent<Animator>();
 
             horizontal = Animator.StringToHash("Horizontal");
@@ -101,6 +103,23 @@ namespace RY
         public void DisableCombo()
         {
             anim.SetBool("canDoCombo", false);
+        }
+
+        // OnAnimatorMove is a MonoBehaviour callback for processing animation movements for modifying root motion.
+        // DO NOT DELETE!!!
+        private void OnAnimatorMove()
+        {
+            if (playerManager.isInteracting == false)
+            {
+                return;
+            }
+
+            float delta = Time.deltaTime;
+            playerLocomotion.rb.drag = 0;
+            Vector3 deltaPosition = anim.deltaPosition;
+            deltaPosition.y = 0;
+            Vector3 velocity = deltaPosition / delta;
+            playerLocomotion.rb.velocity = velocity;
         }
     }
 }

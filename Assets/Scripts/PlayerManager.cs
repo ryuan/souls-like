@@ -15,9 +15,8 @@ namespace RY
         public GameObject interactableUIGameObject;
         public GameObject itemInteractableUIGameObject;
 
-        public bool isInteracting;
-
         [Header("Player Flags")]
+        public bool isInteracting;
         public bool isSprinting;
         public bool isInAir;
         public bool isGrounded;

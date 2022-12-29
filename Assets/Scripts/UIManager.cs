@@ -7,12 +7,18 @@ namespace RY
     public class UIManager : MonoBehaviour
     {
         PlayerInventory playerInventory;
+        [SerializeField]
+        GameObject hudWindow;
 
-        [Header("UI Windows")]
-        public GameObject hudWindow;
-        public GameObject selectWindow;
-        public GameObject weaponInventoryWindow;
-        public GameObject equipmentScreenWindow;
+        [Header("UI Window GameObjects")]
+        [SerializeField]
+        GameObject selectWindow;
+        [SerializeField]
+        GameObject weaponInventoryWindow;
+        [SerializeField]
+        GameObject equipmentWindow;
+
+        [Header("UI Window Scripts")]
         public EquipmentWindowUI equipmentWindowUI;
 
         [Header("Equipment Window Slot Selected")]
@@ -21,15 +27,16 @@ namespace RY
         [Header("Weapon Inventory")]
         public GameObject weaponInventorySlotPrefab;
         public Transform weaponInventorySlotsParent;
-        WeaponInventorySlot[] weaponInventorySlots;
+        WeaponInventorySlotUI[] weaponInventoryWindowSlots;
 
 
 
         private void Awake()
         {
             playerInventory = FindObjectOfType<PlayerInventory>();
+
             equipmentWindowUI = FindObjectOfType<EquipmentWindowUI>(true);
-            weaponInventorySlots = weaponInventorySlotsParent.GetComponentsInChildren<WeaponInventorySlot>();
+            weaponInventoryWindowSlots = weaponInventorySlotsParent.GetComponentsInChildren<WeaponInventorySlotUI>(true);
         }
 
         private void Start()
@@ -39,44 +46,43 @@ namespace RY
 
         public void UpdateUI()
         {
-            #region Weapon Inventory Slots
-            //Debug.Log("weaponInventorySlots.Length: " + weaponInventorySlots.Length);
-            //Debug.Log("playerInventory.weaponsInventory.Count: " + playerInventory.weaponsInventory.Count);
-            for (int i = 0; i < weaponInventorySlots.Length; i++)
+            #region Update the slots in Weapon Inventory Window
+
+            for (int i = 0; i < weaponInventoryWindowSlots.Length; i++)
             {
                 if (i < playerInventory.weaponsInventory.Count)
                 {
-                    if (weaponInventorySlots.Length < playerInventory.weaponsInventory.Count)
+                    if (weaponInventoryWindowSlots.Length < playerInventory.weaponsInventory.Count)
                     {
                         Instantiate(weaponInventorySlotPrefab, weaponInventorySlotsParent);
-                        weaponInventorySlots = weaponInventorySlotsParent.GetComponentsInChildren<WeaponInventorySlot>();
+                        weaponInventoryWindowSlots = weaponInventorySlotsParent.GetComponentsInChildren<WeaponInventorySlotUI>(true);
                     }
-                    weaponInventorySlots[i].AddItem(playerInventory.weaponsInventory[i]);
+                    weaponInventoryWindowSlots[i].AddItem(playerInventory.weaponsInventory[i]);
                 }
                 else
                 {
-                    weaponInventorySlots[i].ClearInventorySlot();
+                    weaponInventoryWindowSlots[i].ClearInventorySlot();
                 }
             }
-  
+
             #endregion
         }
 
-        public void OpenSelectWindow()
+        public void SetActiveHUDWindow(bool isActive)
         {
-            selectWindow.SetActive(true);
+            hudWindow.SetActive(isActive);
         }
 
-        public void CloseSelectWindow()
+        public void SetActiveSelectWindow(bool isActive)
         {
-            selectWindow.SetActive(false);
+            selectWindow.SetActive(isActive);
         }
 
         public void CloseAllInventoryWindows()
         {
             ResetAllSelectedSlots();
             weaponInventoryWindow.SetActive(false);
-            equipmentScreenWindow.SetActive(false);
+            equipmentWindow.SetActive(false);
         }
 
         public void ResetAllSelectedSlots()

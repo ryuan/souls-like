@@ -176,15 +176,15 @@ namespace RY
 
                 if (inventoryFlag)
                 {
-                    uiManager.OpenSelectWindow();
+                    uiManager.SetActiveSelectWindow(true);
                     uiManager.UpdateUI();
-                    uiManager.hudWindow.SetActive(false);
+                    uiManager.SetActiveHUDWindow(false);
                 }
                 else
                 {
-                    uiManager.CloseSelectWindow();
+                    uiManager.SetActiveSelectWindow(false);
                     uiManager.CloseAllInventoryWindows();
-                    uiManager.hudWindow.SetActive(true);
+                    uiManager.SetActiveHUDWindow(true);
                 }
             }
         }

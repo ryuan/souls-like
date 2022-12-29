@@ -24,4 +24,4 @@ MonoBehaviour:
   ohHeavyAtk1: OH_Heavy_Attack_01
   baseStamina: 25
   lightAtkMultipler: 1
-  heavyAtkMultipler: 2
+  heavyAtkMultipler: 2.5

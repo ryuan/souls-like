@@ -10,8 +10,12 @@ namespace RY
 
         InputHandler inputHandler;
         PlayerManager playerManager;
+
+        [SerializeField]
         Transform playerTransform;
+        [SerializeField]
         Transform mainCameraTransform;
+        [SerializeField]
         Transform cameraPivotTransform;
 
         [Header("Camera Movement Attributes")]
