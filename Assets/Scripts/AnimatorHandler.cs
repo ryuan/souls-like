@@ -7,13 +7,10 @@ namespace RY
     public class AnimatorHandler : MonoBehaviour
     {
         PlayerManager playerManager;
-        InputHandler inputHandler;
-        PlayerLocomotion playerLocomotion;
-        public Animator anim;
+        Animator anim;
 
         int horizontal;
         int vertical;
-        public bool canRotate;
 
 
 
@@ -21,8 +18,7 @@ namespace RY
         {
             playerManager = GetComponentInParent<PlayerManager>();
             anim = GetComponent<Animator>();
-            inputHandler = GetComponentInParent<InputHandler>();
-            playerLocomotion = GetComponentInParent<PlayerLocomotion>();
+
             horizontal = Animator.StringToHash("Horizontal");
             vertical= Animator.StringToHash("Vertical");
         }
@@ -97,16 +93,6 @@ namespace RY
             Debug.Log("Animation: " + targetAnim + ", isInteracting: " + isInteracting + ", playerManager: " + playerManager.isInteracting + ", anim: " + anim.GetBool("isInteracting"));
         }
 
-        public void CanRotate()
-        {
-            canRotate = true;
-        }
-
-        public void StopRotate()
-        {
-            canRotate = false;
-        }
-
         public void EnableCombo()
         {
             anim.SetBool("canDoCombo", true);
@@ -115,21 +101,6 @@ namespace RY
         public void DisableCombo()
         {
             anim.SetBool("canDoCombo", false);
-        }
-
-        private void OnAnimatorMove()
-        {
-            if (playerManager.isInteracting == false)
-            {
-                return;
-            }
-            
-            float delta = Time.deltaTime;
-            playerLocomotion.rb.drag = 0;
-            Vector3 deltaPosition = anim.deltaPosition;
-            deltaPosition.y = 0;
-            Vector3 velocity = deltaPosition / delta;
-            playerLocomotion.rb.velocity = velocity;
         }
     }
 }

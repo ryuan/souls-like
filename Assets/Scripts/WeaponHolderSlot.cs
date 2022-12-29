@@ -10,19 +10,12 @@ namespace RY
         public bool isLeftHandSlot;
         public bool isRightHandSlot;
 
-        public GameObject currentWeaponModel;
+        [SerializeField]
+        GameObject currentWeaponModel;
 
 
 
-        public void UnloadWeapon()
-        {
-            if (currentWeaponModel != null)
-            {
-                currentWeaponModel.SetActive(false);
-            }
-        }
-
-        public void UnloadWeaponAndDestroy()
+        private void UnloadWeaponAndDestroy()
         {
             if (currentWeaponModel != null)
             {
@@ -36,7 +29,6 @@ namespace RY
 
             if (weaponItem == null)
             {
-                UnloadWeapon();
                 return;
             }
 
@@ -59,6 +51,11 @@ namespace RY
             }
 
             currentWeaponModel = model;
+        }
+
+        public DamageCollider GetWeaponDamageCollider()
+        {
+            return currentWeaponModel.GetComponentInChildren<DamageCollider>();
         }
     }
 }

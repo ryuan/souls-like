@@ -43,7 +43,7 @@ namespace RY
                 leftWeaponHolderSlot.LoadWeaponModel(weaponItem);
                 quickSlotsUI.UpdateWeaponQuickSlotsUI(weaponItem, true);
                 playerAttackHandler.SetCurrentWeaponDamageCollider(
-                    leftWeaponHolderSlot.currentWeaponModel.GetComponentInChildren<DamageCollider>(), true
+                    leftWeaponHolderSlot.GetWeaponDamageCollider(), true
                     );
 
                 #region Handle Left Weapon Idle Animations
@@ -62,7 +62,7 @@ namespace RY
                 rightWeaponHolderSlot.LoadWeaponModel(weaponItem);
                 quickSlotsUI.UpdateWeaponQuickSlotsUI(weaponItem, false);
                 playerAttackHandler.SetCurrentWeaponDamageCollider(
-                    rightWeaponHolderSlot.currentWeaponModel.GetComponentInChildren<DamageCollider>(), false
+                    rightWeaponHolderSlot.GetWeaponDamageCollider(), false
                     );
 
                 #region Handle Right Weapon Idle Animations

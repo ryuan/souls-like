@@ -104,10 +104,7 @@ namespace RY
                 animatorHandler.UpdateAnimatorValues(0, inputHandler.moveAmount, inputHandler.sprintFlag);
             }
 
-            if (animatorHandler.canRotate)
-            {
-                HandleRotation(delta);
-            }
+            HandleRotation(delta);
         }
 
         public void HandleRotation(float delta)
