@@ -6,47 +6,48 @@ namespace RY
 {
     public class WeaponSlotManager : MonoBehaviour
     {
-        WeaponHolderSlot leftHandSlot;
-        WeaponHolderSlot rightHandSlot;
-
-        DamageCollider leftHandDamageCollider;
-        DamageCollider rightHandDamageCollider;
-
-        public WeaponItem currentWeapon;
-
-        Animator animator;
         QuickSlotsUI quickSlotsUI;
+        Animator animator;
         PlayerStats playerStats;
 
+        WeaponHolderSlot leftWeaponHolderSlot;
+        WeaponHolderSlot rightWeaponHolderSlot;
+
+        DamageCollider leftWeaponDamageCollider;
+        DamageCollider rightWeaponDamageCollider;
+
+        public WeaponItem latestAttackingWeapon;
+        
 
 
         private void Awake()
         {
-            WeaponHolderSlot[] weaponHolderSlots = GetComponentsInChildren<WeaponHolderSlot>();
-            animator = GetComponent<Animator>();
             quickSlotsUI = FindObjectOfType<QuickSlotsUI>();
+            animator = GetComponent<Animator>();
             playerStats = GetComponentInParent<PlayerStats>();
 
-            foreach (WeaponHolderSlot weaponSlot in weaponHolderSlots)
+            WeaponHolderSlot[] weaponHolderSlots = GetComponentsInChildren<WeaponHolderSlot>();
+
+            foreach (WeaponHolderSlot weaponHolderSlot in weaponHolderSlots)
             {
-                if (weaponSlot.isLeftHandSlot)
+                if (weaponHolderSlot.isLeftHandSlot)
                 {
-                    leftHandSlot = weaponSlot;
+                    leftWeaponHolderSlot = weaponHolderSlot;
                 }
-                else if (weaponSlot.isRightHandSlot)
+                else if (weaponHolderSlot.isRightHandSlot)
                 {
-                    rightHandSlot = weaponSlot;
+                    rightWeaponHolderSlot = weaponHolderSlot;
                 }
             }
         }
 
-        public void LoadWeaponOnSlot(WeaponItem weaponItem, bool isLeft)
+        public void LoadWeaponOnHolderSlot(WeaponItem weaponItem, bool isLeft)
         {
             if (isLeft)
             {
-                leftHandSlot.LoadWeaponModel(weaponItem);
-                LoadLeftWeaponDamageCollider();
+                leftWeaponHolderSlot.LoadWeaponModel(weaponItem);
                 quickSlotsUI.UpdateWeaponQuickSlotsUI(weaponItem, true);
+                leftWeaponDamageCollider = leftWeaponHolderSlot.currentWeaponModel.GetComponentInChildren<DamageCollider>();
 
                 #region Handle Left Weapon Idle Animations
                 if (weaponItem != null)
@@ -61,9 +62,9 @@ namespace RY
             }
             else
             {
-                rightHandSlot.LoadWeaponModel(weaponItem);
-                LoadRightWeaponDamageCollider();
+                rightWeaponHolderSlot.LoadWeaponModel(weaponItem);
                 quickSlotsUI.UpdateWeaponQuickSlotsUI(weaponItem, false);
+                rightWeaponDamageCollider = rightWeaponHolderSlot.currentWeaponModel.GetComponentInChildren<DamageCollider>();
 
                 #region Handle Right Weapon Idle Animations
                 if (weaponItem != null)
@@ -80,34 +81,24 @@ namespace RY
 
         #region Handle Weapon's Damage Collider
 
-        private void LoadLeftWeaponDamageCollider()
+        public void EnableLeftWeaponDamageCollider()
         {
-            leftHandDamageCollider = leftHandSlot.currentWeaponModel.GetComponentInChildren<DamageCollider>();
+            leftWeaponDamageCollider.EnableDamageCollider();
         }
 
-        private void LoadRightWeaponDamageCollider()
+        public void EnableRightWeaponDamageCollider()
         {
-            rightHandDamageCollider = rightHandSlot.currentWeaponModel.GetComponentInChildren<DamageCollider>();
+            rightWeaponDamageCollider.EnableDamageCollider();
         }
 
-        public void EnableLeftDamageCollider()
+        public void DisableLeftWeaponDamageCollider()
         {
-            leftHandDamageCollider.EnableDamageCollider();
+            leftWeaponDamageCollider.DisableDamageCollider();
         }
 
-        public void EnableRightDamageCollider()
+        public void DisableRightWeaponDamageCollider()
         {
-            rightHandDamageCollider.EnableDamageCollider();
-        }
-
-        public void DisableLeftDamageCollider()
-        {
-            leftHandDamageCollider.DisableDamageCollider();
-        }
-
-        public void DisableRightDamageCollider()
-        {
-            rightHandDamageCollider.DisableDamageCollider();
+            rightWeaponDamageCollider.DisableDamageCollider();
         }
 
         #endregion
@@ -115,12 +106,12 @@ namespace RY
         #region Handle Weapon's Stamina Drain
         public void DrainStaminaLightAttack()
         {
-            playerStats.DrainStamina(Mathf.RoundToInt(currentWeapon.baseStamina * currentWeapon.lightAtkMultipler));
+            playerStats.DrainStamina(Mathf.RoundToInt(latestAttackingWeapon.baseStamina * latestAttackingWeapon.lightAtkMultipler));
         }
 
         public void DrainStaminaHeavyAttack()
         {
-            playerStats.DrainStamina(Mathf.RoundToInt(currentWeapon.baseStamina * currentWeapon.heavyAtkMultipler));
+            playerStats.DrainStamina(Mathf.RoundToInt(latestAttackingWeapon.baseStamina * latestAttackingWeapon.heavyAtkMultipler));
         }
         #endregion
     }

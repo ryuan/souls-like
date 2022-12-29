@@ -43,14 +43,14 @@ namespace RY
 
         public void HandleLightAttack(WeaponItem weapon)
         {
-            weaponSlotManager.currentWeapon = weapon;
+            weaponSlotManager.latestAttackingWeapon = weapon;
             animatorHandler.PlayTargetAnimation(weapon.ohLightAtk1, true);
             lastattack = weapon.ohLightAtk1;
         }
 
         public void HandleHeavyAttack(WeaponItem weapon)
         {
-            weaponSlotManager.currentWeapon = weapon;
+            weaponSlotManager.latestAttackingWeapon = weapon;
             animatorHandler.PlayTargetAnimation(weapon.ohHeavyAtk1, true);
             lastattack = weapon.ohHeavyAtk1;
         }

@@ -22,28 +22,28 @@ namespace RY
                 switch (handEquipmentSlotUI[i].handSlot)
                 {
                     case Slot.LEFT1:
-                        handEquipmentSlotUI[i].AddItem(playerInventory.weaponsInLeftHandSlot[0]);
+                        handEquipmentSlotUI[i].AddItem(playerInventory.weaponsInLeftQuickSlots[0]);
                         break;
                     case Slot.LEFT2:
-                        handEquipmentSlotUI[i].AddItem(playerInventory.weaponsInLeftHandSlot[1]);
+                        handEquipmentSlotUI[i].AddItem(playerInventory.weaponsInLeftQuickSlots[1]);
                         break;
                     case Slot.LEFT3:
-                        handEquipmentSlotUI[i].AddItem(playerInventory.weaponsInLeftHandSlot[2]);
+                        handEquipmentSlotUI[i].AddItem(playerInventory.weaponsInLeftQuickSlots[2]);
                         break;
                     case Slot.LEFT4:
-                        handEquipmentSlotUI[i].AddItem(playerInventory.weaponsInLeftHandSlot[3]);
+                        handEquipmentSlotUI[i].AddItem(playerInventory.weaponsInLeftQuickSlots[3]);
                         break;
                     case Slot.RIGHT1:
-                        handEquipmentSlotUI[i].AddItem(playerInventory.weaponsInRightHandSlot[0]);
+                        handEquipmentSlotUI[i].AddItem(playerInventory.weaponsInRightQuickSlots[0]);
                         break;
                     case Slot.RIGHT2:
-                        handEquipmentSlotUI[i].AddItem(playerInventory.weaponsInRightHandSlot[1]);
+                        handEquipmentSlotUI[i].AddItem(playerInventory.weaponsInRightQuickSlots[1]);
                         break;
                     case Slot.RIGHT3:
-                        handEquipmentSlotUI[i].AddItem(playerInventory.weaponsInRightHandSlot[2]);
+                        handEquipmentSlotUI[i].AddItem(playerInventory.weaponsInRightQuickSlots[2]);
                         break;
                     case Slot.RIGHT4:
-                        handEquipmentSlotUI[i].AddItem(playerInventory.weaponsInRightHandSlot[3]);
+                        handEquipmentSlotUI[i].AddItem(playerInventory.weaponsInRightQuickSlots[3]);
                         break;
                     default:
                         break;

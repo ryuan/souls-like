@@ -44,58 +44,58 @@ namespace RY
         {
             if (uIManager.selectedSlot == Slot.LEFT1)
             {
-                playerInventory.weaponsInventory.Add(playerInventory.weaponsInLeftHandSlot[0]);
-                playerInventory.weaponsInLeftHandSlot[0] = weapon;
+                playerInventory.weaponsInventory.Add(playerInventory.weaponsInLeftQuickSlots[0]);
+                playerInventory.weaponsInLeftQuickSlots[0] = weapon;
                 playerInventory.weaponsInventory.Remove(weapon);
             }
             else if (uIManager.selectedSlot == Slot.LEFT2)
             {
-                playerInventory.weaponsInventory.Add(playerInventory.weaponsInLeftHandSlot[1]);
-                playerInventory.weaponsInLeftHandSlot[1] = weapon;
+                playerInventory.weaponsInventory.Add(playerInventory.weaponsInLeftQuickSlots[1]);
+                playerInventory.weaponsInLeftQuickSlots[1] = weapon;
                 playerInventory.weaponsInventory.Remove(weapon);
             }
             else if (uIManager.selectedSlot == Slot.LEFT3)
             {
-                playerInventory.weaponsInventory.Add(playerInventory.weaponsInLeftHandSlot[2]);
-                playerInventory.weaponsInLeftHandSlot[2] = weapon;
+                playerInventory.weaponsInventory.Add(playerInventory.weaponsInLeftQuickSlots[2]);
+                playerInventory.weaponsInLeftQuickSlots[2] = weapon;
                 playerInventory.weaponsInventory.Remove(weapon);
             }
             else if (uIManager.selectedSlot == Slot.LEFT4)
             {
-                playerInventory.weaponsInventory.Add(playerInventory.weaponsInLeftHandSlot[3]);
-                playerInventory.weaponsInLeftHandSlot[3] = weapon;
+                playerInventory.weaponsInventory.Add(playerInventory.weaponsInLeftQuickSlots[3]);
+                playerInventory.weaponsInLeftQuickSlots[3] = weapon;
                 playerInventory.weaponsInventory.Remove(weapon);
             }
             else if (uIManager.selectedSlot == Slot.RIGHT1)
             {
-                playerInventory.weaponsInventory.Add(playerInventory.weaponsInRightHandSlot[0]);
-                playerInventory.weaponsInRightHandSlot[0] = weapon;
+                playerInventory.weaponsInventory.Add(playerInventory.weaponsInRightQuickSlots[0]);
+                playerInventory.weaponsInRightQuickSlots[0] = weapon;
                 playerInventory.weaponsInventory.Remove(weapon);
             }
             else if (uIManager.selectedSlot == Slot.RIGHT2)
             {
-                playerInventory.weaponsInventory.Add(playerInventory.weaponsInRightHandSlot[1]);
-                playerInventory.weaponsInRightHandSlot[1] = weapon;
+                playerInventory.weaponsInventory.Add(playerInventory.weaponsInRightQuickSlots[1]);
+                playerInventory.weaponsInRightQuickSlots[1] = weapon;
                 playerInventory.weaponsInventory.Remove(weapon);
             }
             else if (uIManager.selectedSlot == Slot.RIGHT3)
             {
-                playerInventory.weaponsInventory.Add(playerInventory.weaponsInRightHandSlot[2]);
-                playerInventory.weaponsInRightHandSlot[2] = weapon;
+                playerInventory.weaponsInventory.Add(playerInventory.weaponsInRightQuickSlots[2]);
+                playerInventory.weaponsInRightQuickSlots[2] = weapon;
                 playerInventory.weaponsInventory.Remove(weapon);
             }
             else if (uIManager.selectedSlot == Slot.RIGHT4)
             {
-                playerInventory.weaponsInventory.Add(playerInventory.weaponsInRightHandSlot[3]);
-                playerInventory.weaponsInRightHandSlot[3] = weapon;
+                playerInventory.weaponsInventory.Add(playerInventory.weaponsInRightQuickSlots[3]);
+                playerInventory.weaponsInRightQuickSlots[3] = weapon;
                 playerInventory.weaponsInventory.Remove(weapon);
             }
 
-            playerInventory.leftWeapon = playerInventory.weaponsInLeftHandSlot[playerInventory.currentLeftWeaponIndex];
-            playerInventory.rightWeapon = playerInventory.weaponsInRightHandSlot[playerInventory.currentRightWeaponIndex];
+            playerInventory.leftWeapon = playerInventory.weaponsInLeftQuickSlots[playerInventory.currentLeftWeaponIndex];
+            playerInventory.rightWeapon = playerInventory.weaponsInRightQuickSlots[playerInventory.currentRightWeaponIndex];
 
-            weaponSlotManager.LoadWeaponOnSlot(playerInventory.leftWeapon, true);
-            weaponSlotManager.LoadWeaponOnSlot(playerInventory.rightWeapon, false);
+            weaponSlotManager.LoadWeaponOnHolderSlot(playerInventory.leftWeapon, true);
+            weaponSlotManager.LoadWeaponOnHolderSlot(playerInventory.rightWeapon, false);
 
             uIManager.equipmentWindowUI.LoadWeaponsOnEquipmentScreen(playerInventory);
             uIManager.ResetAllSelectedSlots();

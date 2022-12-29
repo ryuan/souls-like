@@ -159,11 +159,11 @@ namespace RY
         {
             if (dPad_Left_Input)
             {
-                playerInventory.ChangeLeftWeapon();
+                playerInventory.ChangeWeapon(true);
             }
             else if (dPad_Right_Input)
             {
-                playerInventory.ChangeRightWeapon();
+                playerInventory.ChangeWeapon(false);
             }
         }
 
