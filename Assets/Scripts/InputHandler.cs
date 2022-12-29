@@ -177,7 +177,7 @@ namespace RY
                 if (inventoryFlag)
                 {
                     uiManager.SetActiveSelectWindow(true);
-                    uiManager.UpdateUI();
+                    uiManager.UpdateWeaponInventoryUI();
                     uiManager.SetActiveHUDWindow(false);
                 }
                 else

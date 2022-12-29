@@ -40,7 +40,7 @@ namespace RY
             playerManager.itemInteractableUIGameObject.GetComponentInChildren<RawImage>().texture = weapon.itemIcon.texture;
             playerManager.itemInteractableUIGameObject.SetActive(true);
 
-            uIManager.UpdateUI();
+            uIManager.UpdateWeaponInventoryUI();
 
             Destroy(gameObject);
         }

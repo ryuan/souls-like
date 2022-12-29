@@ -8,25 +8,26 @@ namespace RY
     public class WeaponInventorySlotUI : MonoBehaviour
     {
         PlayerInventory playerInventory;
-        WeaponHolderSlotManager weaponSlotManager;
+        WeaponHolderSlotManager weaponHolderSlotManager;
         UIManager uIManager;
 
-        public Image icon;
-
+        [SerializeField]
         WeaponItem weapon;
+        [SerializeField]
+        Image icon;
 
 
 
         private void Awake()
         {
             playerInventory = FindObjectOfType<PlayerInventory>();
-            weaponSlotManager = FindObjectOfType<WeaponHolderSlotManager>();
+            weaponHolderSlotManager = FindObjectOfType<WeaponHolderSlotManager>();
             uIManager = FindObjectOfType<UIManager>();
         }
 
-        public void AddItem(WeaponItem newItem)
+        public void AddItem(WeaponItem newWeapon)
         {
-            weapon = newItem;
+            weapon = newWeapon;
             icon.sprite = weapon.itemIcon;
             icon.enabled = true;
             gameObject.SetActive(true);
@@ -40,64 +41,50 @@ namespace RY
             gameObject.SetActive(false);
         }
 
-        public void EquipThisItem()
+        public void AddThisWeaponToQSI()
         {
-            if (uIManager.selectedSlot == Slot.LEFT1)
+            WeaponsQSISlotUI selectedSlot = uIManager.selectedWeaponsQSISlot;
+
+            if (selectedSlot.isLeft)
             {
-                playerInventory.weaponsInventory.Add(playerInventory.weaponsInLeftQuickSlotInventory[0]);
-                playerInventory.weaponsInLeftQuickSlotInventory[0] = weapon;
+                // Add the selected weapon from the Quick Slot Inventory (if it's not empty) to the Weapon Inventory
+                if (playerInventory.weaponsInLeftQuickSlotInventory[selectedSlot.slotIndex] != null)
+                {
+                    playerInventory.weaponsInventory.Add(
+                    playerInventory.weaponsInLeftQuickSlotInventory[selectedSlot.slotIndex]
+                    );
+                }
+                // Overwrite the selected Quick Slot Inventory weapon with the weapon from this Weapon Inventory slot
+                playerInventory.weaponsInLeftQuickSlotInventory[selectedSlot.slotIndex] = weapon;
+                // Remove this weapon from the Weapon Inventory (future update calls to Weapon Inventory will deactivate this slot)
                 playerInventory.weaponsInventory.Remove(weapon);
+
+                // Force refresh the active left weapon in case the new weapon is in the current QS index
+                if (playerInventory.currentLeftWeaponIndex == selectedSlot.slotIndex)
+                {
+                    playerInventory.leftWeapon = playerInventory.weaponsInLeftQuickSlotInventory[playerInventory.currentLeftWeaponIndex];
+                    weaponHolderSlotManager.LoadWeaponOnHolderSlot(playerInventory.leftWeapon, true);
+                }
             }
-            else if (uIManager.selectedSlot == Slot.LEFT2)
+            else
             {
-                playerInventory.weaponsInventory.Add(playerInventory.weaponsInLeftQuickSlotInventory[1]);
-                playerInventory.weaponsInLeftQuickSlotInventory[1] = weapon;
+                if (playerInventory.weaponsInRightQuickSlotInventory[selectedSlot.slotIndex] != null)
+                {
+                    playerInventory.weaponsInventory.Add(
+                        playerInventory.weaponsInRightQuickSlotInventory[selectedSlot.slotIndex]
+                        );
+                }
+                playerInventory.weaponsInRightQuickSlotInventory[selectedSlot.slotIndex] = weapon;
                 playerInventory.weaponsInventory.Remove(weapon);
-            }
-            else if (uIManager.selectedSlot == Slot.LEFT3)
-            {
-                playerInventory.weaponsInventory.Add(playerInventory.weaponsInLeftQuickSlotInventory[2]);
-                playerInventory.weaponsInLeftQuickSlotInventory[2] = weapon;
-                playerInventory.weaponsInventory.Remove(weapon);
-            }
-            else if (uIManager.selectedSlot == Slot.LEFT4)
-            {
-                playerInventory.weaponsInventory.Add(playerInventory.weaponsInLeftQuickSlotInventory[3]);
-                playerInventory.weaponsInLeftQuickSlotInventory[3] = weapon;
-                playerInventory.weaponsInventory.Remove(weapon);
-            }
-            else if (uIManager.selectedSlot == Slot.RIGHT1)
-            {
-                playerInventory.weaponsInventory.Add(playerInventory.weaponsInRightQuickSlotInventory[0]);
-                playerInventory.weaponsInRightQuickSlotInventory[0] = weapon;
-                playerInventory.weaponsInventory.Remove(weapon);
-            }
-            else if (uIManager.selectedSlot == Slot.RIGHT2)
-            {
-                playerInventory.weaponsInventory.Add(playerInventory.weaponsInRightQuickSlotInventory[1]);
-                playerInventory.weaponsInRightQuickSlotInventory[1] = weapon;
-                playerInventory.weaponsInventory.Remove(weapon);
-            }
-            else if (uIManager.selectedSlot == Slot.RIGHT3)
-            {
-                playerInventory.weaponsInventory.Add(playerInventory.weaponsInRightQuickSlotInventory[2]);
-                playerInventory.weaponsInRightQuickSlotInventory[2] = weapon;
-                playerInventory.weaponsInventory.Remove(weapon);
-            }
-            else if (uIManager.selectedSlot == Slot.RIGHT4)
-            {
-                playerInventory.weaponsInventory.Add(playerInventory.weaponsInRightQuickSlotInventory[3]);
-                playerInventory.weaponsInRightQuickSlotInventory[3] = weapon;
-                playerInventory.weaponsInventory.Remove(weapon);
+
+                if (playerInventory.currentRightWeaponIndex == selectedSlot.slotIndex)
+                {
+                    playerInventory.rightWeapon = playerInventory.weaponsInRightQuickSlotInventory[playerInventory.currentRightWeaponIndex];
+                    weaponHolderSlotManager.LoadWeaponOnHolderSlot(playerInventory.rightWeapon, false);
+                }
             }
 
-            playerInventory.leftWeapon = playerInventory.weaponsInLeftQuickSlotInventory[playerInventory.currentLeftWeaponIndex];
-            playerInventory.rightWeapon = playerInventory.weaponsInRightQuickSlotInventory[playerInventory.currentRightWeaponIndex];
-
-            weaponSlotManager.LoadWeaponOnHolderSlot(playerInventory.leftWeapon, true);
-            weaponSlotManager.LoadWeaponOnHolderSlot(playerInventory.rightWeapon, false);
-
-            uIManager.equipmentWindowUI.LoadWeaponsOnEquipmentScreen(playerInventory);
+            uIManager.UpdateEquipmentUI();
             uIManager.ResetAllSelectedSlots();
         }
     }

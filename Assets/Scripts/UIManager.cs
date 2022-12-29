@@ -7,10 +7,10 @@ namespace RY
     public class UIManager : MonoBehaviour
     {
         PlayerInventory playerInventory;
+
+        [Header("HUD & UI Window GameObjects")]
         [SerializeField]
         GameObject hudWindow;
-
-        [Header("UI Window GameObjects")]
         [SerializeField]
         GameObject selectWindow;
         [SerializeField]
@@ -18,42 +18,41 @@ namespace RY
         [SerializeField]
         GameObject equipmentWindow;
 
-        [Header("UI Window Scripts")]
-        public EquipmentWindowUI equipmentWindowUI;
-
-        [Header("Equipment Window Slot Selected")]
-        public Slot selectedSlot = Slot.NONE;
-
-        [Header("Weapon Inventory")]
-        public GameObject weaponInventorySlotPrefab;
-        public Transform weaponInventorySlotsParent;
+        [Header("Weapon Inventory Screen Inputs")]
+        [SerializeField]
+        GameObject weaponInventorySlotPrefab;
+        [SerializeField]
+        Transform weaponInventorySlotsParent;
         WeaponInventorySlotUI[] weaponInventoryWindowSlots;
 
+        [Header("Equipment Screen Inputs")]
+        public WeaponsQSISlotUI selectedWeaponsQSISlot;
+        WeaponsQSISlotUI[] weaponsQSISlots;
+        
 
 
         private void Awake()
         {
             playerInventory = FindObjectOfType<PlayerInventory>();
-
-            equipmentWindowUI = FindObjectOfType<EquipmentWindowUI>(true);
             weaponInventoryWindowSlots = weaponInventorySlotsParent.GetComponentsInChildren<WeaponInventorySlotUI>(true);
         }
 
         private void Start()
         {
-            equipmentWindowUI.LoadWeaponsOnEquipmentScreen(playerInventory);
+            weaponsQSISlots = GetComponentsInChildren<WeaponsQSISlotUI>(true);
+            UpdateEquipmentUI();
         }
 
-        public void UpdateUI()
+        public void UpdateWeaponInventoryUI()
         {
-            #region Update the slots in Weapon Inventory Window
-
             for (int i = 0; i < weaponInventoryWindowSlots.Length; i++)
             {
                 if (i < playerInventory.weaponsInventory.Count)
                 {
                     if (weaponInventoryWindowSlots.Length < playerInventory.weaponsInventory.Count)
                     {
+                        // Instantiate new Weapon Inventory Slot prefab in Inventory Slot Parent (according to Grid Layout Group component)
+                        // Instantiated prefab should be by default inactive based on hierarchy initial state
                         Instantiate(weaponInventorySlotPrefab, weaponInventorySlotsParent);
                         weaponInventoryWindowSlots = weaponInventorySlotsParent.GetComponentsInChildren<WeaponInventorySlotUI>(true);
                     }
@@ -64,8 +63,24 @@ namespace RY
                     weaponInventoryWindowSlots[i].ClearInventorySlot();
                 }
             }
+        }
 
-            #endregion
+        public void UpdateEquipmentUI()
+        {
+            WeaponItem[] weaponsInLeftQSI = playerInventory.weaponsInLeftQuickSlotInventory;
+            WeaponItem[] weaponsInRightQSI = playerInventory.weaponsInRightQuickSlotInventory;
+
+            for (int i = 0; i < weaponsQSISlots.Length; i++)
+            {
+                if (weaponsQSISlots[i].isLeft)
+                {
+                    weaponsQSISlots[i].AddItem(weaponsInLeftQSI[weaponsQSISlots[i].slotIndex]);
+                }
+                else
+                {
+                    weaponsQSISlots[i].AddItem(weaponsInRightQSI[weaponsQSISlots[i].slotIndex]);
+                }
+            }
         }
 
         public void SetActiveHUDWindow(bool isActive)
@@ -87,7 +102,7 @@ namespace RY
 
         public void ResetAllSelectedSlots()
         {
-            selectedSlot = Slot.NONE;
+            selectedWeaponsQSISlot = null;
         }
     }
 }

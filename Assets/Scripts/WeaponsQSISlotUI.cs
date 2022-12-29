@@ -5,22 +5,17 @@ using UnityEngine.UI;
 
 namespace RY
 {
-    public enum Slot
-    {
-        NONE,
-        LEFT1, LEFT2, LEFT3, LEFT4,
-        RIGHT1, RIGHT2, RIGHT3, RIGHT4
-    }
-
-    public class HandEquipmentSlotUI : MonoBehaviour
+    public class WeaponsQSISlotUI : MonoBehaviour
     {
         UIManager uIManager;
 
-        public Slot handSlot;
-        public Image icon;
+        public bool isLeft;
+        public int slotIndex;
 
         [SerializeField]
         WeaponItem weapon;
+        [SerializeField]
+        Image icon;
 
 
 
@@ -50,7 +45,7 @@ namespace RY
 
         public void SelectThisSlot()
         {
-            uIManager.selectedSlot = handSlot;
+            uIManager.selectedWeaponsQSISlot = this;
         }
     }
 
