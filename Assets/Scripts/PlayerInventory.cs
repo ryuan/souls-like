@@ -6,11 +6,11 @@ namespace RY
 {
     public class PlayerInventory : MonoBehaviour
     {
-        WeaponSlotManager weaponSlotManager;
+        WeaponHolderSlotManager weaponHolderSlotManager;
 
-        [Header("Weapons in Slots")]
-        public WeaponItem[] weaponsInLeftQuickSlots = new WeaponItem[4];
-        public WeaponItem[] weaponsInRightQuickSlots = new WeaponItem[4];
+        [Header("Weapons in Quick Slot Inventory")]
+        public WeaponItem[] weaponsInLeftQuickSlotInventory = new WeaponItem[4];
+        public WeaponItem[] weaponsInRightQuickSlotInventory = new WeaponItem[4];
         public int currentLeftWeaponIndex;
         public int currentRightWeaponIndex;
 
@@ -25,7 +25,7 @@ namespace RY
 
         private void Awake()
         {
-            weaponSlotManager = GetComponentInChildren<WeaponSlotManager>();
+            weaponHolderSlotManager = GetComponentInChildren<WeaponHolderSlotManager>();
         }
 
         private void Start()
@@ -40,41 +40,41 @@ namespace RY
         {
             if (isLeft)
             {
-                for (int i = currentLeftWeaponIndex + 1; i <= weaponsInLeftQuickSlots.Length; i++)
+                for (int i = currentLeftWeaponIndex + 1; i <= weaponsInLeftQuickSlotInventory.Length; i++)
                 {
-                    if (weaponsInLeftQuickSlots[i] != null)
-                    {
-                        currentLeftWeaponIndex = i;
-                        leftWeapon = weaponsInLeftQuickSlots[currentLeftWeaponIndex];
-                        break;
-                    }
-                    else if (i == weaponsInLeftQuickSlots.Length)
+                    if (i == weaponsInLeftQuickSlotInventory.Length)
                     {
                         currentLeftWeaponIndex = -1;
                         leftWeapon = unarmed;
                     }
+                    else if (weaponsInLeftQuickSlotInventory[i] != null)
+                    {
+                        currentLeftWeaponIndex = i;
+                        leftWeapon = weaponsInLeftQuickSlotInventory[currentLeftWeaponIndex];
+                        break;
+                    }
                 }
 
-                weaponSlotManager.LoadWeaponOnHolderSlot(leftWeapon, true);
+                weaponHolderSlotManager.LoadWeaponOnHolderSlot(leftWeapon, true);
             }
             else
             {
-                for (int i = currentRightWeaponIndex + 1; i <= weaponsInRightQuickSlots.Length; i++)
+                for (int i = currentRightWeaponIndex + 1; i <= weaponsInRightQuickSlotInventory.Length; i++)
                 {
-                    if (weaponsInRightQuickSlots[i] != null)
-                    {
-                        currentRightWeaponIndex = i;
-                        rightWeapon = weaponsInRightQuickSlots[currentRightWeaponIndex];
-                        break;
-                    }
-                    else if (i == weaponsInRightQuickSlots.Length)
+                    if (i == weaponsInRightQuickSlotInventory.Length)
                     {
                         currentRightWeaponIndex = -1;
                         rightWeapon = unarmed;
                     }
+                    else if (weaponsInRightQuickSlotInventory[i] != null)
+                    {
+                        currentRightWeaponIndex = i;
+                        rightWeapon = weaponsInRightQuickSlotInventory[currentRightWeaponIndex];
+                        break;
+                    }
                 }
 
-                weaponSlotManager.LoadWeaponOnHolderSlot(rightWeapon, false);
+                weaponHolderSlotManager.LoadWeaponOnHolderSlot(rightWeapon, false);
             }
         }
     }

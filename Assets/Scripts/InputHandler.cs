@@ -7,7 +7,8 @@ namespace RY
     public class InputHandler : MonoBehaviour
     {
         PlayerControls inputActions;
-        PlayerAttacker playerAttacker;
+
+        PlayerAttackHandler playerAttackHandler;
         PlayerInventory playerInventory;
         PlayerManager playerManager;
         CameraHandler cameraHandler;
@@ -49,7 +50,7 @@ namespace RY
 
         private void Awake()
         {
-            playerAttacker = GetComponent<PlayerAttacker>();
+            playerAttackHandler = GetComponentInChildren<PlayerAttackHandler>();
             playerInventory = GetComponent<PlayerInventory>();
             playerManager = GetComponent<PlayerManager>();
             cameraHandler = FindObjectOfType<CameraHandler>();
@@ -135,7 +136,7 @@ namespace RY
                 if (playerManager.canDoCombo)
                 {
                     comboFlag = true;
-                    playerAttacker.HandleWeaponCombo(playerInventory.rightWeapon);
+                    playerAttackHandler.HandleWeaponCombo(playerInventory.rightWeapon);
                     comboFlag = false;
                 }
                 else
@@ -144,14 +145,14 @@ namespace RY
                     {
                         return;
                     }
-                    playerAttacker.HandleLightAttack(playerInventory.rightWeapon);
+                    playerAttackHandler.HandleLightAttack(playerInventory.rightWeapon);
                 }
             }
 
             // RT input handles the RIGHT hand weapon's heavy attack
             if (rt_Input)
             {
-                playerAttacker.HandleHeavyAttack(playerInventory.rightWeapon);
+                playerAttackHandler.HandleHeavyAttack(playerInventory.rightWeapon);
             }
         }
 
