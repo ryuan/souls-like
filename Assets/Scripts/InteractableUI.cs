@@ -11,8 +11,6 @@ namespace RY
         public TextMeshProUGUI interactableText;
         public TextMeshProUGUI itemText;
         public RawImage itemImage;
-
-
     }
 
 }

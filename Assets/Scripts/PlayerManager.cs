@@ -11,9 +11,19 @@ namespace RY
         PlayerLocomotion playerLocomotion;
         Animator anim;
 
+        [Header("Interactables Attributes")]
         InteractableUI interactableUI;
+        Vector3 detectionSphereOffset;
+
         public GameObject interactableUIGameObject;
         public GameObject itemInteractableUIGameObject;
+        [SerializeField]
+        float detectionSphereRadius = 0.5f;
+        [SerializeField]
+        float detectionSphereHeight = 0.75f;
+        [SerializeField]
+        float detectionSphereDistance = 0.6f;
+
 
         [Header("Player Flags")]
         public bool isInteracting;
@@ -35,6 +45,7 @@ namespace RY
             playerLocomotion = GetComponent<PlayerLocomotion>();
             anim = GetComponentInChildren<Animator>();
             interactableUI = FindObjectOfType<InteractableUI>();
+            detectionSphereOffset = new Vector3(0, detectionSphereHeight) + (transform.forward * detectionSphereDistance);
         }
 
         // Update is called every frame, before LateUpdate but after FixedUpdate.
@@ -103,23 +114,29 @@ namespace RY
 
         public void CheckForInteractables()
         {
-            RaycastHit hit;
+            Vector3 checkPosition = transform.position + detectionSphereOffset;
+            Collider[] hitColliders = Physics.OverlapSphere(
+                checkPosition, detectionSphereRadius, cameraHandler.ignoreLayers, QueryTriggerInteraction.Collide
+                );
 
-            if (Physics.SphereCast(transform.position, 0.4f, transform.forward, out hit, 1f, cameraHandler.ignoreLayers))
+            if (hitColliders.Length > 0)
             {
-                if (hit.collider.tag == "Interactable")
+                foreach (Collider hitCollider in hitColliders)
                 {
-                    Interactable interactable = hit.collider.GetComponent<Interactable>();
-
-                    if (interactable != null)
+                    if (hitCollider.tag == "Interactable")
                     {
-                        string interactableText = interactable.interactableText;
-                        interactableUI.interactableText.text = interactableText;
-                        interactableUIGameObject.SetActive(true);
+                        Interactable interactable = hitCollider.GetComponent<Interactable>();
 
-                        if (inputHandler.a_Input)
+                        if (interactable != null)
                         {
-                            hit.collider.GetComponent<Interactable>().Interact(this);
+                            string interactableText = interactable.interactableText;
+                            interactableUI.interactableText.text = interactableText;
+                            interactableUIGameObject.SetActive(true);
+
+                            if (inputHandler.a_Input)
+                            {
+                                hitCollider.GetComponent<Interactable>().Interact();
+                            }
                         }
                     }
                 }
@@ -142,7 +159,7 @@ namespace RY
         {
             // For debugging CheckForInteractables function and its SphereCast collision against interactable colliders
             Gizmos.color = Color.blue;
-            Gizmos.DrawWireSphere(transform.position + transform.forward, 0.4f);
+            Gizmos.DrawWireSphere(transform.position + detectionSphereOffset, detectionSphereRadius);
         }
     }
 }
