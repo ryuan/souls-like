@@ -15,12 +15,15 @@ namespace RY
 
 
 
-        public void Initialize()
+        private void Awake()
         {
             playerManager = GetComponentInParent<PlayerManager>();
             playerLocomotion = GetComponentInParent<PlayerLocomotion>();
             anim = GetComponent<Animator>();
+        }
 
+        public void Initialize()
+        {
             horizontal = Animator.StringToHash("Horizontal");
             vertical= Animator.StringToHash("Vertical");
         }

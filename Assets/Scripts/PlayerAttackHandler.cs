@@ -75,19 +75,12 @@ namespace RY
 
         public void HandleWeaponCombo(WeaponItem weapon)
         {
-            if (inputHandler.comboFlag)
-            {
-                animatorHandler.DisableCombo();
+            animatorHandler.DisableCombo();
 
-                if (lastAttack == weapon.ohLightAtk1)
-                {
-                    animatorHandler.PlayTargetAnimation(weapon.ohLightAtk2, true);
-                    lastAttack = weapon.ohLightAtk2;
-                }
-                else
-                {
-                    HandleLightAttack(weapon);
-                }
+            if (lastAttack == weapon.ohLightAtk1)
+            {
+                animatorHandler.PlayTargetAnimation(weapon.ohLightAtk2, true);
+                lastAttack = weapon.ohLightAtk2;
             }
         }
 

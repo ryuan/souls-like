@@ -6,20 +6,27 @@ namespace RY
 {
     public class PlayerLocomotion : MonoBehaviour
     {
-        PlayerManager playerManager;
-        Transform cameraObject;
         InputHandler inputHandler;
+        PlayerManager playerManager;
         CameraHandler cameraHandler;
+        AnimatorHandler animatorHandler;
+        Transform mainCameraTransform;
 
-        [HideInInspector]
-        public Vector3 moveDirection;
-        [HideInInspector]
-        public Transform myTransform;
-        [HideInInspector]
-        public AnimatorHandler animatorHandler;
+        Vector3 moveDirection;
+        Vector3 normalVector;
+        Vector3 targetPosition;
 
         public Rigidbody rb;
-        public GameObject normalCamera;
+
+        [Header("Movement Stats")]
+        [SerializeField]
+        float normalMoveSpeed = 5;
+        [SerializeField]
+        float sprintSpeed = 7;
+        [SerializeField]
+        float rotationSpeed = 10;
+        [SerializeField]
+        float fallingSpeed = 80;
 
         [Header("Ground & Air Detection Stats")]
         [SerializeField]
@@ -28,43 +35,27 @@ namespace RY
         float minDistanceNeededToBeginFall = 1f;
         [SerializeField]
         float groundDirectionRayDistance = 0.2f;
+        [SerializeField]
         LayerMask ignoreForGroundCheck;
         public float inAirTimer;
-
-        [Header("Movement Stats")]
-        [SerializeField]
-        float movementSpeed = 5;
-        [SerializeField]
-        float sprintSpeed = 7;
-        [SerializeField]
-        float rotationSpeed = 10;
-        [SerializeField]
-        float fallingSpeed = 80;
 
 
 
         private void Awake()
         {
+            inputHandler = GetComponent<InputHandler>();
+            playerManager = GetComponent<PlayerManager>();
             cameraHandler = FindObjectOfType<CameraHandler>();
+            animatorHandler = GetComponentInChildren<AnimatorHandler>();
+            mainCameraTransform = Camera.main.transform;
+            rb = GetComponent<Rigidbody>();
         }
 
         private void Start()
         {
-            playerManager = GetComponent<PlayerManager>();
-            rb = GetComponent<Rigidbody>();
-            inputHandler = GetComponent<InputHandler>();
-            animatorHandler = GetComponentInChildren<AnimatorHandler>();
-            cameraObject = Camera.main.transform;
-            myTransform = transform;
             animatorHandler.Initialize();
-
-            playerManager.isGrounded = true;
             ignoreForGroundCheck = ~(1 << 8 | 1 << 11);
         }
-
-        #region Movement
-        Vector3 normalVector;
-        Vector3 targetPosition;
 
         public void HandleMovementAndSprint(float delta)
         {
@@ -73,25 +64,21 @@ namespace RY
                 return;
             }
 
-            moveDirection = cameraObject.forward * inputHandler.vertical;
-            moveDirection += cameraObject.right * inputHandler.horizontal;
+            moveDirection = mainCameraTransform.forward * inputHandler.vertical;
+            moveDirection += mainCameraTransform.right * inputHandler.horizontal;
             moveDirection.Normalize();
             moveDirection.y = 0;
 
-            float speed = movementSpeed;
-
             if (inputHandler.sprintFlag)
             {
-                speed = sprintSpeed;
-                playerManager.isSprinting = true;
-                moveDirection *= speed;
+                moveDirection *= sprintSpeed;
             }
             else
             {
-                playerManager.isSprinting = false;
-                moveDirection *= speed;
+                moveDirection *= normalMoveSpeed;
             }
 
+            // Use ProjectOnPlane to detect the surface and keep player "stickied" to the ground
             Vector3 projectedVelocity = Vector3.ProjectOnPlane(moveDirection, normalVector);
             rb.velocity = projectedVelocity;
 
@@ -113,14 +100,14 @@ namespace RY
 
             if (inputHandler.lockOnFlag == false || inputHandler.sprintFlag || inputHandler.rollFlag)
             {
-                targetDir = cameraObject.forward * inputHandler.vertical;
-                targetDir += cameraObject.right * inputHandler.horizontal;
+                targetDir = mainCameraTransform.forward * inputHandler.vertical;
+                targetDir += mainCameraTransform.right * inputHandler.horizontal;
                 targetDir.y = 0;
                 targetDir.Normalize();
 
                 if (targetDir == Vector3.zero)
                 {
-                    targetDir = myTransform.forward;
+                    targetDir = transform.forward;
                 }
             }
             else
@@ -131,12 +118,12 @@ namespace RY
             }
 
             Quaternion tr = Quaternion.LookRotation(targetDir);
-            Quaternion targetRotation = Quaternion.Slerp(myTransform.rotation, tr, rotationSpeed * delta);
+            Quaternion targetRotation = Quaternion.Slerp(transform.rotation, tr, rotationSpeed * delta);
 
-            myTransform.rotation = targetRotation;
+            transform.rotation = targetRotation;
         }
 
-        public void HandleRoll(float delta)
+        public void HandleRoll()
         {
             if (playerManager.isInteracting)
             {
@@ -147,13 +134,14 @@ namespace RY
             {
                 if (inputHandler.moveAmount > 0)
                 {
-                    moveDirection = cameraObject.forward * inputHandler.vertical;
-                    moveDirection += cameraObject.right * inputHandler.horizontal;
+                    moveDirection = mainCameraTransform.forward * inputHandler.vertical;
+                    moveDirection += mainCameraTransform.right * inputHandler.horizontal;
+                    moveDirection.y = 0;
+                    
+                    Quaternion rollRotation = Quaternion.LookRotation(moveDirection);
+                    transform.rotation = rollRotation;
 
                     animatorHandler.PlayTargetAnimation("Rolling", true);
-                    moveDirection.y = 0;
-                    Quaternion rollRotation = Quaternion.LookRotation(moveDirection);
-                    myTransform.rotation = rollRotation;
                 }
                 else
                 {
@@ -162,15 +150,14 @@ namespace RY
             }
         }
 
-        public void HandleFalling(float delta)
+        public void HandleFalling()
         {
-            playerManager.isGrounded = false;
             RaycastHit hit;
-            Vector3 origin = myTransform.position;
+            Vector3 origin = transform.position;
             origin.y += groundDetectionRayStartPoint;
 
-            Debug.DrawRay(origin, myTransform.forward * 0.15f, Color.red);
-            if (Physics.Raycast(origin, myTransform.forward, out hit, 0.15f))
+            Debug.DrawRay(origin, transform.forward * 0.3f, Color.red);
+            if (Physics.Raycast(origin, transform.forward, out hit, 0.3f))
             {
                 moveDirection = Vector3.zero;
             }
@@ -185,14 +172,15 @@ namespace RY
             dir.Normalize();
             origin = origin + dir * groundDirectionRayDistance;
 
-            targetPosition = myTransform.position;
+            targetPosition = transform.position;
 
             Debug.DrawRay(origin, -Vector3.up * minDistanceNeededToBeginFall, Color.red, 0.1f, false);
             if (Physics.Raycast(origin, -Vector3.up, out hit, minDistanceNeededToBeginFall, ignoreForGroundCheck))
             {
+                playerManager.isGrounded = true;
+
                 normalVector = hit.normal;
                 Vector3 tp = hit.point;
-                playerManager.isGrounded = true;
                 targetPosition.y = tp.y;
 
                 if (playerManager.isInAir)
@@ -213,13 +201,12 @@ namespace RY
             }
             else
             {
-                if (playerManager.isGrounded)
-                {
-                    playerManager.isGrounded = false;
-                }
+                playerManager.isGrounded = false;
 
                 if (playerManager.isInAir == false)
                 {
+                    playerManager.isInAir = true;
+
                     if (playerManager.isInteracting == false)
                     {
                         animatorHandler.PlayTargetAnimation("Falling", true);
@@ -227,8 +214,7 @@ namespace RY
 
                     Vector3 vel = rb.velocity;
                     vel.Normalize();
-                    rb.velocity = vel * (movementSpeed / 2);
-                    playerManager.isInAir = true;
+                    rb.velocity = vel * (normalMoveSpeed / 2);
                 }
             }
 
@@ -236,16 +222,16 @@ namespace RY
             {
                 if (playerManager.isInteracting || inputHandler.moveAmount > 0)
                 {
-                    myTransform.position = Vector3.Lerp(myTransform.position, targetPosition, Time.deltaTime / 0.1f);
+                    transform.position = Vector3.Lerp(transform.position, targetPosition, Time.deltaTime / 0.1f);
                 }
                 else
                 {
-                    myTransform.position = targetPosition;
+                    transform.position = targetPosition;
                 }
             }
         }
 
-        public void HandleJumping(float delta)
+        public void HandleJumping()
         {
             if (playerManager.isInteracting)
             {
@@ -256,16 +242,18 @@ namespace RY
             {
                 if (inputHandler.moveAmount > 0)
                 {
-                    moveDirection = cameraObject.forward * inputHandler.vertical;
-                    moveDirection += cameraObject.right * inputHandler.horizontal;
-                    animatorHandler.PlayTargetAnimation("Jump", true);
+                    moveDirection = mainCameraTransform.forward * inputHandler.vertical;
+                    moveDirection += mainCameraTransform.right * inputHandler.horizontal;
                     moveDirection.y = 0;
+
                     Quaternion jumpRotation = Quaternion.LookRotation(moveDirection);
-                    myTransform.rotation = jumpRotation;
+                    transform.rotation = jumpRotation;
+
+                    animatorHandler.PlayTargetAnimation("Jump", true);
+                    float jumpHeight = 20f;
+                    rb.AddForce(transform.up * Mathf.Sqrt(2 * jumpHeight), ForceMode.VelocityChange);
                 }
             }
         }
-
-        #endregion
     }
 }

@@ -14,6 +14,7 @@ namespace RY
         CameraHandler cameraHandler;
         UIManager uiManager;
 
+        [Header("Player & Camera Movement Inputs")]
         Vector2 movementInput;
         Vector2 cameraInput;
 
@@ -22,27 +23,31 @@ namespace RY
         public float moveAmount;
         public float mouseX;
         public float mouseY;
-        public float rollInputTimer;
 
+        [Header("Player Action Inputs")]
         public bool b_Input;
         public bool a_Input;
         public bool rb_Input;
         public bool rt_Input;
         public bool jump_Input;
 
+        public float rollInputTimer;
+
+        [Header("Inventory & Quick Slot Inputs")]
         public bool dPad_Up_Input;
         public bool dPad_Down_Input;
         public bool dPad_Left_Input;
         public bool dPad_Right_Input;
         public bool inventory_Input;
 
+        [Header("Target Lock-On Inputs")]
         public bool lockOn_Input;
         public bool rStick_Left_Input;
         public bool rStick_Right_Input;
 
+        [Header("Action Determinant Flags")]
         public bool rollFlag;
         public bool sprintFlag;
-        public bool comboFlag;
         public bool lockOnFlag;
         public bool inventoryFlag;
 
@@ -135,9 +140,7 @@ namespace RY
             {
                 if (playerManager.canDoCombo)
                 {
-                    comboFlag = true;
                     playerAttackHandler.HandleWeaponCombo(playerInventory.rightWeapon);
-                    comboFlag = false;
                 }
                 else
                 {

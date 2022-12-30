@@ -12,9 +12,6 @@ namespace RY
         Animator anim;
 
         [Header("Interactables Attributes")]
-        InteractableUI interactableUI;
-        Vector3 detectionSphereOffset;
-
         public GameObject interactableUIGameObject;
         public GameObject itemInteractableUIGameObject;
         [SerializeField]
@@ -24,10 +21,11 @@ namespace RY
         [SerializeField]
         float detectionSphereDistance = 0.6f;
 
+        InteractableUI interactableUI;
+        Vector3 detectionSphereOffset;
 
-        [Header("Player Flags")]
+        [Header("Player State Machine")]
         public bool isInteracting;
-        public bool isSprinting;
         public bool isInAir;
         public bool isGrounded;
         public bool canDoCombo;
@@ -37,15 +35,10 @@ namespace RY
         private void Awake()
         {
             cameraHandler = FindObjectOfType<CameraHandler>();
-        }
-
-        private void Start()
-        {
             inputHandler = GetComponent<InputHandler>();
             playerLocomotion = GetComponent<PlayerLocomotion>();
             anim = GetComponentInChildren<Animator>();
             interactableUI = FindObjectOfType<InteractableUI>();
-            detectionSphereOffset = new Vector3(0, detectionSphereHeight) + (transform.forward * detectionSphereDistance);
         }
 
         // Update is called every frame, before LateUpdate but after FixedUpdate.
@@ -60,8 +53,8 @@ namespace RY
             anim.SetBool("isInAir", isInAir);
 
             inputHandler.TickInput(delta);
-            playerLocomotion.HandleRoll(delta);
-            playerLocomotion.HandleJumping(delta);
+            playerLocomotion.HandleRoll();
+            playerLocomotion.HandleJumping();
 
             CheckForInteractables();
         }
@@ -74,7 +67,7 @@ namespace RY
             float delta = Time.deltaTime;
 
             playerLocomotion.HandleMovementAndSprint(delta);
-            playerLocomotion.HandleFalling(delta);
+            playerLocomotion.HandleFalling();
             // Need to reset flag in FixedUpdate to match update timing of HandleMovementAndSprint
             inputHandler.sprintFlag = false;
         }
@@ -108,12 +101,13 @@ namespace RY
 
             if (isInAir)
             {
-                playerLocomotion.inAirTimer = playerLocomotion.inAirTimer + Time.deltaTime;
+                playerLocomotion.inAirTimer += Time.deltaTime;
             }
         }
 
         public void CheckForInteractables()
         {
+            detectionSphereOffset = new Vector3(0, detectionSphereHeight) + (transform.forward * detectionSphereDistance);
             Vector3 checkPosition = transform.position + detectionSphereOffset;
             Collider[] hitColliders = Physics.OverlapSphere(
                 checkPosition, detectionSphereRadius, cameraHandler.ignoreLayers, QueryTriggerInteraction.Collide
