@@ -9,6 +9,7 @@ namespace RY
         QuickSlotsUI quickSlotsUI;
         Animator animator;
         PlayerAttackHandler playerAttackHandler;
+        InputHandler inputHandler;
 
         WeaponHolderSlot leftWeaponHolderSlot;
         WeaponHolderSlot rightWeaponHolderSlot;
@@ -20,6 +21,7 @@ namespace RY
             quickSlotsUI = FindObjectOfType<QuickSlotsUI>();
             animator = GetComponent<Animator>();
             playerAttackHandler = GetComponent<PlayerAttackHandler>();
+            inputHandler = GetComponentInParent<InputHandler>();
 
             WeaponHolderSlot[] weaponHolderSlots = GetComponentsInChildren<WeaponHolderSlot>();
 
@@ -59,22 +61,31 @@ namespace RY
             }
             else
             {
+                if (inputHandler.twoHandFlag)
+                {
+                    // Move current left weapon to the back/disable it
+                    animator.CrossFade(weaponItem.twoHandIdle, 0.2f);
+                }
+                else
+                {
+                    #region Handle Right Weapon Idle Animations
+                    animator.CrossFade("Both_Arms_Empty", 0.2f);
+                    if (weaponItem != null)
+                    {
+                        animator.CrossFade(weaponItem.rightHandIdle, 0.2f);
+                    }
+                    else
+                    {
+                        animator.CrossFade("Right_Arm_Empty", 0.2f);
+                    }
+                    #endregion
+                }
+
                 rightWeaponHolderSlot.LoadWeaponModel(weaponItem);
                 quickSlotsUI.UpdateWeaponQuickSlotsUI(weaponItem, false);
                 playerAttackHandler.SetCurrentWeaponDamageCollider(
                     rightWeaponHolderSlot.GetWeaponDamageCollider(), false
                     );
-
-                #region Handle Right Weapon Idle Animations
-                if (weaponItem != null)
-                {
-                    animator.CrossFade(weaponItem.rightHandIdle, 0.2f);
-                }
-                else
-                {
-                    animator.CrossFade("Right_Arm_Empty", 0.2f);
-                }
-                #endregion
             }
         }
     }

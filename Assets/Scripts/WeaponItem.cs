@@ -13,6 +13,7 @@ namespace RY
         [Header("Idle Animations")]
         public string leftHandIdle;
         public string rightHandIdle;
+        public string twoHandIdle;
 
         [Header("Attack Animations")]
         public string ohLightAtk1;

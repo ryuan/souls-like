@@ -77,26 +77,29 @@ namespace RY
         // Additionally, any flags/variables that were updated in Update should be reset here.
         private void LateUpdate()
         {
-            float delta = Time.fixedDeltaTime;
+            float fixedDelta = Time.fixedDeltaTime;
 
             inputHandler.rollFlag = false;
+            inputHandler.a_Input = false;
+            inputHandler.y_Input = false;
             inputHandler.rb_Input = false;
             inputHandler.rt_Input = false;
+            inputHandler.jump_Input = false;
+
             inputHandler.dPad_Up_Input = false;
             inputHandler.dPad_Down_Input = false;
             inputHandler.dPad_Left_Input = false;
             inputHandler.dPad_Right_Input = false;
-            inputHandler.a_Input = false;
-            inputHandler.jump_Input = false;
             inputHandler.inventory_Input = false;
+            
             inputHandler.lockOn_Input = false;
             inputHandler.rStick_Left_Input = false;
             inputHandler.rStick_Right_Input = false;
 
             if (cameraHandler != null)
             {
-                cameraHandler.FollowTarget(delta);
-                cameraHandler.HandleCameraRotation(delta, inputHandler.mouseX, inputHandler.mouseY);
+                cameraHandler.FollowTarget(fixedDelta);
+                cameraHandler.HandleCameraRotation(fixedDelta, inputHandler.mouseX, inputHandler.mouseY);
             }
 
             if (isInAir)

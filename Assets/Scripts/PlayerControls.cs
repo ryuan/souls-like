@@ -202,6 +202,15 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
+                    ""name"": ""Y"",
+                    ""type"": ""Button"",
+                    ""id"": ""1bc1d154-020c-4b45-bae5-48720b8eed0c"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
                     ""name"": ""RB"",
                     ""type"": ""Button"",
                     ""id"": ""90a67ae0-480b-4e1b-be7b-11cb41613924"",
@@ -388,6 +397,28 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                     ""action"": ""LockOn"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b35850f4-ac2e-451c-82df-a98c7a9c7415"",
+                    ""path"": ""<Gamepad>/buttonNorth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Y"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""9f1a6e13-e6d2-4800-accc-b3f4e13c76b8"",
+                    ""path"": ""<Keyboard>/y"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Y"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -535,6 +566,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         // Player Actions
         m_PlayerActions = asset.FindActionMap("Player Actions", throwIfNotFound: true);
         m_PlayerActions_Roll = m_PlayerActions.FindAction("Roll", throwIfNotFound: true);
+        m_PlayerActions_Y = m_PlayerActions.FindAction("Y", throwIfNotFound: true);
         m_PlayerActions_RB = m_PlayerActions.FindAction("RB", throwIfNotFound: true);
         m_PlayerActions_RT = m_PlayerActions.FindAction("RT", throwIfNotFound: true);
         m_PlayerActions_A = m_PlayerActions.FindAction("A", throwIfNotFound: true);
@@ -664,6 +696,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
     private readonly InputActionMap m_PlayerActions;
     private IPlayerActionsActions m_PlayerActionsActionsCallbackInterface;
     private readonly InputAction m_PlayerActions_Roll;
+    private readonly InputAction m_PlayerActions_Y;
     private readonly InputAction m_PlayerActions_RB;
     private readonly InputAction m_PlayerActions_RT;
     private readonly InputAction m_PlayerActions_A;
@@ -675,6 +708,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         private @PlayerControls m_Wrapper;
         public PlayerActionsActions(@PlayerControls wrapper) { m_Wrapper = wrapper; }
         public InputAction @Roll => m_Wrapper.m_PlayerActions_Roll;
+        public InputAction @Y => m_Wrapper.m_PlayerActions_Y;
         public InputAction @RB => m_Wrapper.m_PlayerActions_RB;
         public InputAction @RT => m_Wrapper.m_PlayerActions_RT;
         public InputAction @A => m_Wrapper.m_PlayerActions_A;
@@ -693,6 +727,9 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                 @Roll.started -= m_Wrapper.m_PlayerActionsActionsCallbackInterface.OnRoll;
                 @Roll.performed -= m_Wrapper.m_PlayerActionsActionsCallbackInterface.OnRoll;
                 @Roll.canceled -= m_Wrapper.m_PlayerActionsActionsCallbackInterface.OnRoll;
+                @Y.started -= m_Wrapper.m_PlayerActionsActionsCallbackInterface.OnY;
+                @Y.performed -= m_Wrapper.m_PlayerActionsActionsCallbackInterface.OnY;
+                @Y.canceled -= m_Wrapper.m_PlayerActionsActionsCallbackInterface.OnY;
                 @RB.started -= m_Wrapper.m_PlayerActionsActionsCallbackInterface.OnRB;
                 @RB.performed -= m_Wrapper.m_PlayerActionsActionsCallbackInterface.OnRB;
                 @RB.canceled -= m_Wrapper.m_PlayerActionsActionsCallbackInterface.OnRB;
@@ -718,6 +755,9 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                 @Roll.started += instance.OnRoll;
                 @Roll.performed += instance.OnRoll;
                 @Roll.canceled += instance.OnRoll;
+                @Y.started += instance.OnY;
+                @Y.performed += instance.OnY;
+                @Y.canceled += instance.OnY;
                 @RB.started += instance.OnRB;
                 @RB.performed += instance.OnRB;
                 @RB.canceled += instance.OnRB;
@@ -807,6 +847,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
     public interface IPlayerActionsActions
     {
         void OnRoll(InputAction.CallbackContext context);
+        void OnY(InputAction.CallbackContext context);
         void OnRB(InputAction.CallbackContext context);
         void OnRT(InputAction.CallbackContext context);
         void OnA(InputAction.CallbackContext context);
