@@ -47,22 +47,30 @@ namespace RY
         {
             if (isLeft)
             {
-                leftWeaponHolderSlot.LoadWeaponModel(weaponItem);
-                quickSlotsUI.UpdateWeaponQuickSlotsUI(weaponItem, true);
-                playerAttackHandler.SetCurrentWeaponDamageCollider(
-                    leftWeaponHolderSlot.GetWeaponDamageCollider(), true
-                    );
-
-                #region Handle Left Weapon Idle Animations
-                if (weaponItem != null)
+                if (inputHandler.twoHandFlag)
                 {
-                    animator.CrossFade(weaponItem.leftHandIdle, 0.2f);
+                    backWeaponHolderSlot.LoadWeaponModel(weaponItem);
                 }
                 else
                 {
-                    animator.CrossFade("Left_Arm_Empty", 0.2f);
+                    leftWeaponHolderSlot.LoadWeaponModel(weaponItem);
+                    playerAttackHandler.SetCurrentWeaponDamageCollider(
+                    leftWeaponHolderSlot.GetWeaponDamageCollider(), true
+                    );
+
+                    #region Handle Left Weapon Idle Animations
+                    if (weaponItem != null)
+                    {
+                        animator.CrossFade(weaponItem.leftHandIdle, 0.2f);
+                    }
+                    else
+                    {
+                        animator.CrossFade("Left_Arm_Empty", 0.2f);
+                    }
+                    #endregion
                 }
-                #endregion
+
+                quickSlotsUI.UpdateWeaponQuickSlotsUI(weaponItem, true);
             }
             else
             {
@@ -77,7 +85,7 @@ namespace RY
                     backWeaponHolderSlot.UnloadWeaponAndDestroy();
 
                     #region Handle Right Weapon Idle Animations
-                    animator.CrossFade("Both_Arms_Empty", 0.2f);
+                    animator.CrossFade("Both_Arms_Empty", 0.1f);    // force reset animation from two-handed idle state
 
                     if (weaponItem != null)
                     {
@@ -91,10 +99,10 @@ namespace RY
                 }
 
                 rightWeaponHolderSlot.LoadWeaponModel(weaponItem);
-                quickSlotsUI.UpdateWeaponQuickSlotsUI(weaponItem, false);
                 playerAttackHandler.SetCurrentWeaponDamageCollider(
                     rightWeaponHolderSlot.GetWeaponDamageCollider(), false
                     );
+                quickSlotsUI.UpdateWeaponQuickSlotsUI(weaponItem, false);
             }
         }
     }
