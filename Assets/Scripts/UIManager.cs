@@ -7,6 +7,7 @@ namespace RY
     public class UIManager : MonoBehaviour
     {
         PlayerInventory playerInventory;
+        InputHandler inputHandler;
 
         [Header("HUD & UI Window GameObjects")]
         [SerializeField]
@@ -34,6 +35,7 @@ namespace RY
         private void Awake()
         {
             playerInventory = FindObjectOfType<PlayerInventory>();
+            inputHandler = FindObjectOfType<InputHandler>();
             weaponInventoryWindowSlots = weaponInventorySlotsParent.GetComponentsInChildren<WeaponInventorySlotUI>(true);
         }
 
@@ -93,11 +95,17 @@ namespace RY
             selectWindow.SetActive(isActive);
         }
 
-        public void CloseAllInventoryWindows()
+        public void CloseAllOpenMenuWindows()
         {
             ResetAllSelectedSlots();
+
+            selectWindow.SetActive(false);
             weaponInventoryWindow.SetActive(false);
             equipmentWindow.SetActive(false);
+
+            hudWindow.SetActive(true);
+
+            inputHandler.inventoryFlag = false;
         }
 
         public void ResetAllSelectedSlots()

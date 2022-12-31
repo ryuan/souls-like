@@ -201,7 +201,7 @@ namespace RY
                 else
                 {
                     uiManager.SetActiveSelectWindow(false);
-                    uiManager.CloseAllInventoryWindows();
+                    uiManager.CloseAllOpenMenuWindows();
                     uiManager.SetActiveHUDWindow(true);
                 }
             }
