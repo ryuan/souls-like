@@ -84,11 +84,11 @@ namespace RY
 
             if (inputHandler.lockOnFlag && inputHandler.sprintFlag == false)
             {
-                animatorHandler.UpdateAnimatorValues(inputHandler.horizontal, inputHandler.vertical, inputHandler.sprintFlag);
+                animatorHandler.UpdateAnimatorMovementValues(inputHandler.horizontal, inputHandler.vertical, inputHandler.sprintFlag);
             }
             else
             {
-                animatorHandler.UpdateAnimatorValues(0, inputHandler.moveAmount, inputHandler.sprintFlag);
+                animatorHandler.UpdateAnimatorMovementValues(0, inputHandler.moveAmount, inputHandler.sprintFlag);
             }
 
             HandleRotation(delta);

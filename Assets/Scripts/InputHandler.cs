@@ -150,18 +150,27 @@ namespace RY
                 }
                 else
                 {
-                    if (playerManager.isInteracting)
+                    if (playerManager.isInteracting == false)
                     {
-                        return;
+                        playerAttackHandler.HandleLightAttack(playerInventory.rightWeapon);
                     }
-                    playerAttackHandler.HandleLightAttack(playerInventory.rightWeapon);
                 }
             }
 
             // RT input handles the RIGHT hand weapon's heavy attack
             if (rt_Input)
             {
-                playerAttackHandler.HandleHeavyAttack(playerInventory.rightWeapon);
+                if (playerManager.canDoCombo)
+                {
+                    playerAttackHandler.HandleWeaponCombo(playerInventory.rightWeapon);
+                }
+                else
+                {
+                    if (playerManager.isInteracting == false)
+                    {
+                        playerAttackHandler.HandleHeavyAttack(playerInventory.rightWeapon);
+                    }
+                }
             }
         }
 

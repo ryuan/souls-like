@@ -28,7 +28,7 @@ namespace RY
             vertical= Animator.StringToHash("Vertical");
         }
 
-        public void UpdateAnimatorValues(float horizontalMovement, float verticalMovement, bool isSprinting)
+        public void UpdateAnimatorMovementValues(float horizontalMovement, float verticalMovement, bool isSprinting)
         {
             #region Horizontal
             float h = 0;

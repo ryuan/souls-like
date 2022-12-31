@@ -19,8 +19,11 @@ namespace RY
         public string ohLightAtk1;
         public string ohLightAtk2;
         public string ohHeavyAtk1;
-        public string twLightAtk1;
-        public string twLightAtk2;
+        public string ohHeavyAtk2;
+        public string thLightAtk1;
+        public string thLightAtk2;
+        public string thHeavyAtk1;
+        public string thHeavyAtk2;
 
         [Header("Stamina Costs")]
         public int baseStamina;

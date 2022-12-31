@@ -82,10 +82,20 @@ namespace RY
                 animatorHandler.PlayTargetAnimation(weapon.ohLightAtk2, true);
                 lastAttack = weapon.ohLightAtk2;
             }
-            else if (lastAttack == weapon.twLightAtk1)
+            else if (lastAttack == weapon.ohHeavyAtk1)
             {
-                animatorHandler.PlayTargetAnimation(weapon.twLightAtk2, true);
-                lastAttack = weapon.twLightAtk2;
+                animatorHandler.PlayTargetAnimation(weapon.ohHeavyAtk2, true);
+                lastAttack = weapon.ohHeavyAtk2;
+            }
+            else if (lastAttack == weapon.thLightAtk1)
+            {
+                animatorHandler.PlayTargetAnimation(weapon.thLightAtk2, true);
+                lastAttack = weapon.thLightAtk2;
+            }
+            else if (lastAttack == weapon.thHeavyAtk1)
+            {
+                animatorHandler.PlayTargetAnimation(weapon.thHeavyAtk2, true);
+                lastAttack = weapon.thHeavyAtk2;
             }
         }
 
@@ -95,8 +105,8 @@ namespace RY
 
             if (inputHandler.twoHandFlag)
             {
-                animatorHandler.PlayTargetAnimation(weapon.twLightAtk1, true);
-                lastAttack = weapon.twLightAtk1;
+                animatorHandler.PlayTargetAnimation(weapon.thLightAtk1, true);
+                lastAttack = weapon.thLightAtk1;
             }
             else
             {
@@ -111,7 +121,8 @@ namespace RY
 
             if (inputHandler.twoHandFlag)
             {
-                // Set up TH heavy attacks
+                animatorHandler.PlayTargetAnimation(weapon.thHeavyAtk1, true);
+                lastAttack = weapon.thHeavyAtk1;
             }
             else
             {
