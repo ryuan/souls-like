@@ -82,20 +82,42 @@ namespace RY
                 animatorHandler.PlayTargetAnimation(weapon.ohLightAtk2, true);
                 lastAttack = weapon.ohLightAtk2;
             }
+            else if (lastAttack == weapon.twLightAtk1)
+            {
+                animatorHandler.PlayTargetAnimation(weapon.twLightAtk2, true);
+                lastAttack = weapon.twLightAtk2;
+            }
         }
 
         public void HandleLightAttack(WeaponItem weapon)
         {
             latestAttackingWeapon = weapon;
-            animatorHandler.PlayTargetAnimation(weapon.ohLightAtk1, true);
-            lastAttack = weapon.ohLightAtk1;
+
+            if (inputHandler.twoHandFlag)
+            {
+                animatorHandler.PlayTargetAnimation(weapon.twLightAtk1, true);
+                lastAttack = weapon.twLightAtk1;
+            }
+            else
+            {
+                animatorHandler.PlayTargetAnimation(weapon.ohLightAtk1, true);
+                lastAttack = weapon.ohLightAtk1;
+            }
         }
 
         public void HandleHeavyAttack(WeaponItem weapon)
         {
             latestAttackingWeapon = weapon;
-            animatorHandler.PlayTargetAnimation(weapon.ohHeavyAtk1, true);
-            lastAttack = weapon.ohHeavyAtk1;
+
+            if (inputHandler.twoHandFlag)
+            {
+                // Set up TH heavy attacks
+            }
+            else
+            {
+                animatorHandler.PlayTargetAnimation(weapon.ohHeavyAtk1, true);
+                lastAttack = weapon.ohHeavyAtk1;
+            }
         }
     }
 

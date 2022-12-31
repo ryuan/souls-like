@@ -9,28 +9,18 @@ namespace RY
         public Transform parentOverride;
         public bool isLeftHandSlot;
         public bool isRightHandSlot;
+        public bool isBackSlot;
 
+        [SerializeField]
+        WeaponItem currentWeapon;
         [SerializeField]
         GameObject currentWeaponModel;
 
 
 
-        private void UnloadWeaponAndDestroy()
-        {
-            if (currentWeaponModel != null)
-            {
-                Destroy(currentWeaponModel);
-            }
-        }
-
         public void LoadWeaponModel(WeaponItem weaponItem)
         {
             UnloadWeaponAndDestroy();
-
-            if (weaponItem == null)
-            {
-                return;
-            }
 
             GameObject model = Instantiate(weaponItem.modelPrefab);
 
@@ -50,12 +40,26 @@ namespace RY
                 model.transform.localScale = Vector3.one;
             }
 
+            currentWeapon = weaponItem;
             currentWeaponModel = model;
+        }
+
+        public WeaponItem GetWeaponInHolderSlot()
+        {
+            return currentWeapon;
         }
 
         public DamageCollider GetWeaponDamageCollider()
         {
             return currentWeaponModel.GetComponentInChildren<DamageCollider>();
+        }
+
+        public void UnloadWeaponAndDestroy()
+        {
+            if (currentWeaponModel != null)
+            {
+                Destroy(currentWeaponModel);
+            }
         }
     }
 }

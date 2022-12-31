@@ -13,6 +13,7 @@ namespace RY
 
         WeaponHolderSlot leftWeaponHolderSlot;
         WeaponHolderSlot rightWeaponHolderSlot;
+        WeaponHolderSlot backWeaponHolderSlot;
         
 
 
@@ -34,6 +35,10 @@ namespace RY
                 else if (weaponHolderSlot.isRightHandSlot)
                 {
                     rightWeaponHolderSlot = weaponHolderSlot;
+                }
+                else if (weaponHolderSlot.isBackSlot)
+                {
+                    backWeaponHolderSlot = weaponHolderSlot;
                 }
             }
         }
@@ -63,13 +68,17 @@ namespace RY
             {
                 if (inputHandler.twoHandFlag)
                 {
-                    // Move current left weapon to the back/disable it
+                    backWeaponHolderSlot.LoadWeaponModel(leftWeaponHolderSlot.GetWeaponInHolderSlot());
+                    leftWeaponHolderSlot.UnloadWeaponAndDestroy();
                     animator.CrossFade(weaponItem.twoHandIdle, 0.2f);
                 }
                 else
                 {
+                    backWeaponHolderSlot.UnloadWeaponAndDestroy();
+
                     #region Handle Right Weapon Idle Animations
                     animator.CrossFade("Both_Arms_Empty", 0.2f);
+
                     if (weaponItem != null)
                     {
                         animator.CrossFade(weaponItem.rightHandIdle, 0.2f);
