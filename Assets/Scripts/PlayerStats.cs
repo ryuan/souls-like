@@ -6,6 +6,11 @@ namespace RY
 {
     public class PlayerStats : MonoBehaviour
     {
+        HealthBar healthBar;
+        StaminaBar staminaBar;
+        InputHandler inputHandler;
+        AnimatorHandler animatorHandler;
+
         public int healthLevel = 10;
         public int maxHealth;
         public int currentHealth;
@@ -14,16 +19,13 @@ namespace RY
         public int maxStamina;
         public int currentStamina;
 
-        HealthBar healthBar;
-        StaminaBar staminaBar;
-        AnimatorHandler animatorHandler;
-
 
 
         private void Awake()
         {
             healthBar = FindObjectOfType<HealthBar>();
             staminaBar = FindObjectOfType<StaminaBar>();
+            inputHandler = GetComponent<InputHandler>();
             animatorHandler = GetComponentInChildren<AnimatorHandler>();
         }
 
@@ -61,7 +63,14 @@ namespace RY
             }
             else
             {
-                animatorHandler.PlayTargetAnimation("Damage_01", true);
+                if (inputHandler.twoHandFlag)
+                {
+                    animatorHandler.PlayTargetAnimation("TH_Damage_01", true);
+                }
+                else
+                {
+                    animatorHandler.PlayTargetAnimation("OH_Damage_01", true);
+                }
             }
         }
 

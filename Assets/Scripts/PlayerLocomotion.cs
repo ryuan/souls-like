@@ -141,11 +141,25 @@ namespace RY
                     Quaternion rollRotation = Quaternion.LookRotation(moveDirection);
                     transform.rotation = rollRotation;
 
-                    animatorHandler.PlayTargetAnimation("Rolling", true);
+                    if (inputHandler.twoHandFlag)
+                    {
+                        animatorHandler.PlayTargetAnimation("TH_Rolling", true);
+                    }
+                    else
+                    {
+                        animatorHandler.PlayTargetAnimation("OH_Rolling", true);
+                    }
                 }
                 else
                 {
-                    animatorHandler.PlayTargetAnimation("Backstep", true);
+                    if (inputHandler.twoHandFlag)
+                    {
+                        animatorHandler.PlayTargetAnimation("TH_Backstep", true);
+                    }
+                    else
+                    {
+                        animatorHandler.PlayTargetAnimation("OH_Backstep", true);
+                    }
                 }
             }
         }

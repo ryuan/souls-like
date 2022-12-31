@@ -35,7 +35,7 @@ namespace RY
         {
             currentHealth = currentHealth - damage;
 
-            animator.Play("Damage_01");
+            animator.Play("OH_Damage_01");
 
             if (currentHealth <= 0)
             {
