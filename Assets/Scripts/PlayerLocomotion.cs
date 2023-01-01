@@ -42,7 +42,7 @@ namespace RY
 
         [Header("Jump Properties")]
         [SerializeField]
-        float forwardSpeed = 50;
+        float forwardJumpSpeed = 5;
         float jumpStartPosY;
 
 
@@ -61,6 +61,11 @@ namespace RY
         private void Start()
         {
             ignoreForGroundCheck = ~(1 << 8 | 1 << 11);
+        }
+
+        public Vector3 GetMoveDirection()
+        {
+            return moveDirection;
         }
 
         public void HandleMovementAndSprint(float delta)
@@ -184,8 +189,12 @@ namespace RY
 
             if (playerManager.isJumping)
             {
-                rb.AddForce(moveDirection * forwardSpeed);
-
+                Vector3 velo = moveDirection;
+                velo.Normalize();
+                velo *= forwardJumpSpeed;
+                Vector3 projectedVelocity = Vector3.ProjectOnPlane(velo, normalVector);
+                projectedVelocity.y = rb.velocity.y;
+                rb.velocity = projectedVelocity;
 
                 Debug.Log("Animator Y DeltaPos = " + anim.deltaPosition.y + "; Transform Y Pos = " + transform.position.y + "; Frame Count = " + Time.frameCount);
                 if (anim.deltaPosition.y < 0)
@@ -322,6 +331,8 @@ namespace RY
                 transform.rotation = jumpRotation;
 
                 animatorHandler.PlayTargetAnimation("Jump", true);
+
+                HandleFalling();
             }
         }
     }
