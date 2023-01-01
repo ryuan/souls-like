@@ -26,8 +26,9 @@ namespace RY
 
         [Header("Player State Machine")]
         public bool isInteracting;
-        public bool isInAir;
         public bool isGrounded;
+        public bool isFalling;
+        public bool isJumping;
         public bool canDoCombo;
 
 
@@ -42,7 +43,7 @@ namespace RY
         }
 
         // Update is called every frame, before LateUpdate but after FixedUpdate.
-        // Put any functions that checks inputs and updates flags here.
+        // Put any functions that either updates/relies on inputs here.
         private void Update()
         {
             float delta = Time.deltaTime;
@@ -50,7 +51,7 @@ namespace RY
             isInteracting = anim.GetBool("isInteracting");
             anim.applyRootMotion = isInteracting;
             canDoCombo = anim.GetBool("canDoCombo");
-            anim.SetBool("isInAir", isInAir);
+            anim.SetBool("isInAir", isFalling);
 
             inputHandler.TickInput(delta);
             playerLocomotion.HandleRoll();
@@ -102,7 +103,7 @@ namespace RY
                 cameraHandler.HandleCameraRotation(fixedDelta, inputHandler.mouseX, inputHandler.mouseY);
             }
 
-            if (isInAir)
+            if (isFalling)
             {
                 playerLocomotion.inAirTimer += Time.deltaTime;
             }

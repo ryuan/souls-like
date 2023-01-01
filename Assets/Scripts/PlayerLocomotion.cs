@@ -11,6 +11,7 @@ namespace RY
         CameraHandler cameraHandler;
         AnimatorHandler animatorHandler;
         Transform mainCameraTransform;
+        Animator anim;
 
         Vector3 moveDirection;
         Vector3 normalVector;
@@ -18,7 +19,7 @@ namespace RY
 
         public Rigidbody rb;
 
-        [Header("Movement Stats")]
+        [Header("Movement Properties")]
         [SerializeField]
         float normalMoveSpeed = 5;
         [SerializeField]
@@ -28,7 +29,7 @@ namespace RY
         [SerializeField]
         float fallingSpeed = 80;
 
-        [Header("Ground & Air Detection Stats")]
+        [Header("Grounding & Falling Detection")]
         [SerializeField]
         float groundDetectionRayStartPoint = 0.5f;
         [SerializeField]
@@ -39,6 +40,11 @@ namespace RY
         LayerMask ignoreForGroundCheck;
         public float inAirTimer;
 
+        [Header("Jump Properties")]
+        [SerializeField]
+        float forwardSpeed = 50;
+        float jumpStartPosY;
+
 
 
         private void Awake()
@@ -48,12 +54,12 @@ namespace RY
             cameraHandler = FindObjectOfType<CameraHandler>();
             animatorHandler = GetComponentInChildren<AnimatorHandler>();
             mainCameraTransform = Camera.main.transform;
+            anim = GetComponentInChildren<Animator>();
             rb = GetComponent<Rigidbody>();
         }
 
         private void Start()
         {
-            animatorHandler.Initialize();
             ignoreForGroundCheck = ~(1 << 8 | 1 << 11);
         }
 
@@ -176,59 +182,104 @@ namespace RY
                 moveDirection = Vector3.zero;
             }
 
-            if (playerManager.isInAir)
+            if (playerManager.isJumping)
             {
-                rb.AddForce(-Vector3.up * fallingSpeed);
-                rb.AddForce(moveDirection * fallingSpeed / 7.5f);
-            }
+                rb.AddForce(moveDirection * forwardSpeed);
 
-            Vector3 dir = moveDirection;
-            dir.Normalize();
-            origin = origin + dir * groundDirectionRayDistance;
 
-            targetPosition = transform.position;
-
-            Debug.DrawRay(origin, -Vector3.up * minDistanceNeededToBeginFall, Color.red, 0.1f, false);
-            if (Physics.Raycast(origin, -Vector3.up, out hit, minDistanceNeededToBeginFall, ignoreForGroundCheck))
-            {
-                playerManager.isGrounded = true;
-
-                normalVector = hit.normal;
-                Vector3 tp = hit.point;
-                targetPosition.y = tp.y;
-
-                if (playerManager.isInAir)
+                Debug.Log("Animator Y DeltaPos = " + anim.deltaPosition.y + "; Transform Y Pos = " + transform.position.y + "; Frame Count = " + Time.frameCount);
+                if (anim.deltaPosition.y < 0)
                 {
-                    if (inAirTimer > 0.5f)
+                    Debug.DrawRay(origin, -Vector3.up * groundDetectionRayStartPoint, Color.red, 0.1f, false);
+                    if (Physics.Raycast(origin, -Vector3.up, out hit, groundDetectionRayStartPoint, ignoreForGroundCheck))
                     {
-                        animatorHandler.PlayTargetAnimation("Land", true);
+                        playerManager.isGrounded = true;
+                        playerManager.isFalling = false;
+                        playerManager.isJumping = false;
+
+                        Debug.Log("<<<<<<<<<<<<<END JUMP<<<<<<<<<<<<<");
+
+                        normalVector = hit.normal;
+
+                        Vector3 tp = hit.point;
+                        targetPosition.y = tp.y;
+
                         inAirTimer = 0;
                     }
                     else
                     {
-                        animatorHandler.PlayTargetAnimation("Empty", false);
-                        inAirTimer = 0;
-                    }
+                        playerManager.isGrounded = false;
 
-                    playerManager.isInAir = false;
+                        if (transform.position.y <= jumpStartPosY)
+                        {
+                            playerManager.isFalling = true;
+                            playerManager.isJumping = false;
+                        }
+                        else
+                        {
+                            playerManager.isFalling = false;
+                            playerManager.isJumping = true;
+                        }
+                    }
                 }
             }
             else
             {
-                playerManager.isGrounded = false;
-
-                if (playerManager.isInAir == false)
+                if (playerManager.isFalling)
                 {
-                    playerManager.isInAir = true;
+                    rb.AddForce(-Vector3.up * fallingSpeed);
+                    rb.AddForce(moveDirection * fallingSpeed);
+                }
 
-                    if (playerManager.isInteracting == false)
+                Vector3 dir = moveDirection;
+                dir.Normalize();
+                origin = origin + dir * groundDirectionRayDistance;
+
+                targetPosition = transform.position;
+
+                Debug.DrawRay(origin, -Vector3.up * minDistanceNeededToBeginFall, Color.red, 0.1f, false);
+                if (Physics.Raycast(origin, -Vector3.up, out hit, minDistanceNeededToBeginFall, ignoreForGroundCheck))
+                {
+                    playerManager.isGrounded = true;
+
+                    normalVector = hit.normal;
+
+                    Vector3 tp = hit.point;
+                    targetPosition.y = tp.y;
+
+                    if (playerManager.isFalling)
                     {
-                        animatorHandler.PlayTargetAnimation("Falling", true);
-                    }
+                        if (inAirTimer > 0.5f)
+                        {
+                            animatorHandler.PlayTargetAnimation("Land", true);
+                            inAirTimer = 0;
+                        }
+                        else
+                        {
+                            animatorHandler.PlayTargetAnimation("Empty", false);
+                            inAirTimer = 0;
+                        }
 
-                    Vector3 vel = rb.velocity;
-                    vel.Normalize();
-                    rb.velocity = vel * (normalMoveSpeed / 2);
+                        playerManager.isFalling = false;
+                    }
+                }
+                else
+                {
+                    playerManager.isGrounded = false;
+
+                    if (playerManager.isFalling == false)
+                    {
+                        playerManager.isFalling = true;
+
+                        if (playerManager.isInteracting == false)
+                        {
+                            animatorHandler.PlayTargetAnimation("Falling", true);
+                        }
+
+                        Vector3 vel = rb.velocity;
+                        vel.Normalize();
+                        rb.velocity = vel * (normalMoveSpeed / 2);
+                    }
                 }
             }
 
@@ -252,21 +303,25 @@ namespace RY
                 return;
             }
 
-            if (inputHandler.jump_Input)
+            if (inputHandler.jump_Input && inputHandler.sprintFlag) // jump is only possible when sprinting
             {
-                if (inputHandler.moveAmount > 0)
-                {
-                    moveDirection = mainCameraTransform.forward * inputHandler.vertical;
-                    moveDirection += mainCameraTransform.right * inputHandler.horizontal;
-                    moveDirection.y = 0;
+                jumpStartPosY = transform.position.y;
 
-                    Quaternion jumpRotation = Quaternion.LookRotation(moveDirection);
-                    transform.rotation = jumpRotation;
+                Debug.Log("------------BEGIN JUMP------------");
+                Debug.Log("Starting Y Pos = " + jumpStartPosY + "; Frame Count = " + Time.frameCount);
 
-                    animatorHandler.PlayTargetAnimation("Jump", true);
-                    float jumpHeight = 20f;
-                    rb.AddForce(transform.up * Mathf.Sqrt(2 * jumpHeight), ForceMode.VelocityChange);
-                }
+                playerManager.isJumping = true;
+                playerManager.isGrounded = false;
+                playerManager.isFalling = false;
+                
+                moveDirection = mainCameraTransform.forward * inputHandler.vertical;
+                moveDirection += mainCameraTransform.right * inputHandler.horizontal;
+                moveDirection.y = 0;
+
+                Quaternion jumpRotation = Quaternion.LookRotation(moveDirection);
+                transform.rotation = jumpRotation;
+
+                animatorHandler.PlayTargetAnimation("Jump", true);
             }
         }
     }

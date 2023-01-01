@@ -22,7 +22,7 @@ namespace RY
             anim = GetComponent<Animator>();
         }
 
-        public void Initialize()
+        private void Start()
         {
             horizontal = Animator.StringToHash("Horizontal");
             vertical= Animator.StringToHash("Vertical");
@@ -112,17 +112,15 @@ namespace RY
         // DO NOT DELETE!!!
         private void OnAnimatorMove()
         {
-            if (playerManager.isInteracting == false)
+            if (playerManager.isInteracting)
             {
-                return;
+                Vector3 deltaPosition = anim.deltaPosition;
+                //deltaPosition.y = 0;
+                float delta = Time.deltaTime;
+                Vector3 velocity = deltaPosition / delta;
+                playerLocomotion.rb.velocity = velocity;
+                playerLocomotion.rb.drag = 0;
             }
-
-            float delta = Time.deltaTime;
-            playerLocomotion.rb.drag = 0;
-            Vector3 deltaPosition = anim.deltaPosition;
-            deltaPosition.y = 0;
-            Vector3 velocity = deltaPosition / delta;
-            playerLocomotion.rb.velocity = velocity;
         }
     }
 }
