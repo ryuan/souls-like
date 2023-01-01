@@ -189,14 +189,15 @@ namespace RY
 
             if (playerManager.isJumping)
             {
+                #region Update grounding/falling state once jump is started
+                // Move player forward using velocity
                 Vector3 velo = moveDirection;
                 velo.Normalize();
                 velo *= forwardJumpSpeed;
                 Vector3 projectedVelocity = Vector3.ProjectOnPlane(velo, normalVector);
-                projectedVelocity.y = rb.velocity.y;
+                projectedVelocity.y = rb.velocity.y;    // inhereit y-axis velo from jump animation (set at OnAnimatorMove)
                 rb.velocity = projectedVelocity;
 
-                Debug.Log("Animator Y DeltaPos = " + anim.deltaPosition.y + "; Transform Y Pos = " + transform.position.y + "; Frame Count = " + Time.frameCount);
                 if (anim.deltaPosition.y < 0)
                 {
                     Debug.DrawRay(origin, -Vector3.up * groundDetectionRayStartPoint, Color.red, 0.1f, false);
@@ -205,15 +206,6 @@ namespace RY
                         playerManager.isGrounded = true;
                         playerManager.isFalling = false;
                         playerManager.isJumping = false;
-
-                        Debug.Log("<<<<<<<<<<<<<END JUMP<<<<<<<<<<<<<");
-
-                        normalVector = hit.normal;
-
-                        Vector3 tp = hit.point;
-                        targetPosition.y = tp.y;
-
-                        inAirTimer = 0;
                     }
                     else
                     {
@@ -231,13 +223,15 @@ namespace RY
                         }
                     }
                 }
+                #endregion
             }
             else
             {
+                #region Handle Grounding and Falling
                 if (playerManager.isFalling)
                 {
                     rb.AddForce(-Vector3.up * fallingSpeed);
-                    rb.AddForce(moveDirection * fallingSpeed);
+                    rb.AddForce(moveDirection * fallingSpeed / 7.5f);
                 }
 
                 Vector3 dir = moveDirection;
@@ -271,6 +265,15 @@ namespace RY
 
                         playerManager.isFalling = false;
                     }
+
+                    if (playerManager.isInteracting || inputHandler.moveAmount > 0)
+                    {
+                        transform.position = Vector3.Lerp(transform.position, targetPosition, Time.deltaTime / 0.1f);
+                    }
+                    else
+                    {
+                        transform.position = targetPosition;
+                    }
                 }
                 else
                 {
@@ -290,18 +293,7 @@ namespace RY
                         rb.velocity = vel * (normalMoveSpeed / 2);
                     }
                 }
-            }
-
-            if (playerManager.isGrounded)
-            {
-                if (playerManager.isInteracting || inputHandler.moveAmount > 0)
-                {
-                    transform.position = Vector3.Lerp(transform.position, targetPosition, Time.deltaTime / 0.1f);
-                }
-                else
-                {
-                    transform.position = targetPosition;
-                }
+                #endregion
             }
         }
 
@@ -316,9 +308,6 @@ namespace RY
             {
                 jumpStartPosY = transform.position.y;
 
-                Debug.Log("------------BEGIN JUMP------------");
-                Debug.Log("Starting Y Pos = " + jumpStartPosY + "; Frame Count = " + Time.frameCount);
-
                 playerManager.isJumping = true;
                 playerManager.isGrounded = false;
                 playerManager.isFalling = false;
@@ -331,8 +320,6 @@ namespace RY
                 transform.rotation = jumpRotation;
 
                 animatorHandler.PlayTargetAnimation("Jump", true);
-
-                HandleFalling();
             }
         }
     }

@@ -114,6 +114,8 @@ namespace RY
         {
             if (playerManager.isInteracting)
             {
+                playerLocomotion.rb.drag = 0;
+
                 Vector3 deltaPosition = anim.deltaPosition;
                 if (playerManager.isJumping == false)
                 {
@@ -122,9 +124,6 @@ namespace RY
                 float delta = Time.deltaTime;
                 Vector3 velocity = deltaPosition / delta;
                 playerLocomotion.rb.velocity = velocity;
-                playerLocomotion.rb.drag = 0;
-
-                Debug.Log("OnAnimatorMove Velocity = " + playerLocomotion.rb.velocity + "; Frame Count = " + Time.frameCount);
             }
         }
     }
