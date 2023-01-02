@@ -9,7 +9,7 @@ namespace RY
         InputHandler inputHandler;
         PlayerManager playerManager;
         CameraHandler cameraHandler;
-        AnimatorHandler animatorHandler;
+        PlayerAnimatorManager animatorManager;
         Transform mainCameraTransform;
         Animator anim;
 
@@ -52,7 +52,7 @@ namespace RY
             inputHandler = GetComponent<InputHandler>();
             playerManager = GetComponent<PlayerManager>();
             cameraHandler = FindObjectOfType<CameraHandler>();
-            animatorHandler = GetComponentInChildren<AnimatorHandler>();
+            animatorManager = GetComponentInChildren<PlayerAnimatorManager>();
             mainCameraTransform = Camera.main.transform;
             anim = GetComponentInChildren<Animator>();
             rb = GetComponent<Rigidbody>();
@@ -95,11 +95,11 @@ namespace RY
 
             if (inputHandler.lockOnFlag && inputHandler.sprintFlag == false)
             {
-                animatorHandler.UpdateAnimatorMovementValues(inputHandler.horizontal, inputHandler.vertical, inputHandler.sprintFlag);
+                animatorManager.UpdateAnimatorMovementValues(inputHandler.horizontal, inputHandler.vertical, inputHandler.sprintFlag);
             }
             else
             {
-                animatorHandler.UpdateAnimatorMovementValues(0, inputHandler.moveAmount, inputHandler.sprintFlag);
+                animatorManager.UpdateAnimatorMovementValues(0, inputHandler.moveAmount, inputHandler.sprintFlag);
             }
 
             HandleRotation(delta);
@@ -154,22 +154,22 @@ namespace RY
 
                     if (inputHandler.twoHandFlag)
                     {
-                        animatorHandler.PlayTargetAnimation("TH_Rolling", true);
+                        animatorManager.PlayTargetAnimation("TH_Rolling", true);
                     }
                     else
                     {
-                        animatorHandler.PlayTargetAnimation("OH_Rolling", true);
+                        animatorManager.PlayTargetAnimation("OH_Rolling", true);
                     }
                 }
                 else
                 {
                     if (inputHandler.twoHandFlag)
                     {
-                        animatorHandler.PlayTargetAnimation("TH_Backstep", true);
+                        animatorManager.PlayTargetAnimation("TH_Backstep", true);
                     }
                     else
                     {
-                        animatorHandler.PlayTargetAnimation("OH_Backstep", true);
+                        animatorManager.PlayTargetAnimation("OH_Backstep", true);
                     }
                 }
             }
@@ -254,12 +254,12 @@ namespace RY
                     {
                         if (inAirTimer > 0.5f)
                         {
-                            animatorHandler.PlayTargetAnimation("Land", true);
+                            animatorManager.PlayTargetAnimation("Land", true);
                             inAirTimer = 0;
                         }
                         else
                         {
-                            animatorHandler.PlayTargetAnimation("Empty", false);
+                            animatorManager.PlayTargetAnimation("Empty", false);
                             inAirTimer = 0;
                         }
 
@@ -285,7 +285,7 @@ namespace RY
 
                         if (playerManager.isInteracting == false)
                         {
-                            animatorHandler.PlayTargetAnimation("Falling", true);
+                            animatorManager.PlayTargetAnimation("Falling", true);
                         }
 
                         Vector3 vel = rb.velocity;
@@ -319,7 +319,7 @@ namespace RY
                 Quaternion jumpRotation = Quaternion.LookRotation(moveDirection);
                 transform.rotation = jumpRotation;
 
-                animatorHandler.PlayTargetAnimation("Jump", true);
+                animatorManager.PlayTargetAnimation("Jump", true);
             }
         }
     }

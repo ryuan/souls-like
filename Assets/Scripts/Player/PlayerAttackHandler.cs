@@ -7,7 +7,7 @@ namespace RY
     public class PlayerAttackHandler : MonoBehaviour
     {
         InputHandler inputHandler;
-        AnimatorHandler animatorHandler;
+        PlayerAnimatorManager animatorManager;
         PlayerStats playerStats;
 
         DamageCollider leftWeaponDamageCollider;
@@ -21,7 +21,7 @@ namespace RY
         private void Awake()
         {
             inputHandler = GetComponentInParent<InputHandler>();
-            animatorHandler = GetComponent<AnimatorHandler>();
+            animatorManager = GetComponent<PlayerAnimatorManager>();
             playerStats = GetComponentInParent<PlayerStats>();
         }
 
@@ -75,26 +75,26 @@ namespace RY
 
         public void HandleWeaponCombo(WeaponItem weapon)
         {
-            animatorHandler.DisableCombo();
+            animatorManager.DisableCombo();
 
             if (lastAttack == weapon.ohLightAtk1)
             {
-                animatorHandler.PlayTargetAnimation(weapon.ohLightAtk2, true);
+                animatorManager.PlayTargetAnimation(weapon.ohLightAtk2, true);
                 lastAttack = weapon.ohLightAtk2;
             }
             else if (lastAttack == weapon.ohHeavyAtk1)
             {
-                animatorHandler.PlayTargetAnimation(weapon.ohHeavyAtk2, true);
+                animatorManager.PlayTargetAnimation(weapon.ohHeavyAtk2, true);
                 lastAttack = weapon.ohHeavyAtk2;
             }
             else if (lastAttack == weapon.thLightAtk1)
             {
-                animatorHandler.PlayTargetAnimation(weapon.thLightAtk2, true);
+                animatorManager.PlayTargetAnimation(weapon.thLightAtk2, true);
                 lastAttack = weapon.thLightAtk2;
             }
             else if (lastAttack == weapon.thHeavyAtk1)
             {
-                animatorHandler.PlayTargetAnimation(weapon.thHeavyAtk2, true);
+                animatorManager.PlayTargetAnimation(weapon.thHeavyAtk2, true);
                 lastAttack = weapon.thHeavyAtk2;
             }
         }
@@ -105,12 +105,12 @@ namespace RY
 
             if (inputHandler.twoHandFlag)
             {
-                animatorHandler.PlayTargetAnimation(weapon.thLightAtk1, true);
+                animatorManager.PlayTargetAnimation(weapon.thLightAtk1, true);
                 lastAttack = weapon.thLightAtk1;
             }
             else
             {
-                animatorHandler.PlayTargetAnimation(weapon.ohLightAtk1, true);
+                animatorManager.PlayTargetAnimation(weapon.ohLightAtk1, true);
                 lastAttack = weapon.ohLightAtk1;
             }
         }
@@ -121,12 +121,12 @@ namespace RY
 
             if (inputHandler.twoHandFlag)
             {
-                animatorHandler.PlayTargetAnimation(weapon.thHeavyAtk1, true);
+                animatorManager.PlayTargetAnimation(weapon.thHeavyAtk1, true);
                 lastAttack = weapon.thHeavyAtk1;
             }
             else
             {
-                animatorHandler.PlayTargetAnimation(weapon.ohHeavyAtk1, true);
+                animatorManager.PlayTargetAnimation(weapon.ohHeavyAtk1, true);
                 lastAttack = weapon.ohHeavyAtk1;
             }
         }

@@ -9,7 +9,7 @@ namespace RY
         HealthBar healthBar;
         StaminaBar staminaBar;
         InputHandler inputHandler;
-        AnimatorHandler animatorHandler;
+        PlayerAnimatorManager animatorManager;
 
 
 
@@ -18,7 +18,7 @@ namespace RY
             healthBar = FindObjectOfType<HealthBar>();
             staminaBar = FindObjectOfType<StaminaBar>();
             inputHandler = GetComponent<InputHandler>();
-            animatorHandler = GetComponentInChildren<AnimatorHandler>();
+            animatorManager = GetComponentInChildren<PlayerAnimatorManager>();
         }
 
         private void Start()
@@ -51,17 +51,17 @@ namespace RY
 
             if (currentHealth <= 0)
             {
-                animatorHandler.PlayTargetAnimation("Dead_01", true);
+                animatorManager.PlayTargetAnimation("Dead_01", true);
             }
             else
             {
                 if (inputHandler.twoHandFlag)
                 {
-                    animatorHandler.PlayTargetAnimation("TH_Damage_01", true);
+                    animatorManager.PlayTargetAnimation("TH_Damage_01", true);
                 }
                 else
                 {
-                    animatorHandler.PlayTargetAnimation("OH_Damage_01", true);
+                    animatorManager.PlayTargetAnimation("OH_Damage_01", true);
                 }
             }
         }

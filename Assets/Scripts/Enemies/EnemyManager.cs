@@ -13,23 +13,10 @@ namespace RY
         [SerializeField]
         float detectionFOVAngle = 100;
 
-        bool isPerformingAction;
+        public bool isPerformingAction;
 
-        public float MinDetectionAngle
-        {
-            get
-            {
-                return -detectionFOVAngle / 2;
-            }
-        }
-
-        public float MaxDetectionAngle
-        {
-            get
-            {
-                return detectionFOVAngle / 2;
-            }
-        }
+        public float MinDetectionAngle { get { return -detectionFOVAngle / 2; } }
+        public float MaxDetectionAngle { get { return detectionFOVAngle / 2; } }
 
 
 
@@ -40,6 +27,11 @@ namespace RY
 
         private void Update()
         {
+            
+        }
+
+        private void FixedUpdate()
+        {
             HandleCurrentAction();
         }
 
@@ -48,6 +40,10 @@ namespace RY
             if (enemyLocomotion.currentTarget == null)
             {
                 enemyLocomotion.HandleDetection();
+            }
+            else
+            {
+                enemyLocomotion.HandleMoveToTarget();
             }
         }
     }

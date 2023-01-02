@@ -11,7 +11,7 @@ namespace RY
         PlayerManager playerManager;
         PlayerInventory playerInventory;
         PlayerLocomotion playerLocomotion;
-        AnimatorHandler animatorHandler;
+        PlayerAnimatorManager animatorManager;
         UIManager uIManager;
 
         public WeaponItem weapon;
@@ -21,7 +21,7 @@ namespace RY
             playerManager = FindObjectOfType<PlayerManager>();
             playerInventory = playerManager.GetComponent<PlayerInventory>();
             playerLocomotion = playerManager.GetComponent<PlayerLocomotion>();
-            animatorHandler = playerManager.GetComponentInChildren<AnimatorHandler>();
+            animatorManager = playerManager.GetComponentInChildren<PlayerAnimatorManager>();
             uIManager = FindObjectOfType<UIManager>();
         }
 
@@ -34,7 +34,7 @@ namespace RY
         private void PickUpItem()
         {
             playerLocomotion.rb.velocity = Vector3.zero;    // stops player from moving whilst picking up item
-            animatorHandler.PlayTargetAnimation("Pick_Up_Item", true);
+            animatorManager.PlayTargetAnimation("Pick_Up_Item", true);
             playerInventory.weaponsInventory.Add(weapon);
 
             // Update and show the Item Pop Up UI
