@@ -10,16 +10,17 @@ namespace RY
         EnemyManager enemyManager;
         EnemyAnimatorManager animatorManager;
         NavMeshAgent navMeshAgent;
-        Rigidbody rb;
+
+        LayerMask detectionLayer;
+
+        public Rigidbody rb;
 
         public CharacterStats currentTarget;
         public float distanceFromTarget;
         public float stoppingDistance = 0.75f;
 
         public float rotationSpeed = 15;
-
-        LayerMask detectionLayer;
-
+        
 
 
         private void Awake()
@@ -28,7 +29,13 @@ namespace RY
             animatorManager = GetComponentInChildren<EnemyAnimatorManager>();
             navMeshAgent = GetComponentInChildren<NavMeshAgent>();
             rb = GetComponent<Rigidbody>();
+        }
+
+        private void Start()
+        {
+            navMeshAgent.enabled = false;
             detectionLayer = (1 << 9);
+            rb.isKinematic = false;
         }
 
         public void HandleDetection()
@@ -71,6 +78,10 @@ namespace RY
                 if (distanceFromTarget > stoppingDistance)
                 {
                     animatorManager.anim.SetFloat("Vertical", 1, 0.1f, Time.deltaTime);
+                }
+                else
+                {
+                    animatorManager.anim.SetFloat("Vertical", 0, 0.1f, Time.deltaTime);
                 }
             }
 

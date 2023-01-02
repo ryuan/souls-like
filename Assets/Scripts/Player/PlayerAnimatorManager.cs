@@ -16,6 +16,7 @@ namespace RY
 
         private void Awake()
         {
+            anim = GetComponent<Animator>();
             playerManager = GetComponentInParent<PlayerManager>();
             playerLocomotion = GetComponentInParent<PlayerLocomotion>();
         }
