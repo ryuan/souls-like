@@ -14,13 +14,17 @@ namespace RY
         LayerMask detectionLayer;
 
         public Rigidbody rb;
-
         public CharacterStats currentTarget;
-        public float distanceFromTarget;
-        public float stoppingDistance = 0.75f;
 
-        public float rotationSpeed = 15;
-        
+        [Header("Movement Attributes")]
+        [SerializeField]
+        float moveSpeedAnimVerticalFloat = 0.75f;
+        public float stoppingDistance = 0.75f;
+        [SerializeField]
+        float rotationSpeed = 15;
+
+        public float distanceFromTarget;
+
 
 
         private void Awake()
@@ -63,9 +67,14 @@ namespace RY
 
         public void HandleMoveToTarget()
         {
+            if (enemyManager.isPerformingAction)
+            {
+                return;
+            }
+
             Vector3 targetDir = currentTarget.transform.position - transform.position;
             distanceFromTarget = Vector3.Distance(currentTarget.transform.position, transform.position);
-            float viewableAngle = Vector3.Angle(targetDir, transform.forward);
+            //float viewableAngle = Vector3.Angle(targetDir, transform.forward);
 
             // If perfoming any action, stop any movement and navigation (i.e., use the action's root animation movement)
             if (enemyManager.isPerformingAction)
@@ -77,7 +86,9 @@ namespace RY
             {
                 if (distanceFromTarget > stoppingDistance)
                 {
-                    animatorManager.anim.SetFloat("Vertical", 1, 0.1f, Time.deltaTime);
+                    animatorManager.anim.SetFloat("Vertical", moveSpeedAnimVerticalFloat, 0.1f, Time.deltaTime);
+
+                    HandleFalling();    // temporary function - need to review!
                 }
                 else
                 {
@@ -116,7 +127,28 @@ namespace RY
                 navMeshAgent.SetDestination(currentTarget.transform.position);
                 rb.velocity = targetVelocity;
                 transform.rotation = Quaternion.Slerp(transform.rotation, navMeshAgent.transform.rotation, rotationSpeed / Time.deltaTime);
+            }
+        }
 
+        public void HandleFalling()
+        {
+            RaycastHit hit;
+            Vector3 targetPosition = transform.position;
+
+            Debug.DrawRay(transform.position, -Vector3.up, Color.red, 0.1f, false);
+            if (Physics.Raycast(transform.position, -Vector3.up, out hit, 2f))
+            {
+                Vector3 tp = hit.point;
+                targetPosition.y = tp.y + 0.2f;
+
+                if (enemyManager.isPerformingAction)
+                {
+                    transform.position = Vector3.Lerp(transform.position, targetPosition, Time.deltaTime / 0.1f);
+                }
+                else
+                {
+                    transform.position = targetPosition;
+                }
             }
         }
     }

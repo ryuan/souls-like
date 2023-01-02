@@ -19,7 +19,7 @@ namespace RY
 
         public Rigidbody rb;
 
-        [Header("Movement Properties")]
+        [Header("Movement Attributes")]
         [SerializeField]
         float normalMoveSpeed = 5;
         [SerializeField]
@@ -40,7 +40,7 @@ namespace RY
         LayerMask ignoreForGroundCheck;
         public float inAirTimer;
 
-        [Header("Jump Properties")]
+        [Header("Jump Attributes")]
         [SerializeField]
         float forwardJumpSpeed = 5;
         float jumpStartPosY;
