@@ -7,20 +7,21 @@ namespace RY
 {
     public class EnemyManager : CharacterManager
     {
-        EnemyLocomotion enemyLocomotion;
         EnemyStats enemyStats;
         EnemyAnimatorManager animatorManager;
 
-        public State currentState;
+        [SerializeField]
+        Collider mainCollider;
+        [SerializeField]
+        Collider collisionBlockerCollider;
+        
         public NavMeshAgent navMeshAgent;
         public Rigidbody rb;
 
-        public CharacterStats currentTarget;
-
         [Header("AI Detection Settings")]
-        public float detectionRadius = 20;
         [SerializeField]
         float detectionFOVAngle = 100;
+        public float detectionRadius = 20;
         public float currentRecoveryTime = 0;
         public LayerMask detectionLayer;
 
@@ -29,6 +30,9 @@ namespace RY
         public float rotationSpeed = 15;
         public float maxAttackRange = 1.5f;
 
+        [Header("Enemy State Machine")]
+        public State currentState;
+        public CharacterStats currentTarget;
         public bool isPerformingAction;
 
         public float MinDetectionAngle { get {
@@ -40,8 +44,7 @@ namespace RY
         public float DistanceFromTarget { get {
                 return Vector3.Distance(currentTarget.transform.position, transform.position);
             } }
-        public float ViewableAngle { get
-            {
+        public float ViewableAngle { get {
                 return Vector3.Angle(currentTarget.transform.position - transform.position, transform.forward);
             } }
 
@@ -49,11 +52,11 @@ namespace RY
 
         private void Awake()
         {
-            enemyLocomotion = GetComponent<EnemyLocomotion>();
             enemyStats = GetComponent<EnemyStats>();
             animatorManager = GetComponentInChildren<EnemyAnimatorManager>();
-            navMeshAgent = GetComponentInChildren<NavMeshAgent>();
             rb = GetComponent<Rigidbody>();
+            navMeshAgent = GetComponentInChildren<NavMeshAgent>();
+            
         }
 
         private void Start()
@@ -61,6 +64,9 @@ namespace RY
             detectionLayer = (1 << 9);
             navMeshAgent.enabled = false;
             rb.isKinematic = false;
+
+            // Don't let colliders of the same character to bump into each other
+            Physics.IgnoreCollision(mainCollider, collisionBlockerCollider, true);
         }
 
         private void Update()
@@ -81,17 +87,12 @@ namespace RY
 
                 if (nextState != null)
                 {
-                    SwitchToNextState(nextState);
+                    // Set new state for next FixedUpdate's handling of state machine
+                    currentState = nextState;
                 }
             }
         }
 
-        private void SwitchToNextState(State nextState)
-        {
-            currentState = nextState;
-        }
-
-        
 
         private void HandleRecoveryTimer()
         {

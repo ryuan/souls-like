@@ -13,7 +13,7 @@ namespace RY
 
         public override State Tick(EnemyManager enemyManager, EnemyStats enemyStats, EnemyAnimatorManager animatorManager)
         {
-            Collider[] colliders = Physics.OverlapSphere(transform.position, enemyManager.detectionRadius, enemyManager.detectionLayer);
+            Collider[] colliders = Physics.OverlapSphere(enemyManager.transform.position, enemyManager.detectionRadius, enemyManager.detectionLayer);
 
             for (int i = 0; i < colliders.Length; i++)
             {

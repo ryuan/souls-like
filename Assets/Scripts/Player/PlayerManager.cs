@@ -11,6 +11,11 @@ namespace RY
         PlayerLocomotion playerLocomotion;
         Animator anim;
 
+        [SerializeField]
+        Collider mainCollider;
+        [SerializeField]
+        Collider collisionBlockerCollider;
+
         [Header("Interactables Attributes")]
         public GameObject interactableUIGameObject;
         public GameObject itemInteractableUIGameObject;
@@ -40,6 +45,12 @@ namespace RY
             playerLocomotion = GetComponent<PlayerLocomotion>();
             anim = GetComponentInChildren<Animator>();
             interactableUI = FindObjectOfType<InteractableUI>();
+        }
+
+        private void Start()
+        {
+            // Don't let colliders of the same character to bump into each other
+            Physics.IgnoreCollision(mainCollider, collisionBlockerCollider, true);
         }
 
         // Update is called every frame, before LateUpdate but after FixedUpdate.

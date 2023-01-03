@@ -13,10 +13,9 @@ namespace RY
         {
             if (enemyManager.isPerformingAction)
             {
+                animatorManager.anim.SetFloat("Vertical", 0, 0.1f, Time.deltaTime);
                 return this;
             }
-
-            Vector3 targetDir = enemyManager.currentTarget.transform.position - transform.position;
 
             if (enemyManager.DistanceFromTarget > enemyManager.maxAttackRange)
             {
@@ -44,48 +43,51 @@ namespace RY
         {
             if (enemyManager.isPerformingAction)    // rotate manually
             {
-                Vector3 dir = enemyManager.currentTarget.transform.position - transform.position;
+                Vector3 dir = enemyManager.currentTarget.transform.position - enemyManager.transform.position;
                 dir.y = 0;
                 dir.Normalize();
 
                 if (dir == Vector3.zero)
                 {
-                    dir = transform.forward;
+                    dir = enemyManager.transform.forward;
                 }
 
                 Quaternion targetRotation = Quaternion.LookRotation(dir);
-                enemyManager.transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, enemyManager.rotationSpeed / Time.deltaTime);
+                enemyManager.transform.rotation = Quaternion.Slerp(
+                    enemyManager.transform.rotation, targetRotation, enemyManager.rotationSpeed / Time.deltaTime
+                    );
             }
             else    // rotate via pathfinding (navmesh)
             {
-                Vector3 relativeDir = transform.InverseTransformDirection(enemyManager.navMeshAgent.desiredVelocity);
                 Vector3 targetVelocity = enemyManager.rb.velocity;
 
                 enemyManager.navMeshAgent.enabled = true;
                 enemyManager.navMeshAgent.SetDestination(enemyManager.currentTarget.transform.position);
                 enemyManager.rb.velocity = targetVelocity;
-                enemyManager.transform.rotation = Quaternion.Slerp(transform.rotation, enemyManager.navMeshAgent.transform.rotation, enemyManager.rotationSpeed / Time.deltaTime);
+                enemyManager.transform.rotation = Quaternion.Slerp(
+                    enemyManager.transform.rotation, enemyManager.navMeshAgent.transform.rotation, enemyManager.rotationSpeed / Time.deltaTime
+                    );
             }
         }
 
         public void HandleFalling(EnemyManager enemyManager)
         {
             RaycastHit hit;
-            Vector3 targetPosition = transform.position;
+            Vector3 targetPosition = enemyManager.transform.position;
 
-            Debug.DrawRay(transform.position, -Vector3.up, Color.red, 0.1f, false);
-            if (Physics.Raycast(transform.position, -Vector3.up, out hit, 2f))
+            Debug.DrawRay(enemyManager.transform.position, -Vector3.up, Color.red, 0.1f, false);
+            if (Physics.Raycast(enemyManager.transform.position, -Vector3.up, out hit, 2f))
             {
                 Vector3 tp = hit.point;
                 targetPosition.y = tp.y + 0.2f;
 
                 if (enemyManager.isPerformingAction)
                 {
-                    transform.position = Vector3.Lerp(transform.position, targetPosition, Time.deltaTime / 0.1f);
+                    enemyManager.transform.position = Vector3.Lerp(enemyManager.transform.position, targetPosition, Time.deltaTime / 0.1f);
                 }
                 else
                 {
-                    transform.position = targetPosition;
+                    enemyManager.transform.position = targetPosition;
                 }
             }
         }

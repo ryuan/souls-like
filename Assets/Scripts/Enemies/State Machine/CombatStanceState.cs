@@ -13,6 +13,11 @@ namespace RY
 
         public override State Tick(EnemyManager enemyManager, EnemyStats enemyStats, EnemyAnimatorManager animatorManager)
         {
+            if (enemyManager.isPerformingAction)
+            {
+                animatorManager.anim.SetFloat("Vertical", 0, 0.1f, Time.deltaTime);
+            }
+
             if (enemyManager.currentRecoveryTime <= 0 && enemyManager.DistanceFromTarget <= enemyManager.maxAttackRange)
             {
                 return attackState;
