@@ -6,23 +6,23 @@ namespace RY
 {
     public class EnemyAnimatorManager : AnimatorManager
     {
-        EnemyLocomotion enemyLocomotion;
+        EnemyManager enemyManager;
 
         private void Awake()
         {
             anim = GetComponent<Animator>();
-            enemyLocomotion = GetComponentInParent<EnemyLocomotion>();
+            enemyManager = GetComponentInParent<EnemyManager>();
         }
 
         private void OnAnimatorMove()
         {
-            enemyLocomotion.rb.drag = 0;
+            enemyManager.rb.drag = 0;
 
             Vector3 deltaPosition = anim.deltaPosition;
             deltaPosition.y = 0;
             float delta = Time.deltaTime;
             Vector3 velocity = deltaPosition / delta;
-            enemyLocomotion.rb.velocity = velocity;
+            enemyManager.rb.velocity = velocity;
         }
     }
 }
