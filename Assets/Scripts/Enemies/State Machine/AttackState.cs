@@ -18,6 +18,8 @@ namespace RY
 
         public override State Tick(EnemyManager enemyManager, EnemyStats enemyStats, EnemyAnimatorManager animatorManager)
         {
+            HandleRotate(enemyManager);
+
             if (enemyManager.isPerformingAction)
             {
                 return combatStanceState;
@@ -56,7 +58,6 @@ namespace RY
             }
 
             // If you unit didn't execute an attack, that means either (1) currentAttack is empty or (2) currentAttack is out of range
-            HandleRotate(enemyManager);
             GetNewAttack(enemyManager);
             return combatStanceState;
         }

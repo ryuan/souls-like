@@ -35,6 +35,8 @@ namespace RY
         public bool isFalling;
         public bool isJumping;
         public bool canDoCombo;
+        public bool usingRightWeapon;
+        public bool usingLeftWeapon;
 
 
 
@@ -62,6 +64,8 @@ namespace RY
             isInteracting = anim.GetBool("isInteracting");
             anim.applyRootMotion = isInteracting;
             canDoCombo = anim.GetBool("canDoCombo");
+            usingRightWeapon = anim.GetBool("usingRightWeapon");
+            usingLeftWeapon = anim.GetBool("usingLeftWeapon");
             anim.SetBool("isInAir", isFalling);
 
             inputHandler.TickInput(delta);

@@ -29,14 +29,22 @@ namespace RY
 
         public void TakeDamage(int damage)
         {
-            currentHealth = currentHealth - damage;
+            if (isDead)
+            {
+                return;
+            }
 
-            animator.Play("OH_Damage_01");
+            currentHealth -= damage;
 
             if (currentHealth <= 0)
             {
                 currentHealth = 0;
-                animator.Play("Dead_01");
+                isDead = true;
+                animator.Play("OH_Damage_01");
+            }
+            else
+            {
+                animator.Play("OH_Damage_01");
             }
         }
     }

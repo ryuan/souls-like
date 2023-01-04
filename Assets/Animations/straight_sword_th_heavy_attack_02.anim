@@ -72833,14 +72833,14 @@ AnimationClip:
     intParameter: 0
     messageOptions: 0
   - time: 0.93333334
-    functionName: EnableRightWeaponDamageCollider
+    functionName: EnableWeaponDamageCollider
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
   - time: 1.1666666
-    functionName: DisableRightWeaponDamageCollider
+    functionName: DisableWeaponDamageCollider
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0

@@ -46,11 +46,18 @@ namespace RY
 
         public void TakeDamage(int damage)
         {
+            if (isDead)
+            {
+                return;
+            }
+
             currentHealth -= damage;
             healthBar.SetCurrentHealth(currentHealth);
 
             if (currentHealth <= 0)
             {
+                isDead = true;
+
                 if (inputHandler.twoHandFlag)
                 {
                     animatorManager.PlayTargetAnimation("TH_Dead_01", true);

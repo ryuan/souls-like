@@ -55,8 +55,8 @@ namespace RY
                 {
                     leftWeaponHolderSlot.LoadWeaponModel(weaponItem);
                     playerAttackHandler.SetCurrentWeaponDamageCollider(
-                    leftWeaponHolderSlot.GetWeaponDamageCollider(), true
-                    );
+                        leftWeaponHolderSlot.GetWeaponDamageCollider(), true
+                        );
 
                     #region Handle Left Weapon Idle Animations
                     if (weaponItem != null)
@@ -102,6 +102,7 @@ namespace RY
                 playerAttackHandler.SetCurrentWeaponDamageCollider(
                     rightWeaponHolderSlot.GetWeaponDamageCollider(), false
                     );
+
                 quickSlotsUI.UpdateWeaponQuickSlotsUI(weaponItem, false);
             }
         }

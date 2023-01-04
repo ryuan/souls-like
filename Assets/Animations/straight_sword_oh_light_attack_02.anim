@@ -54887,14 +54887,14 @@ AnimationClip:
     intParameter: 0
     messageOptions: 0
   - time: 0.33333334
-    functionName: EnableRightWeaponDamageCollider
+    functionName: EnableWeaponDamageCollider
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
   - time: 0.53333336
-    functionName: DisableRightWeaponDamageCollider
+    functionName: DisableWeaponDamageCollider
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0

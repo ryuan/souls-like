@@ -13,6 +13,7 @@ namespace RY
         PlayerManager playerManager;
         CameraHandler cameraHandler;
         WeaponHolderSlotManager weaponHolderSlotManager;
+        PlayerAnimatorManager animatorManager;
         UIManager uiManager;
 
         [Header("Player & Camera Movement Inputs")]
@@ -63,6 +64,7 @@ namespace RY
             playerManager = GetComponent<PlayerManager>();
             cameraHandler = FindObjectOfType<CameraHandler>();
             weaponHolderSlotManager = GetComponentInChildren<WeaponHolderSlotManager>();
+            animatorManager = GetComponentInChildren<PlayerAnimatorManager>();
             uiManager = FindObjectOfType<UIManager>();
         }
 
@@ -146,12 +148,14 @@ namespace RY
             {
                 if (playerManager.canDoCombo)
                 {
+                    animatorManager.anim.SetBool("usingRightWeapon", true);
                     playerAttackHandler.HandleWeaponCombo(playerInventory.rightWeapon);
                 }
                 else
                 {
                     if (playerManager.isInteracting == false)
                     {
+                        animatorManager.anim.SetBool("usingRightWeapon", true);
                         playerAttackHandler.HandleLightAttack(playerInventory.rightWeapon);
                     }
                 }
@@ -162,12 +166,14 @@ namespace RY
             {
                 if (playerManager.canDoCombo)
                 {
+                    animatorManager.anim.SetBool("usingRightWeapon", true);
                     playerAttackHandler.HandleWeaponCombo(playerInventory.rightWeapon);
                 }
                 else
                 {
                     if (playerManager.isInteracting == false)
                     {
+                        animatorManager.anim.SetBool("usingRightWeapon", true);
                         playerAttackHandler.HandleHeavyAttack(playerInventory.rightWeapon);
                     }
                 }

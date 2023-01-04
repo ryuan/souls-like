@@ -9,6 +9,7 @@ namespace RY
         InputHandler inputHandler;
         PlayerAnimatorManager animatorManager;
         PlayerStats playerStats;
+        PlayerManager playerManager;
 
         DamageCollider leftWeaponDamageCollider;
         DamageCollider rightWeaponDamageCollider;
@@ -23,6 +24,7 @@ namespace RY
             inputHandler = GetComponentInParent<InputHandler>();
             animatorManager = GetComponent<PlayerAnimatorManager>();
             playerStats = GetComponentInParent<PlayerStats>();
+            playerManager = GetComponentInParent<PlayerManager>();
         }
 
         public void SetCurrentWeaponDamageCollider(DamageCollider damageCollider, bool isLeft)
@@ -39,29 +41,29 @@ namespace RY
 
         #region Handle Weapon's Damage Collider
 
-        public void EnableLeftWeaponDamageCollider()
+        public void EnableWeaponDamageCollider()
         {
-            leftWeaponDamageCollider.EnableDamageCollider();
+            if (playerManager.usingLeftWeapon)
+            {
+                leftWeaponDamageCollider.EnableDamageCollider();
+            }
+
+            if (playerManager.usingRightWeapon)
+            {
+                rightWeaponDamageCollider.EnableDamageCollider();
+            }
         }
 
-        public void EnableRightWeaponDamageCollider()
-        {
-            rightWeaponDamageCollider.EnableDamageCollider();
-        }
-
-        public void DisableLeftWeaponDamageCollider()
+        public void DisableWeaponDamageCollider()
         {
             leftWeaponDamageCollider.DisableDamageCollider();
-        }
-
-        public void DisableRightWeaponDamageCollider()
-        {
             rightWeaponDamageCollider.DisableDamageCollider();
         }
 
         #endregion
 
         #region Handle Weapon's Stamina Drain
+
         public void DrainStaminaLightAttack()
         {
             playerStats.DrainStamina(Mathf.RoundToInt(latestAttackingWeapon.baseStamina * latestAttackingWeapon.lightAtkMultipler));
@@ -71,6 +73,7 @@ namespace RY
         {
             playerStats.DrainStamina(Mathf.RoundToInt(latestAttackingWeapon.baseStamina * latestAttackingWeapon.heavyAtkMultipler));
         }
+
         #endregion
 
         public void HandleWeaponCombo(WeaponItem weapon)
