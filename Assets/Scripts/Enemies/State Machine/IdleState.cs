@@ -27,11 +27,7 @@ namespace RY
                 {
                     // Check for team ID
 
-                    Vector3 targetDir = characterStats.transform.position - enemyManager.transform.position;
-                    float viewableAngle = Vector3.Angle(targetDir, enemyManager.transform.forward);
-
-                    if (viewableAngle > enemyManager.MinDetectionAngle
-                        && viewableAngle < enemyManager.MaxDetectionAngle)
+                    if (enemyManager.IsWithinViewableAngle(characterStats.transform.position, enemyManager.MinDetectionAngle, enemyManager.MaxDetectionAngle))
                     {
                         enemyManager.currentTarget = characterStats;
                     }

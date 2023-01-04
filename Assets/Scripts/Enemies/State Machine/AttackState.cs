@@ -25,20 +25,17 @@ namespace RY
 
             if (currentAttack != null)
             {
-                // If this unit is too close to the target, then try again
-                if (enemyManager.DistanceFromTarget < currentAttack.minDistanceNeededToAttack)
+                // If the target is within the attack's viable angle, then proceed
+                if (enemyManager.IsWithinViewableAngle(enemyManager.currentTarget.transform.position, currentAttack.MinAttackAngle, currentAttack.MaxAttackAngle))
                 {
-                    return this;
-                }
-                // If this unit is within range to attack the target, then proceed
-                else if (enemyManager.DistanceFromTarget < currentAttack.maxDistanceNeededToAttack)
-                {
-                    Vector3 targetDir = enemyManager.currentTarget.transform.position - enemyManager.transform.position;
-                    float viewableAngle = Vector3.Angle(targetDir, enemyManager.transform.forward);
-
-                    // If the target is within the attack's viable angle, then proceed
-                    if (viewableAngle <= currentAttack.maxAttackAngle
-                        && viewableAngle >= currentAttack.minAttackAngle)
+                    // If this unit is too close to the target, then try again
+                    // This case shouldn't happen if at least one attack has min distance of 0
+                    if (enemyManager.DistanceFromTarget < currentAttack.minAttackDistance)
+                    {
+                        return this;
+                    }
+                    // If this unit is within range to attack the target, then proceed
+                    else if (enemyManager.DistanceFromTarget < currentAttack.maxAttackDistance)
                     {
                         // If the past action's recovery time has expired, then attack and reset
                         if (enemyManager.currentRecoveryTime <= 0)
@@ -57,32 +54,27 @@ namespace RY
                     }
                 }
             }
-            else
-            {
-                GetNewAttack(enemyManager);
-            }
 
-            // Case when unit has an attack but is outside the max attack distance, or has no attack at any distance
+            // If you unit didn't execute an attack, that means either (1) currentAttack is empty or (2) currentAttack is out of range
+            HandleRotate(enemyManager);
+            GetNewAttack(enemyManager);
             return combatStanceState;
         }
 
         private void GetNewAttack(EnemyManager enemyManager)
         {
-            Vector3 targetDir = enemyManager.currentTarget.transform.position - enemyManager.transform.position;
-            float viewableAngle = Vector3.Angle(targetDir, enemyManager.transform.forward);
             int maxScore = 0;
 
             for (int i = 0; i < enemyAttacks.Length; i++)
             {
                 EnemyAttackAction enemyAttackAction = enemyAttacks[i];
 
-                if (enemyManager.DistanceFromTarget >= enemyAttackAction.minDistanceNeededToAttack
-                    && enemyManager.DistanceFromTarget <= enemyAttackAction.maxDistanceNeededToAttack)
+                if (enemyManager.DistanceFromTarget >= enemyAttackAction.minAttackDistance
+                    && enemyManager.DistanceFromTarget <= enemyAttackAction.maxAttackDistance)
                 {
-                    if (viewableAngle >= enemyAttackAction.minAttackAngle
-                        && viewableAngle <= enemyAttackAction.maxAttackAngle)
+                    if (enemyManager.IsWithinViewableAngle(enemyManager.currentTarget.transform.position, enemyAttackAction.MinAttackAngle, enemyAttackAction.MaxAttackAngle))
                     {
-                        maxScore += enemyAttackAction.attackScore;
+                        maxScore += enemyAttackAction.attackChanceWeight;
                     }
                 }
             }
@@ -94,26 +86,44 @@ namespace RY
             {
                 EnemyAttackAction enemyAttackAction = enemyAttacks[i];
 
-                if (enemyManager.DistanceFromTarget >= enemyAttackAction.minDistanceNeededToAttack
-                    && enemyManager.DistanceFromTarget <= enemyAttackAction.maxDistanceNeededToAttack)
+                if (enemyManager.DistanceFromTarget >= enemyAttackAction.minAttackDistance
+                    && enemyManager.DistanceFromTarget <= enemyAttackAction.maxAttackDistance)
                 {
-                    if (viewableAngle >= enemyAttackAction.minAttackAngle
-                        && viewableAngle <= enemyAttackAction.maxAttackAngle)
+                    if (enemyManager.IsWithinViewableAngle(enemyManager.currentTarget.transform.position, enemyAttackAction.MinAttackAngle, enemyAttackAction.MaxAttackAngle))
                     {
                         if (currentAttack != null)
                         {
                             return;
                         }
 
-                        tempScore += enemyAttackAction.attackScore;
+                        tempScore += enemyAttackAction.attackChanceWeight;
 
                         if (tempScore >= randomValue)
                         {
                             currentAttack = enemyAttackAction;
+
                         }
                     }
                 }
             }
+        }
+
+        private void HandleRotate(EnemyManager enemyManager)
+        {
+            Vector3 targetDir = enemyManager.currentTarget.transform.position - enemyManager.transform.position;
+            targetDir.y = 0;
+            targetDir.Normalize();
+
+            if (targetDir == Vector3.zero)
+            {
+                targetDir = enemyManager.transform.forward;
+            }
+
+            Quaternion targetRotation = Quaternion.LookRotation(targetDir);
+
+            enemyManager.transform.rotation = Quaternion.Slerp(
+                enemyManager.transform.rotation, targetRotation, enemyManager.rotationSpeed * Time.deltaTime
+                );
         }
     }
 }

@@ -24,9 +24,14 @@ namespace RY
         public LayerMask detectionLayers;
 
         [Header("AI Movement Attributes")]
-        public float moveSpeedAnimVerticalFloat = 0.75f;
+        public float moveSpeedAnimVerticalFloat = 0.85f;
         public float rotationSpeed = 15;
         public float maxAttackRange = 1.5f;
+
+        [Header("Grounding Detection")]
+        public float groundDetectionRayStartPoint = 0.5f;
+        public float minDistanceNeededToBeginFall = 1f;
+        public LayerMask ignoreForGroundCheck;
 
         [Header("State Machine")]
         public State initialState;
@@ -35,15 +40,9 @@ namespace RY
         public bool isPerformingAction;
         public float currentRecoveryTime = 0;
 
-        public float MinDetectionAngle { get {
-                return -(_detectionFOVAngle / 2);
-            } }
-        public float MaxDetectionAngle { get {
-                return _detectionFOVAngle / 2;
-            } }
-        public float DistanceFromTarget { get {
-                return Vector3.Distance(currentTarget.transform.position, transform.position);
-            } }
+        public float MinDetectionAngle { get { return -(_detectionFOVAngle / 2); } }
+        public float MaxDetectionAngle { get { return _detectionFOVAngle / 2; } }
+        public float DistanceFromTarget { get { return Vector3.Distance(currentTarget.transform.position, transform.position); } }
 
 
 
@@ -58,9 +57,12 @@ namespace RY
         private void Start()
         {
             currentState = initialState;
-            detectionLayers = (1 << 9);
+
             navMeshAgent.enabled = false;
             rb.isKinematic = false;
+
+            detectionLayers = (1 << 9);
+            ignoreForGroundCheck = ~(1 << 8 | 1 << 11);
 
             // Don't let colliders of the same character to bump into each other
             Physics.IgnoreCollision(mainCollider, collisionBlockerCollider, true);
@@ -74,6 +76,7 @@ namespace RY
         private void FixedUpdate()
         {
             HandleStateMachine();
+            HandleGrounding();
         }
 
         private void HandleStateMachine()
@@ -91,7 +94,6 @@ namespace RY
             }
         }
 
-
         private void HandleRecoveryTimer()
         {
             if (currentRecoveryTime > 0)
@@ -105,6 +107,39 @@ namespace RY
                 {
                     isPerformingAction = false;
                 }
+            }
+        }
+
+        public void HandleGrounding()
+        {
+            RaycastHit hit;
+            Vector3 origin = transform.position;
+            origin.y += groundDetectionRayStartPoint;
+
+            Vector3 targetPosition = transform.position;
+
+            Debug.DrawRay(origin, -Vector3.up * minDistanceNeededToBeginFall, Color.red, 0.1f, false);
+            if (Physics.Raycast(origin, -Vector3.up, out hit, minDistanceNeededToBeginFall, ignoreForGroundCheck))
+            {
+                Vector3 hitPoint = hit.point;
+                targetPosition.y = hitPoint.y;
+
+                transform.position = Vector3.Lerp(transform.position, targetPosition, Time.deltaTime / 0.1f);
+            }
+        }
+
+        public bool IsWithinViewableAngle(Vector3 targetPosition, float minAngle, float maxAngle)
+        {
+            Vector3 targetDir = targetPosition - transform.position;
+            float viewableAngle = Vector3.Angle(targetDir, transform.forward);
+
+            if (viewableAngle >= minAngle && viewableAngle <= maxAngle)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
             }
         }
     }
