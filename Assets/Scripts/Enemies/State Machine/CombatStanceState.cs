@@ -11,11 +11,14 @@ namespace RY
         [SerializeField]
         PursueTargetState pursueTargetState;
 
+
+
         public override State Tick(EnemyManager enemyManager, EnemyStats enemyStats, EnemyAnimatorManager animatorManager)
         {
             if (enemyManager.isPerformingAction)
             {
                 animatorManager.anim.SetFloat("Vertical", 0, 0.1f, Time.deltaTime);
+                return this;
             }
 
             if (enemyManager.currentRecoveryTime <= 0 && enemyManager.DistanceFromTarget <= enemyManager.maxAttackRange)

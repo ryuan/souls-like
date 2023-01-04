@@ -29,7 +29,7 @@ namespace RY
         InteractableUI interactableUI;
         Vector3 detectionSphereOffset;
 
-        [Header("Player State Machine")]
+        [Header("State Machine")]
         public bool isInteracting;
         public bool isGrounded;
         public bool isFalling;

@@ -9,8 +9,12 @@ namespace RY
         [SerializeField]
         CombatStanceState combatStanceState;
 
-        public EnemyAttackAction[] enemyAttacks;
-        public EnemyAttackAction currentAttack;
+        [SerializeField]
+        EnemyAttackAction[] enemyAttacks;
+        [SerializeField]
+        EnemyAttackAction currentAttack;
+
+
 
         public override State Tick(EnemyManager enemyManager, EnemyStats enemyStats, EnemyAnimatorManager animatorManager)
         {
@@ -29,9 +33,12 @@ namespace RY
                 // If this unit is within range to attack the target, then proceed
                 else if (enemyManager.DistanceFromTarget < currentAttack.maxDistanceNeededToAttack)
                 {
+                    Vector3 targetDir = enemyManager.currentTarget.transform.position - enemyManager.transform.position;
+                    float viewableAngle = Vector3.Angle(targetDir, enemyManager.transform.forward);
+
                     // If the target is within the attack's viable angle, then proceed
-                    if (enemyManager.ViewableAngle <= currentAttack.maxAttackAngle
-                        && enemyManager.ViewableAngle >= currentAttack.minAttackAngle)
+                    if (viewableAngle <= currentAttack.maxAttackAngle
+                        && viewableAngle >= currentAttack.minAttackAngle)
                     {
                         // If the past action's recovery time has expired, then attack and reset
                         if (enemyManager.currentRecoveryTime <= 0)
@@ -55,11 +62,14 @@ namespace RY
                 GetNewAttack(enemyManager);
             }
 
+            // Case when unit has an attack but is outside the max attack distance, or has no attack at any distance
             return combatStanceState;
         }
 
         private void GetNewAttack(EnemyManager enemyManager)
         {
+            Vector3 targetDir = enemyManager.currentTarget.transform.position - enemyManager.transform.position;
+            float viewableAngle = Vector3.Angle(targetDir, enemyManager.transform.forward);
             int maxScore = 0;
 
             for (int i = 0; i < enemyAttacks.Length; i++)
@@ -69,8 +79,8 @@ namespace RY
                 if (enemyManager.DistanceFromTarget >= enemyAttackAction.minDistanceNeededToAttack
                     && enemyManager.DistanceFromTarget <= enemyAttackAction.maxDistanceNeededToAttack)
                 {
-                    if (enemyManager.ViewableAngle >= enemyAttackAction.minAttackAngle
-                        && enemyManager.ViewableAngle <= enemyAttackAction.maxAttackAngle)
+                    if (viewableAngle >= enemyAttackAction.minAttackAngle
+                        && viewableAngle <= enemyAttackAction.maxAttackAngle)
                     {
                         maxScore += enemyAttackAction.attackScore;
                     }
@@ -87,8 +97,8 @@ namespace RY
                 if (enemyManager.DistanceFromTarget >= enemyAttackAction.minDistanceNeededToAttack
                     && enemyManager.DistanceFromTarget <= enemyAttackAction.maxDistanceNeededToAttack)
                 {
-                    if (enemyManager.ViewableAngle >= enemyAttackAction.minAttackAngle
-                        && enemyManager.ViewableAngle <= enemyAttackAction.maxAttackAngle)
+                    if (viewableAngle >= enemyAttackAction.minAttackAngle
+                        && viewableAngle <= enemyAttackAction.maxAttackAngle)
                     {
                         if (currentAttack != null)
                         {

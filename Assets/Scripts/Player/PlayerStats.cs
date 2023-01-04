@@ -51,7 +51,14 @@ namespace RY
 
             if (currentHealth <= 0)
             {
-                animatorManager.PlayTargetAnimation("Dead_01", true);
+                if (inputHandler.twoHandFlag)
+                {
+                    animatorManager.PlayTargetAnimation("TH_Dead_01", true);
+                }
+                else
+                {
+                    animatorManager.PlayTargetAnimation("OH_Dead_01", true);
+                }
             }
             else
             {

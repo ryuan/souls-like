@@ -9,6 +9,8 @@ namespace RY
         [SerializeField]
         CombatStanceState combatStanceState;
 
+
+
         public override State Tick(EnemyManager enemyManager, EnemyStats enemyStats, EnemyAnimatorManager animatorManager)
         {
             if (enemyManager.isPerformingAction)
@@ -17,15 +19,11 @@ namespace RY
                 return this;
             }
 
-            if (enemyManager.DistanceFromTarget > enemyManager.maxAttackRange)
-            {
-                animatorManager.anim.SetFloat("Vertical", enemyManager.moveSpeedAnimVerticalFloat, 0.1f, Time.deltaTime);
+            animatorManager.anim.SetFloat("Vertical", enemyManager.moveSpeedAnimVerticalFloat, 0.1f, Time.deltaTime);
+            HandleFalling(enemyManager);    // temporary function - need to review!
+            HandleRotateAndPursue(enemyManager);
 
-                HandleFalling(enemyManager);    // temporary function - need to review!
-            }
-
-            HandleRotateTowardsTarget(enemyManager);
-
+            // Pull back navMeshAgent to the unit's main transform since unit now has velocity and rotation
             enemyManager.navMeshAgent.transform.localPosition = Vector3.zero;
             enemyManager.navMeshAgent.transform.localRotation = Quaternion.identity;
 
@@ -39,31 +37,34 @@ namespace RY
             }
         }
 
-        public void HandleRotateTowardsTarget(EnemyManager enemyManager)
+        public void HandleRotateAndPursue(EnemyManager enemyManager)
         {
             if (enemyManager.isPerformingAction)    // rotate manually
             {
-                Vector3 dir = enemyManager.currentTarget.transform.position - enemyManager.transform.position;
-                dir.y = 0;
-                dir.Normalize();
+                Vector3 targetDir = enemyManager.currentTarget.transform.position - enemyManager.transform.position;
+                targetDir.y = 0;
+                targetDir.Normalize();
 
-                if (dir == Vector3.zero)
+                if (targetDir == Vector3.zero)
                 {
-                    dir = enemyManager.transform.forward;
+                    targetDir = enemyManager.transform.forward;
                 }
 
-                Quaternion targetRotation = Quaternion.LookRotation(dir);
+                Quaternion targetRotation = Quaternion.LookRotation(targetDir);
+
                 enemyManager.transform.rotation = Quaternion.Slerp(
                     enemyManager.transform.rotation, targetRotation, enemyManager.rotationSpeed / Time.deltaTime
                     );
             }
-            else    // rotate via pathfinding (navmesh)
+            else    // rotate via nav mesh pathfinding
             {
                 Vector3 targetVelocity = enemyManager.rb.velocity;
 
                 enemyManager.navMeshAgent.enabled = true;
                 enemyManager.navMeshAgent.SetDestination(enemyManager.currentTarget.transform.position);
+
                 enemyManager.rb.velocity = targetVelocity;
+
                 enemyManager.transform.rotation = Quaternion.Slerp(
                     enemyManager.transform.rotation, enemyManager.navMeshAgent.transform.rotation, enemyManager.rotationSpeed / Time.deltaTime
                     );
@@ -78,8 +79,8 @@ namespace RY
             Debug.DrawRay(enemyManager.transform.position, -Vector3.up, Color.red, 0.1f, false);
             if (Physics.Raycast(enemyManager.transform.position, -Vector3.up, out hit, 2f))
             {
-                Vector3 tp = hit.point;
-                targetPosition.y = tp.y + 0.2f;
+                Vector3 hitPoint = hit.point;
+                targetPosition.y = hitPoint.y + 0.2f;
 
                 if (enemyManager.isPerformingAction)
                 {

@@ -20,32 +20,29 @@ namespace RY
 
         [Header("AI Detection Settings")]
         [SerializeField]
-        float detectionFOVAngle = 100;
-        public float detectionRadius = 20;
-        public float currentRecoveryTime = 0;
-        public LayerMask detectionLayer;
+        float _detectionFOVAngle = 100;
+        public LayerMask detectionLayers;
 
         [Header("AI Movement Attributes")]
         public float moveSpeedAnimVerticalFloat = 0.75f;
         public float rotationSpeed = 15;
         public float maxAttackRange = 1.5f;
 
-        [Header("Enemy State Machine")]
+        [Header("State Machine")]
+        public State initialState;
         public State currentState;
         public CharacterStats currentTarget;
         public bool isPerformingAction;
+        public float currentRecoveryTime = 0;
 
         public float MinDetectionAngle { get {
-                return -(detectionFOVAngle / 2);
+                return -(_detectionFOVAngle / 2);
             } }
         public float MaxDetectionAngle { get {
-                return detectionFOVAngle / 2;
+                return _detectionFOVAngle / 2;
             } }
         public float DistanceFromTarget { get {
                 return Vector3.Distance(currentTarget.transform.position, transform.position);
-            } }
-        public float ViewableAngle { get {
-                return Vector3.Angle(currentTarget.transform.position - transform.position, transform.forward);
             } }
 
 
@@ -56,12 +53,12 @@ namespace RY
             animatorManager = GetComponentInChildren<EnemyAnimatorManager>();
             rb = GetComponent<Rigidbody>();
             navMeshAgent = GetComponentInChildren<NavMeshAgent>();
-            
         }
 
         private void Start()
         {
-            detectionLayer = (1 << 9);
+            currentState = initialState;
+            detectionLayers = (1 << 9);
             navMeshAgent.enabled = false;
             rb.isKinematic = false;
 
@@ -83,6 +80,7 @@ namespace RY
         {
             if (currentState != null)
             {
+                
                 State nextState = currentState.Tick(this, enemyStats, animatorManager);
 
                 if (nextState != null)

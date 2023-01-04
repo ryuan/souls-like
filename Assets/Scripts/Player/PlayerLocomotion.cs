@@ -128,10 +128,9 @@ namespace RY
                 targetDir.Normalize();
             }
 
-            Quaternion tr = Quaternion.LookRotation(targetDir);
-            Quaternion targetRotation = Quaternion.Slerp(transform.rotation, tr, rotationSpeed * delta);
+            Quaternion targetRotation = Quaternion.LookRotation(targetDir);
 
-            transform.rotation = targetRotation;
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * delta);
         }
 
         public void HandleRoll()
@@ -247,8 +246,8 @@ namespace RY
 
                     normalVector = hit.normal;
 
-                    Vector3 tp = hit.point;
-                    targetPosition.y = tp.y;
+                    Vector3 hitPoint = hit.point;
+                    targetPosition.y = hitPoint.y;
 
                     if (playerManager.isFalling)
                     {

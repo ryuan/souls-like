@@ -4934,18 +4934,18 @@ MonoBehaviour:
   collisionBlockerCollider: {fileID: 1862765218452044435}
   navMeshAgent: {fileID: 0}
   rb: {fileID: 0}
-  detectionFOVAngle: 120
-  detectionRadius: 20
-  currentRecoveryTime: 0
-  detectionLayer:
+  _detectionFOVAngle: 100
+  detectionLayers:
     serializedVersion: 2
     m_Bits: 0
   moveSpeedAnimVerticalFloat: 0.75
   rotationSpeed: 20
   maxAttackRange: 1.5
-  currentState: {fileID: 3041293259812136350}
+  initialState: {fileID: 8411624324757982891}
+  currentState: {fileID: 0}
   currentTarget: {fileID: 0}
   isPerformingAction: 0
+  currentRecoveryTime: 0
 --- !u!1 &1889760091180896540
 GameObject:
   m_ObjectHideFlags: 0
@@ -5030,7 +5030,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 612570366554850579}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &7775030507866113172
 MonoBehaviour:
@@ -5174,7 +5174,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 612570366554850579}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &3683958434966575541
 MonoBehaviour:
@@ -5218,6 +5218,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 2317660157303526324}
   - {fileID: 8813446312609648695}
   - {fileID: 1873676724805807166}
   - {fileID: 3849159784633041620}
@@ -5255,7 +5256,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 612570366554850579}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &3041293259812136350
 MonoBehaviour:
@@ -5270,6 +5271,56 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pursueTargetState: {fileID: 4809195166013456567}
+  detectionRadius: 20
+--- !u!1 &7747267099100521742
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2317660157303526324}
+  - component: {fileID: 8411624324757982891}
+  m_Layer: 0
+  m_Name: Ambush State
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2317660157303526324
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7747267099100521742}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 612570366554850579}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8411624324757982891
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7747267099100521742}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 38130f9f6c1fc4183a2baba41159e2f1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pursueTargetState: {fileID: 4809195166013456567}
+  sleepAnimation: Sleep
+  wakeAnimation: Wake_Up
+  isSleeping: 1
+  detectionRadius: 4
 --- !u!1 &9122239255164454702
 GameObject:
   m_ObjectHideFlags: 0
@@ -5300,7 +5351,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 612570366554850579}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &4809195166013456567
 MonoBehaviour:
