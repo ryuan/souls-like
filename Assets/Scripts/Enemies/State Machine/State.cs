@@ -6,6 +6,8 @@ namespace RY
 {
     public abstract class State : MonoBehaviour
     {
-        public abstract State Tick(EnemyManager enemyManager, EnemyStats enemyStats, EnemyAnimatorManager animatorManager);
+        public abstract State Tick(
+            EnemyManager enemyManager, EnemyLocomotion enemyLocomotion, EnemyStats enemyStats, EnemyAnimatorManager animatorManager
+            );
     }
 }

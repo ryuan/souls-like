@@ -42,6 +42,7 @@ namespace RY
         [Header("Target Locked Camera")]
         public float maxLockOnDistance = 30f;
         public float lockedPivotPosYLift = 0.6f;
+        public float scanAngle = 100;
         public CharacterManager nearestLockOnTarget;
         public CharacterManager currentLockOnTarget;
         public CharacterManager leftLockTarget;
@@ -51,6 +52,7 @@ namespace RY
         Vector3 lockedPivotPos;
         Vector3 unlockedPivotPos;
         Vector3 pivotVelocity = Vector3.zero;
+        LayerMask characterLayers;
 
 
 
@@ -64,6 +66,7 @@ namespace RY
 
             defaultMainCamLocalPosZ = mainCameraTransform.localPosition.z;
             ignoreLayers = ~(1 << 7 | 1 << 8 | 1 << 9 | 1 << 10 | 1 << 11);
+            characterLayers = (1 << 7 | 1 << 9);
             unlockedPivotPos = cameraPivotTransform.position;
             lockedPivotPos = unlockedPivotPos + new Vector3(0, lockedPivotPosYLift);
             singleton = this;
@@ -158,14 +161,14 @@ namespace RY
                     float viewableAngle = Vector3.Angle(lockTargetDirection, mainCameraTransform.forward);
 
                     if (character.transform.root != playerTransform.transform.root
-                        && viewableAngle > -50
-                        && viewableAngle < 50
+                        && viewableAngle > -scanAngle/2
+                        && viewableAngle < scanAngle/2
                         && distanceFromTarget <= maxLockOnDistance)
                     {
                         RaycastHit hit;
 
                         Debug.DrawLine(playerManager.lockOnTransform.position, character.lockOnTransform.position, Color.red, 1.5f);
-                        if (Physics.Linecast(playerManager.lockOnTransform.position, character.lockOnTransform.position, out hit))
+                        if (Physics.Linecast(playerManager.lockOnTransform.position, character.lockOnTransform.position, out hit, characterLayers))
                         {
                             Debug.Log(hit.transform.gameObject.name);
 

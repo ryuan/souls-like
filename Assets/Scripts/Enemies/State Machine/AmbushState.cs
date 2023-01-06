@@ -23,14 +23,14 @@ namespace RY
         
 
 
-        public override State Tick(EnemyManager enemyManager, EnemyStats enemyStats, EnemyAnimatorManager animatorManager)
+        public override State Tick(EnemyManager enemyManager, EnemyLocomotion enemyLocomotion, EnemyStats enemyStats, EnemyAnimatorManager animatorManager)
         {
             if (isSleeping && animatorManager.anim.GetBool("isInteracting") == false)
             {
                 animatorManager.PlayTargetAnimation(sleepAnimation, true);
             }
 
-            Collider[] colliders = Physics.OverlapSphere(enemyManager.transform.position, detectionRadius, enemyManager.detectionLayers);
+            Collider[] colliders = Physics.OverlapSphere(enemyManager.transform.position, detectionRadius, enemyLocomotion.detectionLayers);
 
             for (int i = 0; i < colliders.Length; i++)
             {
@@ -39,7 +39,7 @@ namespace RY
 
                 if (characterStats != null)
                 {
-                    if (enemyManager.IsWithinViewableAngle(characterStats.transform.position, enemyManager.MinDetectionAngle, enemyManager.MaxDetectionAngle))
+                    if (enemyLocomotion.IsWithinViewableAngle(characterStats.transform.position, enemyLocomotion.MinDetectionAngle, enemyLocomotion.MaxDetectionAngle))
                     {
                         enemyManager.currentTarget = characterStats;
                         isSleeping = false;
