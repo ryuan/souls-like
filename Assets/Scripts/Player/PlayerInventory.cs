@@ -17,6 +17,7 @@ namespace RY
         public WeaponItem leftWeapon;
         public WeaponItem rightWeapon;
         public WeaponItem unarmed;
+        public SpellItem currentSpell;
 
         [Header("Weapons in Inventory")]
         public List<WeaponItem> weaponsInventory;

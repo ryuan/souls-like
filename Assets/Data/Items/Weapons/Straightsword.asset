@@ -31,3 +31,4 @@ MonoBehaviour:
   baseStamina: 25
   lightAtkMultipler: 1
   heavyAtkMultipler: 2
+  weaponType: 2

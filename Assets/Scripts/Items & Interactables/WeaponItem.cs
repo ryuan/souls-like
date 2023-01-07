@@ -4,11 +4,18 @@ using UnityEngine;
 
 namespace RY
 {
+    public enum WeaponType {
+        FaithCaster, MagicCaster, MeleeWeapon, PyroCaster
+    };
+
     [CreateAssetMenu(menuName = "Items/Weapon Item")]
     public class WeaponItem : Item
     {
         public GameObject modelPrefab;
         public bool isUnarmed;
+
+        [Header("Weapon Type")]
+        public WeaponType weaponType;
 
         [Header("Idle Animations")]
         public string leftHandIdle;

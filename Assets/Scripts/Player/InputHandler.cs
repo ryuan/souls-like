@@ -146,19 +146,7 @@ namespace RY
             // RB input handles the RIGHT hand weapon's light attack
             if (rb_Input)
             {
-                if (playerManager.canDoCombo)
-                {
-                    animatorManager.anim.SetBool("usingRightWeapon", true);
-                    playerAttackHandler.HandleWeaponCombo(playerInventory.rightWeapon);
-                }
-                else
-                {
-                    if (playerManager.isInteracting == false)
-                    {
-                        animatorManager.anim.SetBool("usingRightWeapon", true);
-                        playerAttackHandler.HandleLightAttack(playerInventory.rightWeapon);
-                    }
-                }
+                playerAttackHandler.HandleRBAction();
             }
 
             // RT input handles the RIGHT hand weapon's heavy attack

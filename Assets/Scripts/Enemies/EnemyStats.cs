@@ -42,7 +42,7 @@ namespace RY
             {
                 currentHealth = 0;
                 isDead = true;
-                animator.Play("OH_Damage_01");
+                animator.Play("OH_Dead_01");
             }
             else
             {

@@ -116,6 +116,18 @@ namespace RY
                 }
             }
         }
+
+        public void HealHealth(int healAmount)
+        {
+            currentHealth += healAmount;
+
+            if (currentHealth > maxHealth)
+            {
+                currentHealth = maxHealth;
+            }
+
+            healthBar.SetCurrentHealth(currentHealth);
+        }
     }
 }
 

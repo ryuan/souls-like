@@ -10,6 +10,7 @@ namespace RY
         PlayerAnimatorManager animatorManager;
         PlayerStats playerStats;
         PlayerManager playerManager;
+        PlayerInventory playerInventory;
 
         DamageCollider leftWeaponDamageCollider;
         DamageCollider rightWeaponDamageCollider;
@@ -25,6 +26,7 @@ namespace RY
             animatorManager = GetComponent<PlayerAnimatorManager>();
             playerStats = GetComponentInParent<PlayerStats>();
             playerManager = GetComponentInParent<PlayerManager>();
+            playerInventory = GetComponentInParent<PlayerInventory>();
         }
 
         public void SetCurrentWeaponDamageCollider(DamageCollider damageCollider, bool isLeft)
@@ -56,8 +58,15 @@ namespace RY
 
         public void DisableWeaponDamageCollider()
         {
-            leftWeaponDamageCollider.DisableDamageCollider();
-            rightWeaponDamageCollider.DisableDamageCollider();
+            if (leftWeaponDamageCollider != null)
+            {
+                leftWeaponDamageCollider.DisableDamageCollider();
+            }
+
+            if (rightWeaponDamageCollider != null)
+            {
+                rightWeaponDamageCollider.DisableDamageCollider();
+            }
         }
 
         #endregion
@@ -75,6 +84,35 @@ namespace RY
         }
 
         #endregion
+
+        public void HandleRBAction()
+        {
+            if (playerInventory.rightWeapon.weaponType == WeaponType.FaithCaster || playerInventory.rightWeapon.weaponType == WeaponType.MagicCaster || playerInventory.rightWeapon.weaponType == WeaponType.PyroCaster)
+            {
+                HandleRBSpellAction(playerInventory.rightWeapon);
+            }
+            else if (playerInventory.rightWeapon.weaponType == WeaponType.MeleeWeapon)
+            {
+                HandleRBMeleeAction();
+            }
+        }
+
+        private void HandleRBMeleeAction()
+        {
+            if (playerManager.canDoCombo)
+            {
+                animatorManager.anim.SetBool("usingRightWeapon", true);
+                HandleWeaponCombo(playerInventory.rightWeapon);
+            }
+            else
+            {
+                if (playerManager.isInteracting == false)
+                {
+                    animatorManager.anim.SetBool("usingRightWeapon", true);
+                    HandleLightAttack(playerInventory.rightWeapon);
+                }
+            }
+        }
 
         public void HandleWeaponCombo(WeaponItem weapon)
         {
@@ -105,7 +143,7 @@ namespace RY
             }
         }
 
-        public void HandleLightAttack(WeaponItem weapon)
+        private void HandleLightAttack(WeaponItem weapon)
         {
             if (playerStats.currentStamina > 0)
             {
@@ -142,6 +180,25 @@ namespace RY
                 }
             }
         }
-    }
 
+        private void HandleRBSpellAction(WeaponItem weapon)
+        {
+            if (playerManager.isInteracting == false)
+            {
+                if (weapon.weaponType == WeaponType.FaithCaster)
+                {
+                    if (playerInventory.currentSpell != null && playerInventory.currentSpell.spellType == SpellType.Faith)
+                    {
+                        // check for available FP
+                        playerInventory.currentSpell.SpellCastAttempted(animatorManager, playerStats);
+                    }
+                }
+            }
+        }
+
+        private void CastSpell()
+        {
+            playerInventory.currentSpell.SpellCastSuccessful(animatorManager, playerStats);
+        }
+    }
 }
