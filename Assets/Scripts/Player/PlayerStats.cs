@@ -11,6 +11,7 @@ namespace RY
         InputHandler inputHandler;
         PlayerAnimatorManager animatorManager;
         PlayerManager playerManager;
+        PlayerAttackHandler playerAttackHandler;
 
         [SerializeField]
         float staminaRegenRate = 1;
@@ -28,6 +29,7 @@ namespace RY
             inputHandler = GetComponent<InputHandler>();
             animatorManager = GetComponentInChildren<PlayerAnimatorManager>();
             playerManager = GetComponent<PlayerManager>();
+            playerAttackHandler = GetComponentInChildren<PlayerAttackHandler>();
         }
 
         private void Start()
@@ -87,6 +89,8 @@ namespace RY
                     animatorManager.PlayTargetAnimation("OH_Damage_01", true);
                 }
             }
+
+            playerAttackHandler.DisableWeaponDamageCollider();   // force disable weapon collider if it's open while getting hit
         }
 
         public void DrainStamina(int cost)

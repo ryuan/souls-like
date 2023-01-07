@@ -7,12 +7,14 @@ namespace RY
     public class EnemyStats : CharacterStats
     {
         Animator animator;
+        EnemyAttackHandler enemyAttackHandler;
 
 
 
         private void Awake()
         {
             animator = GetComponentInChildren<Animator>();
+            enemyAttackHandler = GetComponentInChildren<EnemyAttackHandler>();
         }
 
         private void Start()
@@ -46,6 +48,8 @@ namespace RY
             {
                 animator.Play("OH_Damage_01");
             }
+
+            enemyAttackHandler.DisableWeaponDamageCollider();   // force disable weapon collider if it's open while getting hit
         }
     }
 }
