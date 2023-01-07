@@ -23,7 +23,11 @@ namespace RY
                 return this;
             }
 
-            if (enemyManager.currentRecoveryTime <= 0 && enemyLocomotion.DistanceFromTarget <= enemyLocomotion.maxAttackRange && enemyManager.currentTarget.isDead == false)
+            if (enemyManager.currentTarget.isDead)
+            {
+                return this;
+            }
+            else if (enemyManager.currentRecoveryTime <= 0 && enemyLocomotion.DistanceFromTarget <= enemyLocomotion.maxAttackRange)
             {
                 return attackState;
             }

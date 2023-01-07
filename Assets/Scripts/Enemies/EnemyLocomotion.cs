@@ -82,6 +82,7 @@ namespace RY
             Vector3 targetDir = targetPosition - transform.position;
             float viewableAngle = Vector3.Angle(targetDir, transform.forward);
 
+            // Probably need to fix this... Vector3.Angle always return smallest positive angle, so a negative minAngle is pointless
             if (viewableAngle >= minAngle && viewableAngle <= maxAngle)
             {
                 return true;
