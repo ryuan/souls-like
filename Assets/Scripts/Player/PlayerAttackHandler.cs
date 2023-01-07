@@ -80,57 +80,66 @@ namespace RY
         {
             animatorManager.DisableCombo();
 
-            if (lastAttack == weapon.ohLightAtk1)
+            if (playerStats.currentStamina > 0)
             {
-                animatorManager.PlayTargetAnimation(weapon.ohLightAtk2, true);
-                lastAttack = weapon.ohLightAtk2;
-            }
-            else if (lastAttack == weapon.ohHeavyAtk1)
-            {
-                animatorManager.PlayTargetAnimation(weapon.ohHeavyAtk2, true);
-                lastAttack = weapon.ohHeavyAtk2;
-            }
-            else if (lastAttack == weapon.thLightAtk1)
-            {
-                animatorManager.PlayTargetAnimation(weapon.thLightAtk2, true);
-                lastAttack = weapon.thLightAtk2;
-            }
-            else if (lastAttack == weapon.thHeavyAtk1)
-            {
-                animatorManager.PlayTargetAnimation(weapon.thHeavyAtk2, true);
-                lastAttack = weapon.thHeavyAtk2;
+                if (lastAttack == weapon.ohLightAtk1)
+                {
+                    animatorManager.PlayTargetAnimation(weapon.ohLightAtk2, true);
+                    lastAttack = weapon.ohLightAtk2;
+                }
+                else if (lastAttack == weapon.ohHeavyAtk1)
+                {
+                    animatorManager.PlayTargetAnimation(weapon.ohHeavyAtk2, true);
+                    lastAttack = weapon.ohHeavyAtk2;
+                }
+                else if (lastAttack == weapon.thLightAtk1)
+                {
+                    animatorManager.PlayTargetAnimation(weapon.thLightAtk2, true);
+                    lastAttack = weapon.thLightAtk2;
+                }
+                else if (lastAttack == weapon.thHeavyAtk1)
+                {
+                    animatorManager.PlayTargetAnimation(weapon.thHeavyAtk2, true);
+                    lastAttack = weapon.thHeavyAtk2;
+                }
             }
         }
 
         public void HandleLightAttack(WeaponItem weapon)
         {
-            latestAttackingWeapon = weapon;
+            if (playerStats.currentStamina > 0)
+            {
+                latestAttackingWeapon = weapon;
 
-            if (inputHandler.twoHandFlag)
-            {
-                animatorManager.PlayTargetAnimation(weapon.thLightAtk1, true);
-                lastAttack = weapon.thLightAtk1;
-            }
-            else
-            {
-                animatorManager.PlayTargetAnimation(weapon.ohLightAtk1, true);
-                lastAttack = weapon.ohLightAtk1;
+                if (inputHandler.twoHandFlag)
+                {
+                    animatorManager.PlayTargetAnimation(weapon.thLightAtk1, true);
+                    lastAttack = weapon.thLightAtk1;
+                }
+                else
+                {
+                    animatorManager.PlayTargetAnimation(weapon.ohLightAtk1, true);
+                    lastAttack = weapon.ohLightAtk1;
+                }
             }
         }
 
         public void HandleHeavyAttack(WeaponItem weapon)
         {
-            latestAttackingWeapon = weapon;
+            if (playerStats.currentStamina > 0)
+            {
+                latestAttackingWeapon = weapon;
 
-            if (inputHandler.twoHandFlag)
-            {
-                animatorManager.PlayTargetAnimation(weapon.thHeavyAtk1, true);
-                lastAttack = weapon.thHeavyAtk1;
-            }
-            else
-            {
-                animatorManager.PlayTargetAnimation(weapon.ohHeavyAtk1, true);
-                lastAttack = weapon.ohHeavyAtk1;
+                if (inputHandler.twoHandFlag)
+                {
+                    animatorManager.PlayTargetAnimation(weapon.thHeavyAtk1, true);
+                    lastAttack = weapon.thHeavyAtk1;
+                }
+                else
+                {
+                    animatorManager.PlayTargetAnimation(weapon.ohHeavyAtk1, true);
+                    lastAttack = weapon.ohHeavyAtk1;
+                }
             }
         }
     }

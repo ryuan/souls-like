@@ -8,8 +8,9 @@ namespace RY
     {
         CameraHandler cameraHandler;
         InputHandler inputHandler;
-        PlayerLocomotion playerLocomotion;
         Animator anim;
+        PlayerLocomotion playerLocomotion;
+        PlayerStats playerStats;
 
         [SerializeField]
         Collider mainCollider;
@@ -37,6 +38,7 @@ namespace RY
         public bool canDoCombo;
         public bool usingRightWeapon;
         public bool usingLeftWeapon;
+        public bool isInvulnerable;
 
 
 
@@ -44,8 +46,9 @@ namespace RY
         {
             cameraHandler = FindObjectOfType<CameraHandler>();
             inputHandler = GetComponent<InputHandler>();
-            playerLocomotion = GetComponent<PlayerLocomotion>();
             anim = GetComponentInChildren<Animator>();
+            playerLocomotion = GetComponent<PlayerLocomotion>();
+            playerStats = GetComponent<PlayerStats>();
             interactableUI = FindObjectOfType<InteractableUI>();
         }
 
@@ -66,11 +69,13 @@ namespace RY
             canDoCombo = anim.GetBool("canDoCombo");
             usingRightWeapon = anim.GetBool("usingRightWeapon");
             usingLeftWeapon = anim.GetBool("usingLeftWeapon");
+            isInvulnerable = anim.GetBool("isInvulnerable");
             anim.SetBool("isInAir", isFalling);
 
             inputHandler.TickInput(delta);
             playerLocomotion.HandleRoll();
             playerLocomotion.HandleJumping();
+            playerStats.RegenStamina();
 
             CheckForInteractables();
         }

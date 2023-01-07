@@ -10,6 +10,14 @@ namespace RY
         StaminaBar staminaBar;
         InputHandler inputHandler;
         PlayerAnimatorManager animatorManager;
+        PlayerManager playerManager;
+
+        [SerializeField]
+        float staminaRegenRate = 1;
+        [SerializeField]
+        float staminaRegenTimer = 0;
+        [SerializeField]
+        float staminaRegenLockTime = 1.5f;
 
 
 
@@ -19,6 +27,7 @@ namespace RY
             staminaBar = FindObjectOfType<StaminaBar>();
             inputHandler = GetComponent<InputHandler>();
             animatorManager = GetComponentInChildren<PlayerAnimatorManager>();
+            playerManager = GetComponent<PlayerManager>();
         }
 
         private void Start()
@@ -38,7 +47,7 @@ namespace RY
             return maxHealth;
         }
 
-        private int SetMaxStaminaFromHealthLevel()
+        private float SetMaxStaminaFromHealthLevel()
         {
             maxStamina = staminaLevel * 10;
             return maxStamina;
@@ -46,7 +55,7 @@ namespace RY
 
         public void TakeDamage(int damage)
         {
-            if (isDead)
+            if (isDead || playerManager.isInvulnerable)
             {
                 return;
             }
@@ -84,6 +93,24 @@ namespace RY
         {
             currentStamina -= cost;
             staminaBar.SetCurrentStamina(currentStamina);
+        }
+
+        public void RegenStamina()
+        {
+            if (playerManager.isInteracting)
+            {
+                staminaRegenTimer = 0;
+            }
+            else
+            {
+                staminaRegenTimer += Time.deltaTime;
+
+                if (currentStamina < maxStamina && staminaRegenTimer > staminaRegenLockTime)
+                {
+                    currentStamina += staminaRegenRate * Time.deltaTime;
+                    staminaBar.SetCurrentStamina(Mathf.RoundToInt(currentStamina));
+                }
+            }
         }
     }
 }

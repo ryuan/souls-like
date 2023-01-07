@@ -99,6 +99,16 @@ namespace RY
             anim.SetBool("canDoCombo", false);
         }
 
+        public void EnableInvulnerable()
+        {
+            anim.SetBool("isInvulnerable", true);
+        }
+
+        public void DisableInvulnerable()
+        {
+            anim.SetBool("isInvulnerable", false);
+        }
+
         // OnAnimatorMove is a MonoBehaviour callback for processing animation movements for modifying root motion.
         // DO NOT DELETE!!!
         private void OnAnimatorMove()
