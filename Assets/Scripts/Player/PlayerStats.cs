@@ -7,6 +7,7 @@ namespace RY
     public class PlayerStats : CharacterStats
     {
         HealthBar healthBar;
+        FocusPointsBar focusPointsBar;
         StaminaBar staminaBar;
         InputHandler inputHandler;
         PlayerAnimatorManager animatorManager;
@@ -25,6 +26,7 @@ namespace RY
         private void Awake()
         {
             healthBar = FindObjectOfType<HealthBar>();
+            focusPointsBar = FindObjectOfType<FocusPointsBar>();
             staminaBar = FindObjectOfType<StaminaBar>();
             inputHandler = GetComponent<InputHandler>();
             animatorManager = GetComponentInChildren<PlayerAnimatorManager>();
@@ -38,6 +40,10 @@ namespace RY
             currentHealth = maxHealth;
             healthBar.SetMaxHealth(maxHealth);
 
+            maxFocusPoints = SetMaxFocusPointsFromFocusLevel();
+            currentFocusPoints = maxFocusPoints;
+            focusPointsBar.SetMaxFocusPoints(maxFocusPoints);
+
             maxStamina = SetMaxStaminaFromHealthLevel();
             currentStamina = maxStamina;
             staminaBar.SetMaxStamina(maxStamina);
@@ -47,6 +53,12 @@ namespace RY
         {
             maxHealth = healthLevel * 10;
             return maxHealth;
+        }
+
+        private int SetMaxFocusPointsFromFocusLevel()
+        {
+            maxFocusPoints = focusLevel * 10;
+            return maxFocusPoints;
         }
 
         private float SetMaxStaminaFromHealthLevel()
@@ -91,6 +103,18 @@ namespace RY
             }
 
             playerAttackHandler.DisableWeaponDamageCollider();   // force disable weapon collider if it's open while getting hit
+        }
+
+        public void DeductFocusPoints(int focusPoints)
+        {
+            currentFocusPoints -= focusPoints;
+
+            if (currentFocusPoints < 0)
+            {
+                currentFocusPoints = 0;
+            }
+
+            focusPointsBar.SetCurrentFocusPoints(currentFocusPoints);
         }
 
         public void DrainStamina(int cost)

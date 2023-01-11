@@ -11,12 +11,14 @@ namespace RY
 
         public override void SpellCastAttempted(PlayerAnimatorManager animatorManager, PlayerStats playerStats)
         {
+            base.SpellCastAttempted(animatorManager, playerStats);
             GameObject instantiatedWarmUpFX = Instantiate(warmUpFX, animatorManager.transform);
             animatorManager.PlayTargetAnimation(spellAnimation, true);
         }
 
         public override void SpellCastSuccessful(PlayerAnimatorManager animatorManager, PlayerStats playerStats)
         {
+            base.SpellCastSuccessful(animatorManager, playerStats);
             GameObject instantiatedCastFX = Instantiate(castFX, animatorManager.transform);
             playerStats.HealHealth(healAmount);
         }

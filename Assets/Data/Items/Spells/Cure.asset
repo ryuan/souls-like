@@ -13,10 +13,11 @@ MonoBehaviour:
   m_Name: Cure
   m_EditorClassIdentifier: 
   itemIcon: {fileID: 0}
-  itemName: Heal
+  itemName: Cure
   warmUpFX: {fileID: 1838261207787406, guid: ee19ff1df523a41909194ea9a5b6a1ac, type: 3}
   castFX: {fileID: 1592372973558972, guid: fbe26b0dc0ebb45d9bafb7b61762fffb, type: 3}
   spellAnimation: Cast_Spell_Heal_01
   spellType: 0
+  focusPointsCost: 25
   spellDescription: 
   healAmount: 50

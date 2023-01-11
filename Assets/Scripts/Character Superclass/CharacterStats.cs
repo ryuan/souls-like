@@ -10,6 +10,10 @@ namespace RY
         public int maxHealth;
         public int currentHealth;
 
+        public int focusLevel = 10;
+        public int maxFocusPoints;
+        public int currentFocusPoints;
+
         public int staminaLevel = 10;
         public float maxStamina;
         public float currentStamina;

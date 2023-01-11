@@ -189,8 +189,14 @@ namespace RY
                 {
                     if (playerInventory.currentSpell != null && playerInventory.currentSpell.spellType == SpellType.Faith)
                     {
-                        // check for available FP
-                        playerInventory.currentSpell.SpellCastAttempted(animatorManager, playerStats);
+                        if (playerStats.currentFocusPoints >= playerInventory.currentSpell.focusPointsCost)
+                        {
+                            playerInventory.currentSpell.SpellCastAttempted(animatorManager, playerStats);
+                        }
+                        else
+                        {
+                            animatorManager.PlayTargetAnimation("Headache", true);
+                        }
                     }
                 }
             }
