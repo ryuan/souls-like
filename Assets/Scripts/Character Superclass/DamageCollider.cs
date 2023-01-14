@@ -8,7 +8,10 @@ namespace RY
     {
         Collider damageCollider;
 
-        public int currentWeaponDamage = 25;
+        float currentWeaponDamage;
+        bool shouldAnimate;
+
+
 
         private void Awake()
         {
@@ -16,6 +19,8 @@ namespace RY
             damageCollider.gameObject.SetActive(true);
             damageCollider.enabled = false;
             damageCollider.isTrigger = true;
+
+            shouldAnimate = true;
         }
 
         public void EnableDamageCollider()
@@ -28,6 +33,16 @@ namespace RY
             damageCollider.enabled = false;
         }
 
+        public void SetCurrentWeaponDamage(float damage)
+        {
+            currentWeaponDamage = damage;
+        }
+
+        public void DisableDefaultDamageAnimations()
+        {
+            shouldAnimate = false;
+        }
+
         private void OnTriggerEnter(Collider other)
         {
             if (other.tag == "Player")
@@ -36,7 +51,8 @@ namespace RY
 
                 if (playerStats != null)
                 {
-                    playerStats.TakeDamage(currentWeaponDamage);
+                    playerStats.TakeDamage(currentWeaponDamage, shouldAnimate);
+                    shouldAnimate = true;
                 }
             }
 
@@ -46,7 +62,8 @@ namespace RY
 
                 if (enemyStats != null)
                 {
-                    enemyStats.TakeDamage(currentWeaponDamage);
+                    enemyStats.TakeDamage(currentWeaponDamage, shouldAnimate);
+                    shouldAnimate = true;
                 }
             }
         }

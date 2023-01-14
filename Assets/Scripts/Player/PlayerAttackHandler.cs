@@ -45,10 +45,12 @@ namespace RY
             if (isLeft)
             {
                 leftWeaponDamageCollider = damageCollider;
+                leftWeaponDamageCollider.SetCurrentWeaponDamage(playerInventory.leftWeapon.baseDamage);
             }
             else
             {
                 rightWeaponDamageCollider = damageCollider;
+                rightWeaponDamageCollider.SetCurrentWeaponDamage(playerInventory.rightWeapon.baseDamage);
             }
         }
 
@@ -71,11 +73,13 @@ namespace RY
         {
             if (leftWeaponDamageCollider != null)
             {
+                leftWeaponDamageCollider.SetCurrentWeaponDamage(playerInventory.leftWeapon.baseDamage);
                 leftWeaponDamageCollider.DisableDamageCollider();
             }
 
             if (rightWeaponDamageCollider != null)
             {
+                rightWeaponDamageCollider.SetCurrentWeaponDamage(playerInventory.rightWeapon.baseDamage);
                 rightWeaponDamageCollider.DisableDamageCollider();
             }
         }
@@ -86,12 +90,12 @@ namespace RY
 
         public void DrainStaminaLightAttack()
         {
-            playerStats.DrainStamina(Mathf.RoundToInt(latestAttackingWeapon.baseStamina * latestAttackingWeapon.lightAtkMultipler));
+            playerStats.DrainStamina(Mathf.RoundToInt(latestAttackingWeapon.baseStaminaCost * latestAttackingWeapon.lightAtkStaminaCostMultipler));
         }
 
         public void DrainStaminaHeavyAttack()
         {
-            playerStats.DrainStamina(Mathf.RoundToInt(latestAttackingWeapon.baseStamina * latestAttackingWeapon.heavyAtkMultipler));
+            playerStats.DrainStamina(Mathf.RoundToInt(latestAttackingWeapon.baseStaminaCost * latestAttackingWeapon.heavyAtkStaminaCostMultipler));
         }
 
         #endregion
@@ -226,6 +230,7 @@ namespace RY
         {
             RaycastHit hit;
 
+            Debug.DrawRay(critAtkRaycastStartPoint.position, transform.TransformDirection(Vector3.forward) * critAtkRaycastDistance, Color.red);
             if (Physics.Raycast(critAtkRaycastStartPoint.position, transform.TransformDirection(Vector3.forward), out hit, critAtkRaycastDistance, backstabLayer))
             {
                 EnemyManager enemyManager = hit.transform.gameObject.GetComponentInParent<EnemyManager>();
@@ -240,6 +245,12 @@ namespace RY
                     targetDir.Normalize();
                     Quaternion targetRotation = Quaternion.LookRotation(targetDir);
                     playerManager.transform.rotation = Quaternion.Slerp(playerManager.transform.rotation, targetRotation, 50 * Time.deltaTime);
+
+                    rightWeaponDamageCollider.SetCurrentWeaponDamage(playerInventory.rightWeapon.baseDamage * playerInventory.rightWeapon.critDamageMultiplier);
+                    rightWeaponDamageCollider.DisableDefaultDamageAnimations();
+
+                    latestAttackingWeapon = playerInventory.rightWeapon;
+                    animatorManager.anim.SetBool("usingRightWeapon", true);
 
                     animatorManager.PlayTargetAnimation("Backstab", true);
                     enemyManager.GetComponentInChildren<EnemyAnimatorManager>().PlayTargetAnimation("Backstabbed", true);

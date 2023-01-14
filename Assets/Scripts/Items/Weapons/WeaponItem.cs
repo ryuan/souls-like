@@ -17,6 +17,15 @@ namespace RY
         [Header("Weapon Type")]
         public WeaponType weaponType;
 
+        [Header("Damage")]
+        public int baseDamage;
+        public float critDamageMultiplier;
+
+        [Header("Stamina Costs")]
+        public int baseStaminaCost;
+        public float lightAtkStaminaCostMultipler;
+        public float heavyAtkStaminaCostMultipler;
+
         [Header("Idle Animations")]
         public string leftHandIdle;
         public string rightHandIdle;
@@ -31,10 +40,5 @@ namespace RY
         public string thLightAtk2;
         public string thHeavyAtk1;
         public string thHeavyAtk2;
-
-        [Header("Stamina Costs")]
-        public int baseStamina;
-        public float lightAtkMultipler;
-        public float heavyAtkMultipler;
     }
 }

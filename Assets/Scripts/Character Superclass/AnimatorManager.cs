@@ -8,6 +8,8 @@ namespace RY
     {
         public Animator anim;
 
+
+
         public void PlayTargetAnimation(string targetAnim, bool isInteracting)
         {
             anim.applyRootMotion = isInteracting;

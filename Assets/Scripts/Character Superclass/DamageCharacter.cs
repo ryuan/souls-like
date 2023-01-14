@@ -17,12 +17,12 @@ namespace RY
                 if (other.tag == "Player")
                 {
                     PlayerStats playerStats = other.GetComponent<PlayerStats>();
-                    playerStats.TakeDamage(damage);
+                    playerStats.TakeDamage(damage, true);
                 }
                 else if (other.tag == "Enemy")
                 {
                     EnemyStats enemyStats = other.GetComponent<EnemyStats>();
-                    enemyStats.TakeDamage(damage);
+                    enemyStats.TakeDamage(damage, true);
                 }
             }
         }

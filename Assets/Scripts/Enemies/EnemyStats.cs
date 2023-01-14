@@ -23,13 +23,13 @@ namespace RY
             currentHealth = maxHealth;
         }
 
-        private int SetMaxHealthFromHealthLevel()
+        private float SetMaxHealthFromHealthLevel()
         {
             maxHealth = healthLevel * 10;
             return maxHealth;
         }
 
-        public void TakeDamage(int damage)
+        public void TakeDamage(float damage, bool shouldAnimate)
         {
             if (isDead)
             {
@@ -42,11 +42,19 @@ namespace RY
             {
                 currentHealth = 0;
                 isDead = true;
-                animator.Play("OH_Dead_01");
+                animator.SetBool("isDead", isDead);
+
+                if (shouldAnimate)
+                {
+                    animator.Play("OH_Dead_01");
+                }
             }
             else
             {
-                animator.Play("OH_Damage_01");
+                if (shouldAnimate)
+                {
+                    animator.Play("OH_Damage_01");
+                }
             }
 
             enemyAttackHandler.DisableWeaponDamageCollider();   // force disable weapon collider if it's open while getting hit

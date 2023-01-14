@@ -6,18 +6,29 @@ namespace RY
 {
     public class EnemyAttackHandler : MonoBehaviour
     {
+        EnemyWeaponHolderSlotManager weaponHolderSlotManager;
+
         DamageCollider leftWeaponDamageCollider;
         DamageCollider rightWeaponDamageCollider;
+
+
+
+        private void Awake()
+        {
+            weaponHolderSlotManager = GetComponent<EnemyWeaponHolderSlotManager>();
+        }
 
         public void SetCurrentWeaponDamageCollider(DamageCollider damageCollider, bool isLeft)
         {
             if (isLeft)
             {
                 leftWeaponDamageCollider = damageCollider;
+                leftWeaponDamageCollider.SetCurrentWeaponDamage(weaponHolderSlotManager.leftWeapon.baseDamage);
             }
             else
             {
                 rightWeaponDamageCollider = damageCollider;
+                rightWeaponDamageCollider.SetCurrentWeaponDamage(weaponHolderSlotManager.rightWeapon.baseDamage);
             }
         }
 
@@ -30,6 +41,7 @@ namespace RY
 
         public void DisableWeaponDamageCollider()
         {
+            rightWeaponDamageCollider.SetCurrentWeaponDamage(weaponHolderSlotManager.rightWeapon.baseDamage);
             rightWeaponDamageCollider.DisableDamageCollider();
         }
 

@@ -49,13 +49,13 @@ namespace RY
             staminaBar.SetMaxStamina(maxStamina);
         }
 
-        private int SetMaxHealthFromHealthLevel()
+        private float SetMaxHealthFromHealthLevel()
         {
             maxHealth = healthLevel * 10;
             return maxHealth;
         }
 
-        private int SetMaxFocusPointsFromFocusLevel()
+        private float SetMaxFocusPointsFromFocusLevel()
         {
             maxFocusPoints = focusLevel * 10;
             return maxFocusPoints;
@@ -67,7 +67,7 @@ namespace RY
             return maxStamina;
         }
 
-        public void TakeDamage(int damage)
+        public void TakeDamage(float damage, bool shouldAnimate)
         {
             if (isDead || playerManager.isInvulnerable)
             {
@@ -80,25 +80,32 @@ namespace RY
             if (currentHealth <= 0)
             {
                 isDead = true;
+                animatorManager.anim.SetBool("isDead", isDead);
 
-                if (inputHandler.twoHandFlag)
+                if (shouldAnimate)
                 {
-                    animatorManager.PlayTargetAnimation("TH_Dead_01", true);
-                }
-                else
-                {
-                    animatorManager.PlayTargetAnimation("OH_Dead_01", true);
+                    if (inputHandler.twoHandFlag)
+                    {
+                        animatorManager.PlayTargetAnimation("TH_Dead_01", true);
+                    }
+                    else
+                    {
+                        animatorManager.PlayTargetAnimation("OH_Dead_01", true);
+                    }
                 }
             }
             else
             {
-                if (inputHandler.twoHandFlag)
+                if (shouldAnimate)
                 {
-                    animatorManager.PlayTargetAnimation("TH_Damage_01", true);
-                }
-                else
-                {
-                    animatorManager.PlayTargetAnimation("OH_Damage_01", true);
+                    if (inputHandler.twoHandFlag)
+                    {
+                        animatorManager.PlayTargetAnimation("TH_Damage_01", true);
+                    }
+                    else
+                    {
+                        animatorManager.PlayTargetAnimation("OH_Damage_01", true);
+                    }
                 }
             }
 

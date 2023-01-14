@@ -17,6 +17,12 @@ MonoBehaviour:
   modelPrefab: {fileID: 7626413826203440076, guid: fcd30d6303ca243c98fafb6b80e50e95,
     type: 3}
   isUnarmed: 1
+  weaponType: 2
+  baseDamage: 10
+  critDamageMultiplier: 1.5
+  baseStaminaCost: 5
+  lightAtkStaminaCostMultipler: 1
+  heavyAtkStaminaCostMultipler: 1.3
   leftHandIdle: Left_Arm_Empty
   rightHandIdle: Right_Arm_Empty
   twoHandIdle: Both_Arms_Empty
@@ -28,7 +34,3 @@ MonoBehaviour:
   thLightAtk2: TH_Light_Attack_02
   thHeavyAtk1: TH_Heavy_Attack_01
   thHeavyAtk2: TH_Heavy_Attack_02
-  baseStamina: 5
-  lightAtkMultipler: 1
-  heavyAtkMultipler: 2
-  weaponType: 2
