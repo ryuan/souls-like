@@ -49,19 +49,19 @@ namespace RY
             staminaBar.SetMaxStamina(maxStamina);
         }
 
-        private float SetMaxHealthFromHealthLevel()
+        private int SetMaxHealthFromHealthLevel()
         {
             maxHealth = healthLevel * 10;
             return maxHealth;
         }
 
-        private float SetMaxFocusPointsFromFocusLevel()
+        private int SetMaxFocusPointsFromFocusLevel()
         {
             maxFocusPoints = focusLevel * 10;
             return maxFocusPoints;
         }
 
-        private float SetMaxStaminaFromHealthLevel()
+        private int SetMaxStaminaFromHealthLevel()
         {
             maxStamina = staminaLevel * 10;
             return maxStamina;

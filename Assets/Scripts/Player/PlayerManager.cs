@@ -82,10 +82,8 @@ namespace RY
         // Put any functions that call on Unity's physics engine to affect rigidbodies here.
         private void FixedUpdate()
         {
-            float delta = Time.deltaTime;
-
-            playerLocomotion.HandleMovementAndSprint(delta);
-            playerLocomotion.HandleRotation(delta);
+            playerLocomotion.HandleMovementAndSprint();
+            playerLocomotion.HandleRotation();
             playerLocomotion.HandleFalling();
             // Need to reset flag in FixedUpdate to match update timing of HandleMovementAndSprint
             inputHandler.sprintFlag = false;
@@ -96,8 +94,6 @@ namespace RY
         // Additionally, any flags/variables that were updated in Update should be reset here.
         private void LateUpdate()
         {
-            float fixedDelta = Time.fixedDeltaTime;
-
             inputHandler.rollFlag = false;
             inputHandler.a_Input = false;
             inputHandler.y_Input = false;
@@ -117,6 +113,7 @@ namespace RY
 
             if (cameraHandler != null)
             {
+                float fixedDelta = Time.fixedDeltaTime;
                 cameraHandler.FollowTarget(fixedDelta);
                 cameraHandler.HandleCameraRotation(fixedDelta, inputHandler.mouseX, inputHandler.mouseY);
             }

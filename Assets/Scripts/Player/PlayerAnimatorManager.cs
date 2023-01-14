@@ -89,6 +89,8 @@ namespace RY
             anim.SetFloat(vertical, v, 0.1f, Time.deltaTime);
         }
 
+        #region Rotation Animator Events
+
         public void EnableRotation()
         {
             anim.SetBool("canRotate", true);
@@ -98,6 +100,10 @@ namespace RY
         {
             anim.SetBool("canRotate", false);
         }
+
+        #endregion
+
+        #region Combo Animator Events
 
         public void EnableCombo()
         {
@@ -109,6 +115,10 @@ namespace RY
             anim.SetBool("canDoCombo", false);
         }
 
+        #endregion
+
+        #region Invulnerability Animator Events
+
         public void EnableInvulnerable()
         {
             anim.SetBool("isInvulnerable", true);
@@ -118,6 +128,8 @@ namespace RY
         {
             anim.SetBool("isInvulnerable", false);
         }
+
+        #endregion
 
         // OnAnimatorMove is a MonoBehaviour callback for processing animation movements for modifying root motion.
         // DO NOT DELETE!!!

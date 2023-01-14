@@ -8,6 +8,7 @@ namespace RY
     {
         InputHandler inputHandler;
         PlayerManager playerManager;
+        PlayerStats playerStats;
         CameraHandler cameraHandler;
         PlayerAnimatorManager animatorManager;
         Transform mainCameraTransform;
@@ -19,15 +20,20 @@ namespace RY
 
         public Rigidbody rb;
 
-        [Header("Movement Attributes")]
+        [Header("Locomotion Speeds")]
         [SerializeField]
         float normalMoveSpeed = 5;
         [SerializeField]
         float sprintSpeed = 7;
         [SerializeField]
         float rotationSpeed = 10;
+
+        [Header("Jump & Falling Speeds")]
+        [SerializeField]
+        float forwardJumpSpeed = 5;
         [SerializeField]
         float fallingSpeed = 80;
+        float jumpStartPosY;
 
         [Header("Grounding & Falling Detection")]
         [SerializeField]
@@ -40,10 +46,16 @@ namespace RY
         LayerMask ignoreForGroundCheck;
         public float inAirTimer;
 
-        [Header("Jump Attributes")]
+        [Header("Stamina Costs")]
         [SerializeField]
-        float forwardJumpSpeed = 5;
-        float jumpStartPosY;
+        int sprintCost = 1;
+        [SerializeField]
+        int rollCost = 15;
+        [SerializeField]
+        int backstepCost = 10;
+        [SerializeField]
+        int jumpCost = 12;
+        
 
 
 
@@ -51,6 +63,7 @@ namespace RY
         {
             inputHandler = GetComponent<InputHandler>();
             playerManager = GetComponent<PlayerManager>();
+            playerStats = GetComponent<PlayerStats>();
             cameraHandler = FindObjectOfType<CameraHandler>();
             animatorManager = GetComponentInChildren<PlayerAnimatorManager>();
             mainCameraTransform = Camera.main.transform;
@@ -68,11 +81,16 @@ namespace RY
             return moveDirection;
         }
 
-        public void HandleMovementAndSprint(float delta)
+        public void HandleMovementAndSprint()
         {
             if (inputHandler.rollFlag || playerManager.isInteracting)
             {
                 return;
+            }
+
+            if (playerStats.currentStamina <= 0)
+            {
+                inputHandler.sprintFlag = false;
             }
 
             moveDirection = mainCameraTransform.forward * inputHandler.vertical;
@@ -82,6 +100,8 @@ namespace RY
 
             if (inputHandler.sprintFlag)
             {
+                playerStats.DrainStamina(sprintCost);
+
                 moveDirection *= sprintSpeed;
             }
             else
@@ -103,10 +123,11 @@ namespace RY
             }
         }
 
-        public void HandleRotation(float delta)
+        public void HandleRotation()
         {
             if (playerManager.canRotate)
             {
+                float delta = Time.deltaTime;
                 Vector3 targetDir;
 
                 if (inputHandler.lockOnFlag == false || inputHandler.sprintFlag || inputHandler.rollFlag)
@@ -136,7 +157,7 @@ namespace RY
 
         public void HandleRoll()
         {
-            if (playerManager.isInteracting)
+            if (playerManager.isInteracting || playerStats.currentStamina <= 0)
             {
                 return;
             }
@@ -152,6 +173,8 @@ namespace RY
                     Quaternion rollRotation = Quaternion.LookRotation(moveDirection);
                     transform.rotation = rollRotation;
 
+                    playerStats.DrainStamina(rollCost);
+
                     if (inputHandler.twoHandFlag)
                     {
                         animatorManager.PlayTargetAnimation("TH_Rolling", true);
@@ -163,6 +186,8 @@ namespace RY
                 }
                 else
                 {
+                    playerStats.DrainStamina(backstepCost);
+
                     if (inputHandler.twoHandFlag)
                     {
                         animatorManager.PlayTargetAnimation("TH_Backstep", true);
@@ -299,7 +324,7 @@ namespace RY
 
         public void HandleJumping()
         {
-            if (playerManager.isInteracting)
+            if (playerManager.isInteracting || playerStats.currentStamina <= 0)
             {
                 return;
             }
@@ -318,6 +343,8 @@ namespace RY
 
                 Quaternion jumpRotation = Quaternion.LookRotation(moveDirection);
                 transform.rotation = jumpRotation;
+
+                playerStats.DrainStamina(jumpCost);
 
                 animatorManager.PlayTargetAnimation("Jump", true);
             }

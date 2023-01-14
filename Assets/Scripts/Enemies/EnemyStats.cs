@@ -23,7 +23,7 @@ namespace RY
             currentHealth = maxHealth;
         }
 
-        private float SetMaxHealthFromHealthLevel()
+        private int SetMaxHealthFromHealthLevel()
         {
             maxHealth = healthLevel * 10;
             return maxHealth;

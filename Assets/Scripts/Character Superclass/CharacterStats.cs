@@ -7,15 +7,15 @@ namespace RY
     public class CharacterStats : MonoBehaviour
     {
         public int healthLevel = 10;
-        public float maxHealth;
+        public int maxHealth;
         public float currentHealth;
 
         public int focusLevel = 10;
-        public float maxFocusPoints;
+        public int maxFocusPoints;
         public float currentFocusPoints;
 
         public int staminaLevel = 10;
-        public float maxStamina;
+        public int maxStamina;
         public float currentStamina;
 
         public bool isDead;

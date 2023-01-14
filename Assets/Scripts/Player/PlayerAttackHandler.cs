@@ -54,7 +54,7 @@ namespace RY
             }
         }
 
-        #region Handle Weapon's Damage Collider
+        #region Handle Weapon's Damage Collider (Animator Events)
 
         public void EnableWeaponDamageCollider()
         {
@@ -86,7 +86,7 @@ namespace RY
 
         #endregion
 
-        #region Handle Weapon's Stamina Drain
+        #region Handle Weapon's Stamina Drain (Animator Events)
 
         public void DrainStaminaLightAttack()
         {
@@ -100,7 +100,7 @@ namespace RY
 
         #endregion
 
-        #region Handle Weapon's Attack Actions (Melee/Spell)
+        #region Handle Weapon's Melee/Spell Attack Actions
 
         public void HandleRBAction()
         {
@@ -159,68 +159,74 @@ namespace RY
 
         public void HandleWeaponCombo(WeaponItem weapon)
         {
+            if (playerStats.currentStamina <= 0)
+            {
+                return;
+            }
+
             animatorManager.DisableCombo();
 
-            if (playerStats.currentStamina > 0)
+            if (lastAttack == weapon.ohLightAtk1)
             {
-                if (lastAttack == weapon.ohLightAtk1)
-                {
-                    animatorManager.PlayTargetAnimation(weapon.ohLightAtk2, true);
-                    lastAttack = weapon.ohLightAtk2;
-                }
-                else if (lastAttack == weapon.ohHeavyAtk1)
-                {
-                    animatorManager.PlayTargetAnimation(weapon.ohHeavyAtk2, true);
-                    lastAttack = weapon.ohHeavyAtk2;
-                }
-                else if (lastAttack == weapon.thLightAtk1)
-                {
-                    animatorManager.PlayTargetAnimation(weapon.thLightAtk2, true);
-                    lastAttack = weapon.thLightAtk2;
-                }
-                else if (lastAttack == weapon.thHeavyAtk1)
-                {
-                    animatorManager.PlayTargetAnimation(weapon.thHeavyAtk2, true);
-                    lastAttack = weapon.thHeavyAtk2;
-                }
+                animatorManager.PlayTargetAnimation(weapon.ohLightAtk2, true);
+                lastAttack = weapon.ohLightAtk2;
+            }
+            else if (lastAttack == weapon.ohHeavyAtk1)
+            {
+                animatorManager.PlayTargetAnimation(weapon.ohHeavyAtk2, true);
+                lastAttack = weapon.ohHeavyAtk2;
+            }
+            else if (lastAttack == weapon.thLightAtk1)
+            {
+                animatorManager.PlayTargetAnimation(weapon.thLightAtk2, true);
+                lastAttack = weapon.thLightAtk2;
+            }
+            else if (lastAttack == weapon.thHeavyAtk1)
+            {
+                animatorManager.PlayTargetAnimation(weapon.thHeavyAtk2, true);
+                lastAttack = weapon.thHeavyAtk2;
             }
         }
 
         private void HandleLightAttack(WeaponItem weapon)
         {
-            if (playerStats.currentStamina > 0)
+            if (playerStats.currentStamina <= 0)
             {
-                latestAttackingWeapon = weapon;
+                return;
+            }
 
-                if (inputHandler.twoHandFlag)
-                {
-                    animatorManager.PlayTargetAnimation(weapon.thLightAtk1, true);
-                    lastAttack = weapon.thLightAtk1;
-                }
-                else
-                {
-                    animatorManager.PlayTargetAnimation(weapon.ohLightAtk1, true);
-                    lastAttack = weapon.ohLightAtk1;
-                }
+            latestAttackingWeapon = weapon;
+
+            if (inputHandler.twoHandFlag)
+            {
+                animatorManager.PlayTargetAnimation(weapon.thLightAtk1, true);
+                lastAttack = weapon.thLightAtk1;
+            }
+            else
+            {
+                animatorManager.PlayTargetAnimation(weapon.ohLightAtk1, true);
+                lastAttack = weapon.ohLightAtk1;
             }
         }
 
         public void HandleHeavyAttack(WeaponItem weapon)
         {
-            if (playerStats.currentStamina > 0)
+            if (playerStats.currentStamina <= 0)
             {
-                latestAttackingWeapon = weapon;
+                return;
+            }
 
-                if (inputHandler.twoHandFlag)
-                {
-                    animatorManager.PlayTargetAnimation(weapon.thHeavyAtk1, true);
-                    lastAttack = weapon.thHeavyAtk1;
-                }
-                else
-                {
-                    animatorManager.PlayTargetAnimation(weapon.ohHeavyAtk1, true);
-                    lastAttack = weapon.ohHeavyAtk1;
-                }
+            latestAttackingWeapon = weapon;
+
+            if (inputHandler.twoHandFlag)
+            {
+                animatorManager.PlayTargetAnimation(weapon.thHeavyAtk1, true);
+                lastAttack = weapon.thHeavyAtk1;
+            }
+            else
+            {
+                animatorManager.PlayTargetAnimation(weapon.ohHeavyAtk1, true);
+                lastAttack = weapon.ohHeavyAtk1;
             }
         }
 
@@ -228,6 +234,11 @@ namespace RY
 
         public void HandleCriticalAttacks()
         {
+            if (playerStats.currentStamina <= 0)
+            {
+                return;
+            }
+
             RaycastHit hit;
 
             Debug.DrawRay(critAtkRaycastStartPoint.position, transform.TransformDirection(Vector3.forward) * critAtkRaycastDistance, Color.red);
