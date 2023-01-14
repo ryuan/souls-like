@@ -89,6 +89,16 @@ namespace RY
             anim.SetFloat(vertical, v, 0.1f, Time.deltaTime);
         }
 
+        public void EnableRotation()
+        {
+            anim.SetBool("canRotate", true);
+        }
+
+        public void DisableRotation()
+        {
+            anim.SetBool("canRotate", false);
+        }
+
         public void EnableCombo()
         {
             anim.SetBool("canDoCombo", true);

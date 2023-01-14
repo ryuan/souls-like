@@ -14,6 +14,16 @@ namespace RY
             enemyManager = GetComponentInParent<EnemyManager>();
         }
 
+        public void EnableRotation()
+        {
+            //anim.SetBool("canRotate", true);
+        }
+
+        public void DisableRotation()
+        {
+            //anim.SetBool("canRotate", false);
+        }
+
         public void EnableCombo()
         {
             //anim.SetBool("canDoCombo", true);

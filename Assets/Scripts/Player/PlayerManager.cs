@@ -30,6 +30,7 @@ namespace RY
         public bool isGrounded;
         public bool isFalling;
         public bool isJumping;
+        public bool canRotate;
         public bool canDoCombo;
         public bool usingRightWeapon;
         public bool usingLeftWeapon;
@@ -61,6 +62,7 @@ namespace RY
 
             isInteracting = anim.GetBool("isInteracting");
             anim.applyRootMotion = isInteracting;
+            canRotate = anim.GetBool("canRotate");
             canDoCombo = anim.GetBool("canDoCombo");
             usingRightWeapon = anim.GetBool("usingRightWeapon");
             usingLeftWeapon = anim.GetBool("usingLeftWeapon");
@@ -83,6 +85,7 @@ namespace RY
             float delta = Time.deltaTime;
 
             playerLocomotion.HandleMovementAndSprint(delta);
+            playerLocomotion.HandleRotation(delta);
             playerLocomotion.HandleFalling();
             // Need to reset flag in FixedUpdate to match update timing of HandleMovementAndSprint
             inputHandler.sprintFlag = false;

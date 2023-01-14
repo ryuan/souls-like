@@ -101,36 +101,37 @@ namespace RY
             {
                 animatorManager.UpdateAnimatorMovementValues(0, inputHandler.moveAmount, inputHandler.sprintFlag);
             }
-
-            HandleRotation(delta);
         }
 
         public void HandleRotation(float delta)
         {
-            Vector3 targetDir;
-
-            if (inputHandler.lockOnFlag == false || inputHandler.sprintFlag || inputHandler.rollFlag)
+            if (playerManager.canRotate)
             {
-                targetDir = mainCameraTransform.forward * inputHandler.vertical;
-                targetDir += mainCameraTransform.right * inputHandler.horizontal;
-                targetDir.y = 0;
-                targetDir.Normalize();
+                Vector3 targetDir;
 
-                if (targetDir == Vector3.zero)
+                if (inputHandler.lockOnFlag == false || inputHandler.sprintFlag || inputHandler.rollFlag)
                 {
-                    targetDir = transform.forward;
+                    targetDir = mainCameraTransform.forward * inputHandler.vertical;
+                    targetDir += mainCameraTransform.right * inputHandler.horizontal;
+                    targetDir.y = 0;
+                    targetDir.Normalize();
+
+                    if (targetDir == Vector3.zero)
+                    {
+                        targetDir = transform.forward;
+                    }
                 }
-            }
-            else
-            {
-                targetDir = cameraHandler.currentLockOnTarget.transform.position - transform.position;
-                targetDir.y = 0;
-                targetDir.Normalize();
-            }
+                else
+                {
+                    targetDir = cameraHandler.currentLockOnTarget.transform.position - transform.position;
+                    targetDir.y = 0;
+                    targetDir.Normalize();
+                }
 
-            Quaternion targetRotation = Quaternion.LookRotation(targetDir);
+                Quaternion targetRotation = Quaternion.LookRotation(targetDir);
 
-            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * delta);
+                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * delta);
+            }
         }
 
         public void HandleRoll()

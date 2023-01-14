@@ -14,6 +14,7 @@ namespace RY
         {
             anim.applyRootMotion = isInteracting;
             anim.SetBool("isInteracting", isInteracting);
+            anim.SetBool("canRotate", false);
             anim.CrossFade(targetAnim, 0.1f);
         }
     }

@@ -638,6 +638,7 @@ AnimatorState:
   - {fileID: -4318573362207857403}
   - {fileID: 2384883850635776474}
   - {fileID: -7679267978958297785}
+  - {fileID: 7320645745651642592}
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 0
   m_WriteDefaultValues: 1
@@ -1238,6 +1239,12 @@ AnimatorController:
     m_DefaultBool: 0
     m_Controller: {fileID: 0}
   - m_Name: isInteracting
+    m_Type: 4
+    m_DefaultFloat: 0
+    m_DefaultInt: 0
+    m_DefaultBool: 0
+    m_Controller: {fileID: 0}
+  - m_Name: canRotate
     m_Type: 4
     m_DefaultFloat: 0
     m_DefaultInt: 0
@@ -2156,6 +2163,20 @@ AnimatorState:
   m_MirrorParameter: 
   m_CycleOffsetParameter: 
   m_TimeParameter: 
+--- !u!114 &7320645745651642592
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 90cea501192d7483eab34d9474f783fc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetBool: canRotate
+  status: 1
 --- !u!1102 &7577570885489005315
 AnimatorState:
   serializedVersion: 6
