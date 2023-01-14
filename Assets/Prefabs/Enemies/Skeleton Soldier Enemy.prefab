@@ -4933,6 +4933,7 @@ Transform:
   - {fileID: 1889760091180896541}
   - {fileID: 612570366554850579}
   - {fileID: 844433241704543606}
+  - {fileID: 1148741951952789116}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -4981,6 +4982,9 @@ MonoBehaviour:
   healthLevel: 10
   maxHealth: 0
   currentHealth: 0
+  focusLevel: 10
+  maxFocusPoints: 0
+  currentFocusPoints: 0
   staminaLevel: 10
   maxStamina: 0
   currentStamina: 0
@@ -5000,21 +5004,10 @@ MonoBehaviour:
   lockOnTransform: {fileID: 1889760090471494715}
   mainCollider: {fileID: 1889760090992357260}
   collisionBlockerCollider: {fileID: 1862765218452044435}
+  backstabCollider: {fileID: 74304126724949253}
   navMeshAgent: {fileID: 0}
   rb: {fileID: 0}
-  _detectionFOVAngle: 100
-  detectionLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  moveSpeedAnimVerticalFloat: 0.75
-  rotationSpeed: 15
-  maxAttackRange: 1.5
-  groundDetectionRayStartPoint: 0.5
-  minDistanceNeededToBeginFall: 1
-  ignoreForGroundCheck:
-    serializedVersion: 2
-    m_Bits: 0
-  initialState: {fileID: 8411624324757982891}
+  initialState: {fileID: 3041293259812136350}
   currentState: {fileID: 0}
   currentTarget: {fileID: 0}
   isPerformingAction: 0
@@ -5031,6 +5024,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a23f9e430af94413a53b77d021e75b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _detectionFOVAngle: 100
+  detectionLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  moveSpeedAnimVerticalFloat: 0.85
+  rotationSpeed: 15
+  maxAttackRange: 1.5
+  groundDetectionRayStartPoint: 0.5
+  minDistanceNeededToBeginFall: 1
+  ignoreForGroundCheck:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!1 &1889760091180896540
 GameObject:
   m_ObjectHideFlags: 0
@@ -5226,8 +5231,72 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1878918638684275496}
+  - {fileID: 7602437420119270328}
   m_Father: {fileID: 1889760090992357265}
   m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &3578870119378468474
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8399796587444682094}
+  m_Layer: 9
+  m_Name: Critical Attack Raycast Start Point
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8399796587444682094
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3578870119378468474}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.2, z: 0.25}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1148741951952789116}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4283847497554399892
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1148741951952789116}
+  m_Layer: 9
+  m_Name: Combat Raycast Start Points
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1148741951952789116
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4283847497554399892}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 8399796587444682094}
+  m_Father: {fileID: 1889760090992357265}
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4663919629848654973
 GameObject:
@@ -5311,6 +5380,51 @@ Transform:
   m_Father: {fileID: 1889760090992357265}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &7440139675868760553
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7602437420119270328}
+  - component: {fileID: 74304126724949253}
+  m_Layer: 12
+  m_Name: Backstab Collider
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7602437420119270328
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7440139675868760553}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.2, z: -0.3}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 844433241704543606}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &74304126724949253
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7440139675868760553}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.5, y: 1, z: 0.02}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &7510286509507394849
 GameObject:
   m_ObjectHideFlags: 0

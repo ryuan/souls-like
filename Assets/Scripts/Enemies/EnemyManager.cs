@@ -10,16 +10,9 @@ namespace RY
         EnemyStats enemyStats;
         EnemyAnimatorManager animatorManager;
         EnemyLocomotion enemyLocomotion;
-
-        [SerializeField]
-        Collider mainCollider;
-        [SerializeField]
-        Collider collisionBlockerCollider;
         
         public NavMeshAgent navMeshAgent;
         public Rigidbody rb;
-
-        
 
         [Header("State Machine")]
         public State initialState;

@@ -18,6 +18,15 @@ namespace RY
         public WeaponItem latestAttackingWeapon;
         public string lastAttack;
 
+        [SerializeField]
+        Transform critAtkRaycastStartPoint;
+        [SerializeField]
+        float critAtkRaycastDistance = 0.5f;
+        [SerializeField]
+        float backstabPosZOffset = -0.75f;
+        [SerializeField]
+        LayerMask backstabLayer;
+
 
 
         private void Awake()
@@ -27,6 +36,8 @@ namespace RY
             playerStats = GetComponentInParent<PlayerStats>();
             playerManager = GetComponentInParent<PlayerManager>();
             playerInventory = GetComponentInParent<PlayerInventory>();
+
+            backstabLayer = 1 << 12;
         }
 
         public void SetCurrentWeaponDamageCollider(DamageCollider damageCollider, bool isLeft)
@@ -85,6 +96,8 @@ namespace RY
 
         #endregion
 
+        #region Handle Weapon's Attack Actions (Melee/Spell)
+
         public void HandleRBAction()
         {
             if (playerInventory.rightWeapon.weaponType == WeaponType.FaithCaster || playerInventory.rightWeapon.weaponType == WeaponType.MagicCaster || playerInventory.rightWeapon.weaponType == WeaponType.PyroCaster)
@@ -95,6 +108,32 @@ namespace RY
             {
                 HandleRBMeleeAction();
             }
+        }
+
+        private void HandleRBSpellAction(WeaponItem weapon)
+        {
+            if (playerManager.isInteracting == false)
+            {
+                if (weapon.weaponType == WeaponType.FaithCaster)
+                {
+                    if (playerInventory.currentSpell != null && playerInventory.currentSpell.spellType == SpellType.Faith)
+                    {
+                        if (playerStats.currentFocusPoints >= playerInventory.currentSpell.focusPointsCost)
+                        {
+                            playerInventory.currentSpell.SpellCastAttempted(animatorManager, playerStats);
+                        }
+                        else
+                        {
+                            animatorManager.PlayTargetAnimation("Headache", true);
+                        }
+                    }
+                }
+            }
+        }
+
+        public void CastSpell()
+        {
+            playerInventory.currentSpell.SpellCastSuccessful(animatorManager, playerStats);
         }
 
         private void HandleRBMeleeAction()
@@ -181,30 +220,31 @@ namespace RY
             }
         }
 
-        private void HandleRBSpellAction(WeaponItem weapon)
+        #endregion
+
+        public void HandleCriticalAttacks()
         {
-            if (playerManager.isInteracting == false)
+            RaycastHit hit;
+
+            if (Physics.Raycast(critAtkRaycastStartPoint.position, transform.TransformDirection(Vector3.forward), out hit, critAtkRaycastDistance, backstabLayer))
             {
-                if (weapon.weaponType == WeaponType.FaithCaster)
+                EnemyManager enemyManager = hit.transform.gameObject.GetComponentInParent<EnemyManager>();
+
+                if (enemyManager != null)
                 {
-                    if (playerInventory.currentSpell != null && playerInventory.currentSpell.spellType == SpellType.Faith)
-                    {
-                        if (playerStats.currentFocusPoints >= playerInventory.currentSpell.focusPointsCost)
-                        {
-                            playerInventory.currentSpell.SpellCastAttempted(animatorManager, playerStats);
-                        }
-                        else
-                        {
-                            animatorManager.PlayTargetAnimation("Headache", true);
-                        }
-                    }
+                    // Check for team ID so stop backstab of allies or yourself
+                    Vector3 targetPos = enemyManager.transform.position + enemyManager.transform.forward * backstabPosZOffset;
+                    playerManager.transform.position = Vector3.Slerp(playerManager.transform.position, targetPos, 50 * Time.deltaTime);
+                    Vector3 targetDir = hit.transform.position - playerManager.transform.position;
+                    targetDir.y = 0;
+                    targetDir.Normalize();
+                    Quaternion targetRotation = Quaternion.LookRotation(targetDir);
+                    playerManager.transform.rotation = Quaternion.Slerp(playerManager.transform.rotation, targetRotation, 50 * Time.deltaTime);
+
+                    animatorManager.PlayTargetAnimation("Backstab", true);
+                    enemyManager.GetComponentInChildren<EnemyAnimatorManager>().PlayTargetAnimation("Backstabbed", true);
                 }
             }
-        }
-
-        private void CastSpell()
-        {
-            playerInventory.currentSpell.SpellCastSuccessful(animatorManager, playerStats);
         }
     }
 }

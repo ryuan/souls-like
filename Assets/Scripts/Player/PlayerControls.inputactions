@@ -44,6 +44,17 @@
             ],
             "bindings": [
                 {
+                    "name": "",
+                    "id": "1b503e44-4d48-4800-bdb9-a0a274631498",
+                    "path": "<Gamepad>/leftStick",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Movement",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
                     "name": "WASD",
                     "id": "d754b596-c904-4618-922f-f53535aaae43",
                     "path": "2DVector(mode=2)",
@@ -198,6 +209,15 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "CriticalAttack",
+                    "type": "PassThrough",
+                    "id": "bd95cb56-6a78-45b2-9978-c54e42c0ca21",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "RT",
                     "type": "Button",
                     "id": "7d34ce92-08d6-4aeb-9c5d-dce1576e911e",
@@ -268,12 +288,34 @@
                 },
                 {
                     "name": "",
-                    "id": "ef567512-466c-43e3-bd7d-4d88457ad823",
-                    "path": "<Keyboard>/e",
-                    "interactions": "",
+                    "id": "20b11072-e401-4f4b-b6ac-f4f9b088a8d0",
+                    "path": "<Gamepad>/rightShoulder",
+                    "interactions": "Tap",
                     "processors": "",
                     "groups": "",
                     "action": "RB",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ef567512-466c-43e3-bd7d-4d88457ad823",
+                    "path": "<Keyboard>/e",
+                    "interactions": "Tap",
+                    "processors": "",
+                    "groups": "",
+                    "action": "RB",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "00085481-face-4861-8794-84020b7b3cc5",
+                    "path": "<Gamepad>/rightTrigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "RT",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -318,6 +360,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "A",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "2e6adfee-ba4d-41df-a6e4-98dff6ae2652",
+                    "path": "<Gamepad>/leftStickPress",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Jump",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -397,6 +450,28 @@
                     "action": "Y",
                     "isComposite": false,
                     "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "f2642a23-977f-4e53-b65d-f08cf0e348ef",
+                    "path": "<Gamepad>/rightShoulder",
+                    "interactions": "Hold(duration=0.4)",
+                    "processors": "",
+                    "groups": "",
+                    "action": "CriticalAttack",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "5de9ddeb-7bdc-4619-baf7-fe18bea6a426",
+                    "path": "<Keyboard>/e",
+                    "interactions": "Hold(duration=0.4)",
+                    "processors": "",
+                    "groups": "",
+                    "action": "CriticalAttack",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         },
@@ -444,17 +519,6 @@
             "bindings": [
                 {
                     "name": "",
-                    "id": "df779f9f-383d-4a85-abc7-a487f1bd0c42",
-                    "path": "<Keyboard>/upArrow",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "D-Pad Up",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "071b442f-9702-4886-aeba-bbf45c87f7ad",
                     "path": "<Gamepad>/dpad/up",
                     "interactions": "",
@@ -466,12 +530,12 @@
                 },
                 {
                     "name": "",
-                    "id": "03c1f912-2992-4412-9508-9084f4fc8f66",
-                    "path": "<Keyboard>/downArrow",
+                    "id": "df779f9f-383d-4a85-abc7-a487f1bd0c42",
+                    "path": "<Keyboard>/upArrow",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "D-Pad Down",
+                    "action": "D-Pad Up",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -488,12 +552,12 @@
                 },
                 {
                     "name": "",
-                    "id": "935e4a4d-c364-47bc-b104-00a29e8231c9",
-                    "path": "<Keyboard>/leftArrow",
+                    "id": "03c1f912-2992-4412-9508-9084f4fc8f66",
+                    "path": "<Keyboard>/downArrow",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "D-Pad Left",
+                    "action": "D-Pad Down",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -510,8 +574,19 @@
                 },
                 {
                     "name": "",
-                    "id": "e250af74-ee13-4924-b430-886f9c9e5535",
-                    "path": "<Keyboard>/rightArrow",
+                    "id": "935e4a4d-c364-47bc-b104-00a29e8231c9",
+                    "path": "<Keyboard>/leftArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "D-Pad Left",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c3d7451c-6ac0-4889-84ac-b7c823412933",
+                    "path": "<Gamepad>/dpad/right",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -521,8 +596,8 @@
                 },
                 {
                     "name": "",
-                    "id": "c3d7451c-6ac0-4889-84ac-b7c823412933",
-                    "path": "<Gamepad>/dpad/right",
+                    "id": "e250af74-ee13-4924-b430-886f9c9e5535",
+                    "path": "<Keyboard>/rightArrow",
                     "interactions": "",
                     "processors": "",
                     "groups": "",

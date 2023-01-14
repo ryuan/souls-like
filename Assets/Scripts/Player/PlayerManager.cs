@@ -12,11 +12,6 @@ namespace RY
         PlayerLocomotion playerLocomotion;
         PlayerStats playerStats;
 
-        [SerializeField]
-        Collider mainCollider;
-        [SerializeField]
-        Collider collisionBlockerCollider;
-
         [Header("Interactables Attributes")]
         public GameObject interactableUIGameObject;
         public GameObject itemInteractableUIGameObject;

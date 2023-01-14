@@ -32,6 +32,7 @@ namespace RY
         public bool y_Input;
         public bool rb_Input;
         public bool rt_Input;
+        public bool critAtk_Input;
         public bool jump_Input;
 
         public float rollInputTimer;
@@ -86,6 +87,7 @@ namespace RY
                 inputActions.PlayerMovement.LockOnTargetLeft.performed += context => rStick_Left_Input = true;
                 inputActions.PlayerMovement.LockOnTargetRight.performed += context => rStick_Right_Input = true;
                 inputActions.PlayerActions.Y.performed += context => y_Input = true;
+                inputActions.PlayerActions.CriticalAttack.performed += context => critAtk_Input = true;
             }
 
             inputActions.Enable();
@@ -105,6 +107,7 @@ namespace RY
             HandleInventoryInput();
             HandleLockOnInput();
             HandleTwoHandInput();
+            HandleCriticleAttackInput();
         }
 
         private void MoveInput(float delta)
@@ -258,6 +261,15 @@ namespace RY
                     weaponHolderSlotManager.LoadWeaponOnHolderSlot(playerInventory.leftWeapon, true);
                     weaponHolderSlotManager.LoadWeaponOnHolderSlot(playerInventory.rightWeapon, false);
                 }
+            }
+        }
+
+        private void HandleCriticleAttackInput()
+        {
+            if (critAtk_Input)
+            {
+                critAtk_Input = false;
+                playerAttackHandler.HandleCriticalAttacks();
             }
         }
     }
