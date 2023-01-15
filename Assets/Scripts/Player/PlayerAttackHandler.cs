@@ -251,17 +251,17 @@ namespace RY
                 if (enemyManager != null)
                 {
                     // Check for team ID so stop backstab of allies or yourself
-
-                    Vector3 targetMovePos = enemyManager.transform.position + enemyManager.transform.forward * backstabPosZOffset;
-                    Vector3 targetLookPos = hit.transform.position;
-                    StartCoroutine(HandleBackstab(targetMovePos, targetLookPos, enemyManager));
+                    
+                    StartCoroutine(HandleBackstab(hit, enemyManager));
                 }
             }
         }
 
-        IEnumerator HandleBackstab(Vector3 targetMovePos, Vector3 targetLookPos, EnemyManager enemyManager)
+        IEnumerator HandleBackstab(RaycastHit hit, EnemyManager enemyManager)
         {
             // Slerp to position and look towards target before moving onto backstabbing
+            Vector3 targetMovePos = enemyManager.transform.position + enemyManager.transform.forward * backstabPosZOffset;
+            Vector3 targetLookPos = hit.transform.position;
             yield return StartCoroutine(playerLocomotion.SlerpFunction(targetMovePos, targetLookPos));
 
             // Set crit damage on right weapon Damage Collider

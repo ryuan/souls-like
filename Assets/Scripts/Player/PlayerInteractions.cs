@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace RY
@@ -13,8 +14,8 @@ namespace RY
         PlayerLocomotion playerLocomotion;
 
         [Header("UI Update Gameobjects")]
-        public GameObject interactableUIGameObject;
-        public GameObject itemInteractableUIGameObject;
+        public GameObject interactionAlertUIGameObject;
+        public GameObject itemPopUpUIGameObject;
 
         [Header("Detection Attributes")]
         [SerializeField]
@@ -44,39 +45,48 @@ namespace RY
             Collider[] hitColliders = Physics.OverlapSphere(
                 checkPosition, detectionSphereRadius, cameraHandler.ignoreLayers, QueryTriggerInteraction.Collide
                 );
+            List<Interactable> interactables = new List<Interactable>();
 
-            if (hitColliders.Length > 0)
+            // Add all interactable script components from hitColliders to a list
+            foreach (Collider hitCollider in hitColliders)
             {
-                foreach (Collider hitCollider in hitColliders)
+                if (hitCollider.tag == "Interactable")
                 {
-                    if (hitCollider.tag == "Interactable")
+                    Interactable interactable = hitCollider.GetComponent<Interactable>();
+
+                    if (interactable != null)
                     {
-                        Interactable interactable = hitCollider.GetComponent<Interactable>();
+                        interactables.Add(interactable);
+                    }
+                }
+            }
 
-                        if (interactable != null)
-                        {
-                            string interactableText = interactable.interactableText;
-                            interactableUI.interactableText.text = interactableText;
-                            interactableUIGameObject.SetActive(true);
+            // Show the UI popup for any interactable and let player interact with it
+            // Otherwise if no interactable, auto-close interaction alert and let player close item pop up
+            if (interactables.Count > 0)
+            {
+                foreach (Interactable interactable in interactables)
+                {
+                    string interactableText = interactable.interactableText;
+                    interactableUI.interactableText.text = interactableText;
+                    interactionAlertUIGameObject.SetActive(true);
 
-                            if (inputHandler.a_Input && playerManager.isInteracting == false)
-                            {
-                                interactable.Interact();
-                            }
-                        }
+                    if (inputHandler.a_Input && playerManager.isInteracting == false)
+                    {
+                        interactable.Interact();
                     }
                 }
             }
             else
             {
-                if (interactableUIGameObject != null)
+                if (interactionAlertUIGameObject != null)
                 {
-                    interactableUIGameObject.SetActive(false);
+                    interactionAlertUIGameObject.SetActive(false);
                 }
 
-                if (itemInteractableUIGameObject != null && inputHandler.a_Input)
+                if (itemPopUpUIGameObject != null && inputHandler.a_Input)
                 {
-                    itemInteractableUIGameObject.SetActive(false);
+                    itemPopUpUIGameObject.SetActive(false);
                 }
             }
         }

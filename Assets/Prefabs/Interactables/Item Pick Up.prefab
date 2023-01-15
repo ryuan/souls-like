@@ -14449,7 +14449,7 @@ GameObject:
   - component: {fileID: 8751454741092146316}
   - component: {fileID: 8751454741092146315}
   m_Layer: 0
-  m_Name: WeaponPickUp
+  m_Name: Item Pick Up
   m_TagString: Interactable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

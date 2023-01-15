@@ -29,39 +29,33 @@ namespace RY
         {
             base.Interact();
             StartCoroutine(OpenChestInteraction());
-
-
-
-            // Lock his transform to a certian point in front of chest
-            // Open chest's lid and animate player
-            // Spawn an item inside the chest that players can pickup
         }
 
         IEnumerator OpenChestInteraction()
         {
+            // Slerp to position and look towards chest before opening
             Vector3 targetMovePos = transform.position + transform.forward * openPosZOffset;
             Vector3 targetLookPos = transform.position;
-
             yield return StartCoroutine(playerLocomotion.SlerpFunction(targetMovePos, targetLookPos));
 
             animatorManager.PlayTargetAnimation("Open_Chest", true);
             anim.Play("Lift_Chest_Lid");
 
-            StartCoroutine(SpawnItemInChest());
+            // Wait for chest opening animation to play a bit, then spawn Item Pick Up object
+            yield return new WaitForSeconds(1);
 
+            Instantiate(itemSpawner, transform);
+
+            // Get the WeaponPickUp script of the Item Pick Up and assign its embedded weapon
             WeaponPickUp weaponPickUp = itemSpawner.GetComponent<WeaponPickUp>();
 
             if (weaponPickUp != null)
             {
                 weaponPickUp.weapon = weaponInChest;
             }
-        }
 
-        IEnumerator SpawnItemInChest()
-        {
-            yield return new WaitForSeconds(1);
-
-            Instantiate(itemSpawner, transform);
+            // Untag this Chest object and destroy its OpenChest script to remove UI pop up and interaction detection
+            gameObject.tag = "Untagged";
             Destroy(this);
         }
     }

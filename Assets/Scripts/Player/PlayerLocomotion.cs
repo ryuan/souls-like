@@ -89,7 +89,7 @@ namespace RY
             Vector3 relativeDir = transform.InverseTransformDirection(moveDir);
 
             // Calculate direction to look towards
-            Vector3 targetDir = targetLookPos - transform.position;
+            Vector3 targetDir = targetLookPos - targetMovePos;
             targetDir.y = 0;
             targetDir.Normalize();
             Quaternion targetRotation = Quaternion.LookRotation(targetDir);
@@ -112,12 +112,12 @@ namespace RY
                 Debug.Log(Quaternion.Angle(transform.rotation, targetRotation));
 
                 // When approximately at target position/rotation, force snap to targets
-                if (Vector3.Distance(transform.position, targetMovePos) < 0.05f)
+                if (Vector3.Distance(transform.position, targetMovePos) < 0.1f)
                 {
                     transform.position = targetMovePos;
                 }
 
-                if (Quaternion.Angle(transform.rotation, targetRotation) < 2.5f)
+                if (Quaternion.Angle(transform.rotation, targetRotation) < 3f)
                 {
                     transform.rotation = targetRotation;
                 }

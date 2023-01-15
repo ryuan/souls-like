@@ -44,9 +44,9 @@ namespace RY
             playerInventory.weaponsInventory.Add(weapon);
 
             // Update and show the Item Pop Up UI
-            playerInteractions.itemInteractableUIGameObject.GetComponentInChildren<TextMeshProUGUI>().text = weapon.itemName;
-            playerInteractions.itemInteractableUIGameObject.GetComponentInChildren<RawImage>().texture = weapon.itemIcon.texture;
-            playerInteractions.itemInteractableUIGameObject.SetActive(true);
+            playerInteractions.itemPopUpUIGameObject.GetComponentInChildren<TextMeshProUGUI>().text = weapon.itemName;
+            playerInteractions.itemPopUpUIGameObject.GetComponentInChildren<RawImage>().texture = weapon.itemIcon.texture;
+            playerInteractions.itemPopUpUIGameObject.SetActive(true);
 
             // Update the Weapon Inventory Window here in case it's open while picking up weapon
             uIManager.UpdateWeaponInventoryUI();
