@@ -18,6 +18,8 @@ namespace RY
         public int maxStamina;
         public float currentStamina;
 
+        public int soulCount = 0;
+
         public bool isDead;
     }
 }

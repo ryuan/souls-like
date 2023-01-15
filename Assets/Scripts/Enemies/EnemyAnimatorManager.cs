@@ -7,11 +7,15 @@ namespace RY
     public class EnemyAnimatorManager : AnimatorManager
     {
         EnemyManager enemyManager;
+        EnemyStats enemyStats;
+        PlayerStats playerStats;
 
         private void Awake()
         {
             anim = GetComponent<Animator>();
             enemyManager = GetComponentInParent<EnemyManager>();
+            enemyStats = GetComponentInParent<EnemyStats>();
+            playerStats = FindObjectOfType<PlayerStats>();
         }
 
         public void EnableRotation()
@@ -32,6 +36,11 @@ namespace RY
         public void DisableCombo()
         {
             //anim.SetBool("canDoCombo", false);
+        }
+
+        public void AwardSoulsOnDeath()
+        {
+            playerStats.AddSouls(enemyStats.soulCount);
         }
 
         private void OnAnimatorMove()

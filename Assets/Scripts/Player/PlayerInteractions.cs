@@ -11,11 +11,10 @@ namespace RY
         InteractableUI interactableUI;
         InputHandler inputHandler;
         PlayerManager playerManager;
-        PlayerLocomotion playerLocomotion;
 
         [Header("UI Update Gameobjects")]
-        public GameObject interactionAlertUIGameObject;
-        public GameObject itemPopUpUIGameObject;
+        public GameObject interactableAlertUIGameObject;
+        public GameObject itemPickUpAlertUIGameObject;
 
         [Header("Detection Attributes")]
         [SerializeField]
@@ -35,7 +34,6 @@ namespace RY
             interactableUI = FindObjectOfType<InteractableUI>();
             inputHandler = GetComponent<InputHandler>();
             playerManager = GetComponent<PlayerManager>();
-            playerLocomotion = GetComponent<PlayerLocomotion>();
         }
 
         public void CheckForInteractables()
@@ -69,7 +67,7 @@ namespace RY
                 {
                     string interactableText = interactable.interactableText;
                     interactableUI.interactableText.text = interactableText;
-                    interactionAlertUIGameObject.SetActive(true);
+                    interactableAlertUIGameObject.SetActive(true);
 
                     if (inputHandler.a_Input && playerManager.isInteracting == false)
                     {
@@ -79,14 +77,14 @@ namespace RY
             }
             else
             {
-                if (interactionAlertUIGameObject != null)
+                if (interactableAlertUIGameObject != null)
                 {
-                    interactionAlertUIGameObject.SetActive(false);
+                    interactableAlertUIGameObject.SetActive(false);
                 }
 
-                if (itemPopUpUIGameObject != null && inputHandler.a_Input)
+                if (itemPickUpAlertUIGameObject != null && inputHandler.a_Input)
                 {
-                    itemPopUpUIGameObject.SetActive(false);
+                    itemPickUpAlertUIGameObject.SetActive(false);
                 }
             }
         }

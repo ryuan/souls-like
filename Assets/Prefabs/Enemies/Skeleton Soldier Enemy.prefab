@@ -4988,6 +4988,7 @@ MonoBehaviour:
   staminaLevel: 10
   maxStamina: 0
   currentStamina: 0
+  soulCount: 50
   isDead: 0
 --- !u!114 &1889760090992357261
 MonoBehaviour:

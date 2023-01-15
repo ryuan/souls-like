@@ -9,6 +9,8 @@ namespace RY
         HealthBar healthBar;
         FocusPointsBar focusPointsBar;
         StaminaBar staminaBar;
+        SoulCountBar soulCountBar;
+
         InputHandler inputHandler;
         PlayerAnimatorManager animatorManager;
         PlayerManager playerManager;
@@ -28,6 +30,8 @@ namespace RY
             healthBar = FindObjectOfType<HealthBar>();
             focusPointsBar = FindObjectOfType<FocusPointsBar>();
             staminaBar = FindObjectOfType<StaminaBar>();
+            soulCountBar = FindObjectOfType<SoulCountBar>();
+
             inputHandler = GetComponent<InputHandler>();
             animatorManager = GetComponentInChildren<PlayerAnimatorManager>();
             playerManager = GetComponent<PlayerManager>();
@@ -47,7 +51,11 @@ namespace RY
             maxStamina = SetMaxStaminaFromHealthLevel();
             currentStamina = maxStamina;
             staminaBar.SetMaxStamina(maxStamina);
+
+            soulCountBar.SetSoulCountText(soulCount);
         }
+
+        #region Stats Initialization Setup
 
         private int SetMaxHealthFromHealthLevel()
         {
@@ -66,6 +74,10 @@ namespace RY
             maxStamina = staminaLevel * 10;
             return maxStamina;
         }
+
+        #endregion
+
+        #region Stats Modifier Functions
 
         public void TakeDamage(float damage, bool shouldAnimate)
         {
@@ -112,6 +124,18 @@ namespace RY
             playerAttackHandler.DisableWeaponDamageCollider();   // force disable weapon collider if it's open while getting hit
         }
 
+        public void HealHealth(int healAmount)
+        {
+            currentHealth += healAmount;
+
+            if (currentHealth > maxHealth)
+            {
+                currentHealth = maxHealth;
+            }
+
+            healthBar.SetCurrentHealth(currentHealth);
+        }
+
         public void DeductFocusPoints(int focusPoints)
         {
             currentFocusPoints -= focusPoints;
@@ -148,17 +172,14 @@ namespace RY
             }
         }
 
-        public void HealHealth(int healAmount)
+        public void AddSouls(int souls)
         {
-            currentHealth += healAmount;
+            soulCount += souls;
 
-            if (currentHealth > maxHealth)
-            {
-                currentHealth = maxHealth;
-            }
-
-            healthBar.SetCurrentHealth(currentHealth);
+            soulCountBar.SetSoulCountText(soulCount);
         }
+
+        #endregion
     }
 }
 

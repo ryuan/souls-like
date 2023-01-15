@@ -131,6 +131,11 @@ namespace RY
 
         #endregion
 
+        public void AwardSoulsOnDeath()
+        {
+            // Award player souls to enemy who dealt lethal blow
+        }
+
         // OnAnimatorMove is a MonoBehaviour callback for processing animation movements for modifying root motion.
         // DO NOT DELETE!!!
         private void OnAnimatorMove()

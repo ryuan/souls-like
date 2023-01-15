@@ -6,14 +6,14 @@ namespace RY
 {
     public class EnemyStats : CharacterStats
     {
-        Animator animator;
+        EnemyAnimatorManager animatorManager;
         EnemyAttackHandler enemyAttackHandler;
 
 
 
         private void Awake()
         {
-            animator = GetComponentInChildren<Animator>();
+            animatorManager = GetComponentInChildren<EnemyAnimatorManager>();
             enemyAttackHandler = GetComponentInChildren<EnemyAttackHandler>();
         }
 
@@ -42,22 +42,27 @@ namespace RY
             {
                 currentHealth = 0;
                 isDead = true;
-                animator.SetBool("isDead", isDead);
+                animatorManager.anim.SetBool("isDead", isDead);
 
                 if (shouldAnimate)
                 {
-                    animator.Play("OH_Dead_01");
+                    animatorManager.PlayTargetAnimation("OH_Dead_01", true);
                 }
             }
             else
             {
                 if (shouldAnimate)
                 {
-                    animator.Play("OH_Damage_01");
+                    animatorManager.PlayTargetAnimation("OH_Damage_01", true);
                 }
             }
 
             enemyAttackHandler.DisableWeaponDamageCollider();   // force disable weapon collider if it's open while getting hit
+        }
+
+        public void AddSouls(int souls)
+        {
+            soulCount += souls;
         }
     }
 }
