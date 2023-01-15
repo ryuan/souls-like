@@ -107,6 +107,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5018328819515271180}
+  - component: {fileID: 5834718017455777553}
   - component: {fileID: 1706094154469572546}
   - component: {fileID: 9131263801959941023}
   - component: {fileID: 2303799851305183376}
@@ -134,6 +135,26 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!95 &5834718017455777553
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6794409707689643442}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 5612f0888492f4a90837dfff53ff63d0, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!33 &1706094154469572546
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -211,3 +232,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   interactableText: Open Chest
+  itemSpawner: {fileID: 8751454741092146314, guid: 385bfb7a3cd8f45c397da8fa9bd1dedf,
+    type: 3}
+  weaponInChest: {fileID: 0}
+  openPosZOffset: 0.75

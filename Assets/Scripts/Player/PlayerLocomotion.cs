@@ -109,13 +109,15 @@ namespace RY
                 transform.position = Vector3.Slerp(transform.position, targetMovePos, normalMoveSpeed * Time.deltaTime);
                 transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
 
+                Debug.Log(Quaternion.Angle(transform.rotation, targetRotation));
+
                 // When approximately at target position/rotation, force snap to targets
                 if (Vector3.Distance(transform.position, targetMovePos) < 0.05f)
                 {
                     transform.position = targetMovePos;
                 }
 
-                if (Vector3.Angle(transform.position, targetLookPos) < 2.5f)
+                if (Quaternion.Angle(transform.rotation, targetRotation) < 2.5f)
                 {
                     transform.rotation = targetRotation;
                 }

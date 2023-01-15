@@ -6,7 +6,12 @@ namespace RY
 {
     public class OpenChest : Interactable
     {
-        PlayerManager playerManager;
+        PlayerLocomotion playerLocomotion;
+        PlayerAnimatorManager animatorManager;
+        Animator anim;
+
+        public GameObject itemSpawner;
+        public WeaponItem weaponInChest;
 
         [SerializeField]
         float openPosZOffset = 0.75f;
@@ -15,22 +20,49 @@ namespace RY
 
         private void Awake()
         {
-            playerManager = FindObjectOfType<PlayerManager>();
+            playerLocomotion = FindObjectOfType<PlayerLocomotion>();
+            animatorManager = playerLocomotion.GetComponentInChildren<PlayerAnimatorManager>();
+            anim = GetComponent<Animator>();
         }
 
         public override void Interact()
         {
-            // Make coroutine to slerp the movement
-            Vector3 targetDir = transform.position - playerManager.transform.position;
-            targetDir.y = 0;
-            targetDir.Normalize();
+            base.Interact();
+            StartCoroutine(OpenChestInteraction());
 
-            Quaternion targetRotation = Quaternion.LookRotation(targetDir);
-            playerManager.transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 300 * Time.deltaTime);
+
 
             // Lock his transform to a certian point in front of chest
             // Open chest's lid and animate player
             // Spawn an item inside the chest that players can pickup
+        }
+
+        IEnumerator OpenChestInteraction()
+        {
+            Vector3 targetMovePos = transform.position + transform.forward * openPosZOffset;
+            Vector3 targetLookPos = transform.position;
+
+            yield return StartCoroutine(playerLocomotion.SlerpFunction(targetMovePos, targetLookPos));
+
+            animatorManager.PlayTargetAnimation("Open_Chest", true);
+            anim.Play("Lift_Chest_Lid");
+
+            StartCoroutine(SpawnItemInChest());
+
+            WeaponPickUp weaponPickUp = itemSpawner.GetComponent<WeaponPickUp>();
+
+            if (weaponPickUp != null)
+            {
+                weaponPickUp.weapon = weaponInChest;
+            }
+        }
+
+        IEnumerator SpawnItemInChest()
+        {
+            yield return new WaitForSeconds(1);
+
+            Instantiate(itemSpawner, transform);
+            Destroy(this);
         }
     }
 }

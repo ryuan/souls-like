@@ -30,14 +30,17 @@ namespace RY
         public override void Interact()
         {
             base.Interact();
-            PickUpItem();
+            StartCoroutine(PickUpItem());
         }
 
-        private void PickUpItem()
+        IEnumerator PickUpItem()
         {
-            playerLocomotion.rb.velocity = Vector3.zero;    // stops player from moving whilst picking up item
+            yield return StartCoroutine(playerLocomotion.SlerpFunction(playerInteractions.transform.position, transform.position));
 
             animatorManager.PlayTargetAnimation("Pick_Up_Item", true);
+
+            yield return new WaitForSeconds(1);
+
             playerInventory.weaponsInventory.Add(weapon);
 
             // Update and show the Item Pop Up UI

@@ -61,7 +61,7 @@ namespace RY
 
                             if (inputHandler.a_Input && playerManager.isInteracting == false)
                             {
-                                StartCoroutine(HandleInteraction(interactable));
+                                interactable.Interact();
                             }
                         }
                     }
@@ -79,13 +79,6 @@ namespace RY
                     itemInteractableUIGameObject.SetActive(false);
                 }
             }
-        }
-
-        IEnumerator HandleInteraction(Interactable interactable)
-        {
-            yield return StartCoroutine(playerLocomotion.SlerpFunction(transform.position, interactable.transform.position));
-
-            interactable.Interact();
         }
 
         private void OnDrawGizmos()
