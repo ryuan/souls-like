@@ -10,6 +10,7 @@ namespace RY
         PlayerAnimatorManager animatorManager;
         PlayerStats playerStats;
         PlayerManager playerManager;
+        PlayerLocomotion playerLocomotion;
         PlayerInventory playerInventory;
 
         DamageCollider leftWeaponDamageCollider;
@@ -35,6 +36,7 @@ namespace RY
             animatorManager = GetComponent<PlayerAnimatorManager>();
             playerStats = GetComponentInParent<PlayerStats>();
             playerManager = GetComponentInParent<PlayerManager>();
+            playerLocomotion = GetComponentInParent<PlayerLocomotion>();
             playerInventory = GetComponentInParent<PlayerInventory>();
 
             backstabLayer = 1 << 12;
@@ -249,24 +251,30 @@ namespace RY
                 if (enemyManager != null)
                 {
                     // Check for team ID so stop backstab of allies or yourself
-                    Vector3 targetPos = enemyManager.transform.position + enemyManager.transform.forward * backstabPosZOffset;
-                    playerManager.transform.position = Vector3.Slerp(playerManager.transform.position, targetPos, 50 * Time.deltaTime);
-                    Vector3 targetDir = hit.transform.position - playerManager.transform.position;
-                    targetDir.y = 0;
-                    targetDir.Normalize();
-                    Quaternion targetRotation = Quaternion.LookRotation(targetDir);
-                    playerManager.transform.rotation = Quaternion.Slerp(playerManager.transform.rotation, targetRotation, 50 * Time.deltaTime);
 
-                    rightWeaponDamageCollider.SetCurrentWeaponDamage(playerInventory.rightWeapon.baseDamage * playerInventory.rightWeapon.critDamageMultiplier);
-                    rightWeaponDamageCollider.DisableDefaultDamageAnimations();
-
-                    latestAttackingWeapon = playerInventory.rightWeapon;
-                    animatorManager.anim.SetBool("usingRightWeapon", true);
-
-                    animatorManager.PlayTargetAnimation("Backstab", true);
-                    enemyManager.GetComponentInChildren<EnemyAnimatorManager>().PlayTargetAnimation("Backstabbed", true);
+                    Vector3 targetMovePos = enemyManager.transform.position + enemyManager.transform.forward * backstabPosZOffset;
+                    Vector3 targetLookPos = hit.transform.position;
+                    StartCoroutine(HandleBackstab(targetMovePos, targetLookPos, enemyManager));
                 }
             }
+        }
+
+        IEnumerator HandleBackstab(Vector3 targetMovePos, Vector3 targetLookPos, EnemyManager enemyManager)
+        {
+            // Slerp to position and look towards target before moving onto backstabbing
+            yield return StartCoroutine(playerLocomotion.SlerpFunction(targetMovePos, targetLookPos));
+
+            // Set crit damage on right weapon Damage Collider
+            // Disable default TakeDamage animations to force play backstabbed animations
+            rightWeaponDamageCollider.SetCurrentWeaponDamage(playerInventory.rightWeapon.baseDamage * playerInventory.rightWeapon.critDamageMultiplier);
+            rightWeaponDamageCollider.DisableDefaultDamageAnimations();
+
+            // Set latestAttackingWeapon and animator bool for animation events of stamina drain and weapon collider
+            latestAttackingWeapon = playerInventory.rightWeapon;
+            animatorManager.anim.SetBool("usingRightWeapon", true);
+
+            animatorManager.PlayTargetAnimation("Backstab", true);
+            enemyManager.GetComponentInChildren<EnemyAnimatorManager>().PlayTargetAnimation("Backstabbed", true);
         }
     }
 }

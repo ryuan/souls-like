@@ -8,22 +8,12 @@ namespace RY
     {
         CameraHandler cameraHandler;
         InputHandler inputHandler;
-        Animator anim;
         PlayerLocomotion playerLocomotion;
+        PlayerInteractions playerInteractions;
         PlayerStats playerStats;
+        Animator anim;
 
-        [Header("Interactables Attributes")]
-        public GameObject interactableUIGameObject;
-        public GameObject itemInteractableUIGameObject;
-        [SerializeField]
-        float detectionSphereRadius = 0.5f;
-        [SerializeField]
-        float detectionSphereHeight = 0.75f;
-        [SerializeField]
-        float detectionSphereDistance = 0.6f;
 
-        InteractableUI interactableUI;
-        Vector3 detectionSphereOffset;
 
         [Header("State Flags")]
         public bool isInteracting;
@@ -42,10 +32,10 @@ namespace RY
         {
             cameraHandler = FindObjectOfType<CameraHandler>();
             inputHandler = GetComponent<InputHandler>();
-            anim = GetComponentInChildren<Animator>();
             playerLocomotion = GetComponent<PlayerLocomotion>();
+            playerInteractions = GetComponent<PlayerInteractions>();
             playerStats = GetComponent<PlayerStats>();
-            interactableUI = FindObjectOfType<InteractableUI>();
+            anim = GetComponentInChildren<Animator>();
         }
 
         private void Start()
@@ -74,7 +64,7 @@ namespace RY
             playerLocomotion.HandleJumping();
             playerStats.RegenStamina();
 
-            CheckForInteractables();
+            playerInteractions.CheckForInteractables();
         }
 
         // FixedUpdate gets called every fixed frames.
@@ -122,57 +112,6 @@ namespace RY
             {
                 playerLocomotion.inAirTimer += Time.deltaTime;
             }
-        }
-
-        public void CheckForInteractables()
-        {
-            detectionSphereOffset = new Vector3(0, detectionSphereHeight) + (transform.forward * detectionSphereDistance);
-            Vector3 checkPosition = transform.position + detectionSphereOffset;
-            Collider[] hitColliders = Physics.OverlapSphere(
-                checkPosition, detectionSphereRadius, cameraHandler.ignoreLayers, QueryTriggerInteraction.Collide
-                );
-
-            if (hitColliders.Length > 0)
-            {
-                foreach (Collider hitCollider in hitColliders)
-                {
-                    if (hitCollider.tag == "Interactable")
-                    {
-                        Interactable interactable = hitCollider.GetComponent<Interactable>();
-
-                        if (interactable != null)
-                        {
-                            string interactableText = interactable.interactableText;
-                            interactableUI.interactableText.text = interactableText;
-                            interactableUIGameObject.SetActive(true);
-
-                            if (inputHandler.a_Input)
-                            {
-                                hitCollider.GetComponent<Interactable>().Interact();
-                            }
-                        }
-                    }
-                }
-            }
-            else
-            {
-                if (interactableUIGameObject != null)
-                {
-                    interactableUIGameObject.SetActive(false);
-                }
-
-                if (itemInteractableUIGameObject != null && inputHandler.a_Input)
-                {
-                    itemInteractableUIGameObject.SetActive(false);
-                }
-            }
-        }
-
-        private void OnDrawGizmos()
-        {
-            // For debugging CheckForInteractables function and its SphereCast collision against interactable colliders
-            Gizmos.color = Color.blue;
-            Gizmos.DrawWireSphere(transform.position + detectionSphereOffset, detectionSphereRadius);
         }
     }
 }

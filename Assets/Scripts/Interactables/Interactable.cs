@@ -8,6 +8,8 @@ namespace RY
     {
         public string interactableText;
 
+
+
         public virtual void Interact()
         {
             Debug.Log("You interacted with an object");

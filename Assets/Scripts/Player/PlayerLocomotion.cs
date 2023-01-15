@@ -69,17 +69,62 @@ namespace RY
             mainCameraTransform = Camera.main.transform;
             anim = GetComponentInChildren<Animator>();
             rb = GetComponent<Rigidbody>();
-        }
 
-        private void Start()
-        {
             ignoreForGroundCheck = ~(1 << 8 | 1 << 11);
         }
+
+        #region Helper Functions
 
         public Vector3 GetMoveDirection()
         {
             return moveDirection;
         }
+
+        public IEnumerator SlerpFunction(Vector3 targetMovePos, Vector3 targetLookPos)
+        {
+            // Calculate the local direction of movement
+            Vector3 moveDir = targetMovePos - transform.position;
+            moveDir.y = 0;
+            moveDir.Normalize();
+            Vector3 relativeDir = transform.InverseTransformDirection(moveDir);
+
+            // Calculate direction to look towards
+            Vector3 targetDir = targetLookPos - transform.position;
+            targetDir.y = 0;
+            targetDir.Normalize();
+            Quaternion targetRotation = Quaternion.LookRotation(targetDir);
+
+            while (transform.position.x != targetMovePos.x || transform.position.z != targetMovePos.z || transform.rotation != targetRotation)
+            {
+                // Make sure player can't move/rotate or take any other actions while slerping
+                animatorManager.anim.SetBool("isInteracting", true);
+                playerManager.isInteracting = true;
+                playerManager.canRotate = false;
+                rb.velocity = Vector3.zero;
+
+                // Animate walk/strafe while slerping to positing
+                animatorManager.UpdateAnimatorMovementValues(Mathf.Clamp(relativeDir.x, -0.5f, 0.5f), Mathf.Clamp(relativeDir.z, -0.5f, 0.5f), false);
+
+                // Slerp position and rotation for this frame
+                transform.position = Vector3.Slerp(transform.position, targetMovePos, normalMoveSpeed * Time.deltaTime);
+                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+
+                // When approximately at target position/rotation, force snap to targets
+                if (Vector3.Distance(transform.position, targetMovePos) < 0.05f)
+                {
+                    transform.position = targetMovePos;
+                }
+
+                if (Vector3.Angle(transform.position, targetLookPos) < 2.5f)
+                {
+                    transform.rotation = targetRotation;
+                }
+
+                yield return null;
+            }
+        }
+
+        #endregion
 
         public void HandleMovementAndSprint()
         {
@@ -150,7 +195,6 @@ namespace RY
                 }
 
                 Quaternion targetRotation = Quaternion.LookRotation(targetDir);
-
                 transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * delta);
             }
         }

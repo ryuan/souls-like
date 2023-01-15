@@ -100,7 +100,7 @@ namespace RY
 
         public void TickInput(float delta)
         {
-            MoveInput(delta);
+            MoveInput();
             HandleRollAndSprintInput(delta);
             HandleAttackInput(delta);
             HandleQuickSlotInput();
@@ -110,7 +110,7 @@ namespace RY
             HandleCriticleAttackInput();
         }
 
-        private void MoveInput(float delta)
+        private void MoveInput()
         {
             horizontal = movementInput.x;
             vertical = movementInput.y;
