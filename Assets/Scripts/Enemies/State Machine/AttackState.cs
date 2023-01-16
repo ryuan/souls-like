@@ -18,12 +18,12 @@ namespace RY
 
         public override State Tick(EnemyManager enemyManager, EnemyLocomotion enemyLocomotion, EnemyStats enemyStats, EnemyAnimatorManager animatorManager)
         {
-            enemyLocomotion.HandleRotate();
-
-            if (enemyManager.isPerformingAction)
+            if (enemyManager.isInteracting)
             {
                 return combatStanceState;
             }
+
+            enemyLocomotion.HandleRotate();
 
             if (currentAttack != null)
             {
@@ -46,7 +46,7 @@ namespace RY
                             animatorManager.anim.SetFloat("Horizontal", 0, 0.1f, Time.deltaTime);
                             animatorManager.PlayTargetAnimation(currentAttack.actionAnimation, true);
 
-                            enemyManager.isPerformingAction = true;
+                            enemyManager.isInteracting = true;
                             enemyManager.currentRecoveryTime = currentAttack.recoveryTime;
 
                             currentAttack = null;

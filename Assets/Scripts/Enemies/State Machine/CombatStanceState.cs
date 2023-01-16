@@ -15,13 +15,13 @@ namespace RY
 
         public override State Tick(EnemyManager enemyManager, EnemyLocomotion enemyLocomotion, EnemyStats enemyStats, EnemyAnimatorManager animatorManager)
         {
-            enemyLocomotion.HandleRotate();
-
-            if (enemyManager.isPerformingAction)
+            if (enemyManager.isInteracting)
             {
                 animatorManager.anim.SetFloat("Vertical", 0, 0.1f, Time.deltaTime);
                 return this;
             }
+
+            enemyLocomotion.HandleRotate();
 
             if (enemyManager.currentTarget.isDead)
             {

@@ -6,7 +6,7 @@ namespace RY
 {
     public class PlayerInventory : MonoBehaviour
     {
-        WeaponHolderSlotManager weaponHolderSlotManager;
+        PlayerHolderSlotManager holderSlotManager;
 
         [Header("Weapons in Quick Slot Inventory")]
         public WeaponItem[] weaponsInLeftQuickSlotInventory = new WeaponItem[4];
@@ -26,7 +26,7 @@ namespace RY
 
         private void Awake()
         {
-            weaponHolderSlotManager = GetComponentInChildren<WeaponHolderSlotManager>();
+            holderSlotManager = GetComponentInChildren<PlayerHolderSlotManager>();
         }
 
         private void Start()
@@ -56,7 +56,7 @@ namespace RY
                     }
                 }
 
-                weaponHolderSlotManager.LoadWeaponOnHolderSlot(leftWeapon, true);
+                holderSlotManager.LoadWeaponOnHolderSlot(leftWeapon, true);
             }
             else
             {
@@ -75,7 +75,7 @@ namespace RY
                     }
                 }
 
-                weaponHolderSlotManager.LoadWeaponOnHolderSlot(rightWeapon, false);
+                holderSlotManager.LoadWeaponOnHolderSlot(rightWeapon, false);
             }
         }
     }

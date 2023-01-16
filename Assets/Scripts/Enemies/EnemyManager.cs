@@ -18,7 +18,7 @@ namespace RY
         public State initialState;
         public State currentState;
         public CharacterStats currentTarget;
-        public bool isPerformingAction;
+        public bool isInteracting;
         public float currentRecoveryTime = 0;
 
         
@@ -46,6 +46,8 @@ namespace RY
         private void Update()
         {
             HandleRecoveryTimer();
+
+            isInteracting = animatorManager.anim.GetBool("isInteracting");
         }
 
         private void FixedUpdate()
@@ -74,14 +76,6 @@ namespace RY
             if (currentRecoveryTime > 0)
             {
                 currentRecoveryTime -= Time.deltaTime;
-            }
-
-            if (isPerformingAction)
-            {
-                if (currentRecoveryTime <= 0)
-                {
-                    isPerformingAction = false;
-                }
             }
         }
     }

@@ -8,7 +8,7 @@ namespace RY
     public class WeaponInventorySlotUI : MonoBehaviour
     {
         PlayerInventory playerInventory;
-        WeaponHolderSlotManager weaponHolderSlotManager;
+        PlayerHolderSlotManager holderSlotManager;
         UIManager uIManager;
 
         [SerializeField]
@@ -21,7 +21,7 @@ namespace RY
         private void Awake()
         {
             playerInventory = FindObjectOfType<PlayerInventory>();
-            weaponHolderSlotManager = FindObjectOfType<WeaponHolderSlotManager>();
+            holderSlotManager = FindObjectOfType<PlayerHolderSlotManager>();
             uIManager = FindObjectOfType<UIManager>();
         }
 
@@ -65,7 +65,7 @@ namespace RY
                     if (playerInventory.currentLeftWeaponIndex == selectedSlot.slotIndex)
                     {
                         playerInventory.leftWeapon = playerInventory.weaponsInLeftQuickSlotInventory[playerInventory.currentLeftWeaponIndex];
-                        weaponHolderSlotManager.LoadWeaponOnHolderSlot(playerInventory.leftWeapon, true);
+                        holderSlotManager.LoadWeaponOnHolderSlot(playerInventory.leftWeapon, true);
                     }
                 }
                 else
@@ -82,7 +82,7 @@ namespace RY
                     if (playerInventory.currentRightWeaponIndex == selectedSlot.slotIndex)
                     {
                         playerInventory.rightWeapon = playerInventory.weaponsInRightQuickSlotInventory[playerInventory.currentRightWeaponIndex];
-                        weaponHolderSlotManager.LoadWeaponOnHolderSlot(playerInventory.rightWeapon, false);
+                        holderSlotManager.LoadWeaponOnHolderSlot(playerInventory.rightWeapon, false);
                     }
                 }
 

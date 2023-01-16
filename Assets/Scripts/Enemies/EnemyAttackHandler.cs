@@ -7,7 +7,7 @@ namespace RY
     public class EnemyAttackHandler : MonoBehaviour
     {
         EnemyManager enemyManager;
-        EnemyWeaponHolderSlotManager weaponHolderSlotManager;
+        EnemyInventory enemyInventory;
 
         DamageCollider leftWeaponDamageCollider;
         DamageCollider rightWeaponDamageCollider;
@@ -17,7 +17,7 @@ namespace RY
         private void Awake()
         {
             enemyManager = GetComponentInParent<EnemyManager>();
-            weaponHolderSlotManager = GetComponent<EnemyWeaponHolderSlotManager>();
+            enemyInventory = GetComponentInParent<EnemyInventory>();
         }
 
         public void SetCurrentWeaponDamageCollider(DamageCollider damageCollider, bool isLeft)
@@ -25,12 +25,12 @@ namespace RY
             if (isLeft)
             {
                 leftWeaponDamageCollider = damageCollider;
-                leftWeaponDamageCollider.SetCurrentWeaponDamage(weaponHolderSlotManager.leftWeapon.baseDamage);
+                leftWeaponDamageCollider.SetCurrentWeaponDamage(enemyInventory.leftWeapon.baseDamage);
             }
             else
             {
                 rightWeaponDamageCollider = damageCollider;
-                rightWeaponDamageCollider.SetCurrentWeaponDamage(weaponHolderSlotManager.rightWeapon.baseDamage);
+                rightWeaponDamageCollider.SetCurrentWeaponDamage(enemyInventory.rightWeapon.baseDamage);
             }
         }
 
@@ -43,7 +43,7 @@ namespace RY
 
         public void DisableWeaponDamageCollider()
         {
-            rightWeaponDamageCollider.SetCurrentWeaponDamage(weaponHolderSlotManager.rightWeapon.baseDamage);
+            rightWeaponDamageCollider.SetCurrentWeaponDamage(enemyInventory.rightWeapon.baseDamage);
             rightWeaponDamageCollider.DisableDamageCollider();
         }
 

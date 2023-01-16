@@ -8,6 +8,8 @@ namespace RY
     {
         public int damage = 25;
 
+
+
         private void OnTriggerEnter(Collider other)
         {
             CharacterStats characterStats = other.GetComponent<CharacterStats>();

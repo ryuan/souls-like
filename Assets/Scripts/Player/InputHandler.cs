@@ -12,7 +12,7 @@ namespace RY
         PlayerInventory playerInventory;
         PlayerManager playerManager;
         CameraHandler cameraHandler;
-        WeaponHolderSlotManager weaponHolderSlotManager;
+        PlayerHolderSlotManager weaponHolderSlotManager;
         PlayerAnimatorManager animatorManager;
         UIManager uiManager;
 
@@ -65,7 +65,7 @@ namespace RY
             playerInventory = GetComponent<PlayerInventory>();
             playerManager = GetComponent<PlayerManager>();
             cameraHandler = FindObjectOfType<CameraHandler>();
-            weaponHolderSlotManager = GetComponentInChildren<WeaponHolderSlotManager>();
+            weaponHolderSlotManager = GetComponentInChildren<PlayerHolderSlotManager>();
             animatorManager = GetComponentInChildren<PlayerAnimatorManager>();
             uiManager = FindObjectOfType<UIManager>();
         }
