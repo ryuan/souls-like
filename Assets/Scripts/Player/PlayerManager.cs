@@ -13,8 +13,6 @@ namespace RY
         PlayerStats playerStats;
         Animator anim;
 
-
-
         [Header("State Flags")]
         public bool isInteracting;
         public bool isGrounded;
@@ -87,6 +85,7 @@ namespace RY
             inputHandler.rollFlag = false;
             inputHandler.a_Input = false;
             inputHandler.y_Input = false;
+            inputHandler.lt_Input = false;
             inputHandler.rb_Input = false;
             inputHandler.rt_Input = false;
             inputHandler.jump_Input = false;

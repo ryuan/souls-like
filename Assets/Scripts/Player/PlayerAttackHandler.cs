@@ -19,14 +19,24 @@ namespace RY
         public WeaponItem latestAttackingWeapon;
         public string lastAttack;
 
+        [Header("Critical Attack Attributes")]
         [SerializeField]
         Transform critAtkRaycastStartPoint;
+
         [SerializeField]
-        float critAtkRaycastDistance = 0.5f;
+        float backstabDetectionDistance = 0.5f;
         [SerializeField]
         float backstabPosZOffset = -0.75f;
         [SerializeField]
         LayerMask backstabLayer;
+
+        [SerializeField]
+        float riposteDetectionDistance = 0.75f;
+        [SerializeField]
+        float ripostePosZOffset = 1f;
+        [SerializeField]
+        LayerMask riposteLayer;
+
 
 
 
@@ -40,6 +50,7 @@ namespace RY
             playerInventory = GetComponentInParent<PlayerInventory>();
 
             backstabLayer = 1 << 12;
+            riposteLayer = 1 << 13;
         }
 
         public void SetCurrentWeaponDamageCollider(DamageCollider damageCollider, bool isLeft)
@@ -102,7 +113,19 @@ namespace RY
 
         #endregion
 
-        #region Handle Weapon's Melee/Spell Attack Actions
+        #region Handle Attack Input Actions
+
+        public void HandleLTAction()
+        {
+            if (playerInventory.leftWeapon.weaponType == WeaponType.ShieldWeapon)
+            {
+                HandleLTWeaponArt(inputHandler.twoHandFlag);
+            }
+            else if (playerInventory.leftWeapon.weaponType == WeaponType.MeleeWeapon)
+            {
+                // Perform light attack
+            }
+        }
 
         public void HandleRBAction()
         {
@@ -113,6 +136,28 @@ namespace RY
             else if (playerInventory.rightWeapon.weaponType == WeaponType.MeleeWeapon)
             {
                 HandleRBMeleeAction();
+            }
+        }
+
+        #endregion
+
+        #region Handle Weapon's Melee/Spell Attack Actions
+
+        private void HandleLTWeaponArt(bool isTwoHanding)
+        {
+            if (playerManager.isInteracting)
+            {
+                return;
+            }
+
+            // If two-handing weapon, perform weapon art for RIGHT weapon, else perform weapon art for LEFT weapon
+            if (isTwoHanding)
+            {
+                
+            }
+            else
+            {
+                animatorManager.PlayTargetAnimation(playerInventory.leftWeapon.weaponArt, true);
             }
         }
 
@@ -234,6 +279,8 @@ namespace RY
 
         #endregion
 
+        #region Handle Critical Attacks
+
         public void HandleCriticalAttacks()
         {
             if (playerStats.currentStamina <= 0)
@@ -243,9 +290,10 @@ namespace RY
 
             RaycastHit hit;
 
-            Debug.DrawRay(critAtkRaycastStartPoint.position, transform.TransformDirection(Vector3.forward) * critAtkRaycastDistance, Color.red);
-            if (Physics.Raycast(critAtkRaycastStartPoint.position, transform.TransformDirection(Vector3.forward), out hit, critAtkRaycastDistance, backstabLayer))
+            if (Physics.Raycast(critAtkRaycastStartPoint.position, transform.TransformDirection(Vector3.forward), out hit, backstabDetectionDistance, backstabLayer))
             {
+                Debug.DrawRay(critAtkRaycastStartPoint.position, transform.TransformDirection(Vector3.forward) * backstabDetectionDistance, Color.yellow, 2f);
+
                 EnemyManager enemyManager = hit.transform.gameObject.GetComponentInParent<EnemyManager>();
 
                 if (enemyManager != null)
@@ -253,6 +301,19 @@ namespace RY
                     // Check for team ID so stop backstab of allies or yourself
                     
                     StartCoroutine(HandleBackstab(hit, enemyManager));
+                }
+            }
+            else if (Physics.Raycast(critAtkRaycastStartPoint.position, transform.TransformDirection(Vector3.forward), out hit, riposteDetectionDistance, riposteLayer))
+            {
+                Debug.DrawRay(critAtkRaycastStartPoint.position, transform.TransformDirection(Vector3.forward) * riposteDetectionDistance, Color.yellow, 2f);
+
+                EnemyManager enemyManager = hit.transform.gameObject.GetComponentInParent<EnemyManager>();
+
+                if (enemyManager != null && enemyManager.canBeRiposted)
+                {
+                    // Check for team ID so stop riposte of allies or yourself
+                    
+                    StartCoroutine(HandleRiposte(hit, enemyManager));
                 }
             }
         }
@@ -264,17 +325,37 @@ namespace RY
             Vector3 targetLookPos = hit.transform.position;
             yield return StartCoroutine(playerLocomotion.SlerpFunction(targetMovePos, targetLookPos));
 
+            PrepareForCritAtkAnimationEvents();
+
+            animatorManager.PlayTargetAnimation("Backstab", true);
+            enemyManager.GetComponentInChildren<EnemyAnimatorManager>().PlayTargetAnimation("Backstabbed", true);
+        }
+
+        IEnumerator HandleRiposte(RaycastHit hit, EnemyManager enemyManager)
+        {
+            // Slerp to position and look towards target before moving onto riposting
+            Vector3 targetMovePos = enemyManager.transform.position + enemyManager.transform.forward * ripostePosZOffset;
+            Vector3 targetLookPos = hit.transform.position;
+            yield return StartCoroutine(playerLocomotion.SlerpFunction(targetMovePos, targetLookPos));
+
+            PrepareForCritAtkAnimationEvents();
+
+            animatorManager.PlayTargetAnimation("Riposte", true);
+            enemyManager.GetComponentInChildren<EnemyAnimatorManager>().PlayTargetAnimation("Riposted", true);
+        }
+
+        private void PrepareForCritAtkAnimationEvents()
+        {
             // Set crit damage on right weapon Damage Collider
-            // Disable default TakeDamage animations to force play backstabbed animations
+            // Disable default TakeDamage animations to force play riposted animation
             rightWeaponDamageCollider.SetCurrentWeaponDamage(playerInventory.rightWeapon.baseDamage * playerInventory.rightWeapon.critDamageMultiplier);
             rightWeaponDamageCollider.DisableDefaultDamageAnimations();
 
             // Set latestAttackingWeapon and animator bool for animation events of stamina drain and weapon collider
             latestAttackingWeapon = playerInventory.rightWeapon;
             animatorManager.anim.SetBool("usingRightWeapon", true);
-
-            animatorManager.PlayTargetAnimation("Backstab", true);
-            enemyManager.GetComponentInChildren<EnemyAnimatorManager>().PlayTargetAnimation("Backstabbed", true);
         }
+
+        #endregion
     }
 }

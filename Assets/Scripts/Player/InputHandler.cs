@@ -30,6 +30,7 @@ namespace RY
         public bool b_Input;
         public bool a_Input;
         public bool y_Input;
+        public bool lt_Input;
         public bool rb_Input;
         public bool rt_Input;
         public bool critAtk_Input;
@@ -76,18 +77,19 @@ namespace RY
                 inputActions = new PlayerControls();
                 inputActions.PlayerMovement.Movement.performed += context => movementInput = context.ReadValue<Vector2>();
                 inputActions.PlayerMovement.Camera.performed += context => cameraInput = context.ReadValue<Vector2>();
+                inputActions.PlayerActions.A.performed += context => a_Input = true;
+                inputActions.PlayerActions.Y.performed += context => y_Input = true;
+                inputActions.PlayerActions.LT.performed += context => lt_Input = true;
                 inputActions.PlayerActions.RB.performed += context => rb_Input = true;
                 inputActions.PlayerActions.RT.performed += context => rt_Input = true;
+                inputActions.PlayerActions.CriticalAttack.performed += context => critAtk_Input = true;
+                inputActions.PlayerActions.Jump.performed += context => jump_Input = true;
                 inputActions.PlayerQuickSlots.DPadLeft.performed += context => dPad_Left_Input = true;
                 inputActions.PlayerQuickSlots.DPadRight.performed += context => dPad_Right_Input = true;
-                inputActions.PlayerActions.A.performed += context => a_Input = true;
-                inputActions.PlayerActions.Jump.performed += context => jump_Input = true;
                 inputActions.PlayerActions.Inventory.performed += context => inventory_Input = true;
                 inputActions.PlayerActions.LockOn.performed += context => lockOn_Input = true;
                 inputActions.PlayerMovement.LockOnTargetLeft.performed += context => rStick_Left_Input = true;
                 inputActions.PlayerMovement.LockOnTargetRight.performed += context => rStick_Right_Input = true;
-                inputActions.PlayerActions.Y.performed += context => y_Input = true;
-                inputActions.PlayerActions.CriticalAttack.performed += context => critAtk_Input = true;
             }
 
             inputActions.Enable();
@@ -146,6 +148,20 @@ namespace RY
 
         private void HandleAttackInput(float delta)
         {
+            // LT input handles the LEFT hand weapon's light attack
+            // or weapon art if (1) LEFT hand weapon is a shield or (2) TWO handed weapon
+            if (lt_Input)
+            {
+                if (twoHandFlag)
+                {
+
+                }
+                else
+                {
+                    playerAttackHandler.HandleLTAction();
+                }
+            }
+
             // RB input handles the RIGHT hand weapon's light attack
             if (rb_Input)
             {

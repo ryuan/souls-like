@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 68d892ed59de949879a7b6dbc172ffc6, type: 3}
+  m_Name: Cutlass
+  m_EditorClassIdentifier: 
+  itemIcon: {fileID: 21300000, guid: e024936aeaada4014890d71d88eccee3, type: 3}
+  itemName: Cutlass
+  modelPrefab: {fileID: 7460540334622564261, guid: 700fb901bb20d459dab872d7a5553372,
+    type: 3}
+  isUnarmed: 0
+  weaponType: 2
+  baseDamage: 25
+  critDamageMultiplier: 4
+  baseStaminaCost: 25
+  lightAtkStaminaCostMultipler: 1
+  heavyAtkStaminaCostMultipler: 1.4
+  leftHandIdle: Left_Arm_Idle_01
+  rightHandIdle: Right_Arm_Idle_01
+  twoHandIdle: Both_Arms_Idle_01
+  ohLightAtk1: OH_Light_Attack_01
+  ohLightAtk2: OH_Light_Attack_02
+  ohHeavyAtk1: OH_Heavy_Attack_01
+  ohHeavyAtk2: OH_Heavy_Attack_02
+  thLightAtk1: TH_Light_Attack_01
+  thLightAtk2: TH_Light_Attack_02
+  thHeavyAtk1: TH_Heavy_Attack_01
+  thHeavyAtk2: TH_Heavy_Attack_02

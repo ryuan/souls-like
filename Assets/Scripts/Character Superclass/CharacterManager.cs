@@ -16,5 +16,12 @@ namespace RY
         protected Collider collisionBlockerCollider;
         [SerializeField]
         protected Collider backstabCollider;
+        [SerializeField]
+        protected Collider riposteCollider;
+
+        [Header("Combat Flags")]
+        public bool canBeRiposted;
+        public bool canBeParried;
+        public bool isParrying;
     }
 }

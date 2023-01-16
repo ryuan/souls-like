@@ -65,7 +65,7 @@ namespace RY
             cameraPivotTransform = this.transform.GetChild(0);
 
             defaultMainCamLocalPosZ = mainCameraTransform.localPosition.z;
-            ignoreLayers = ~(1 << 7 | 1 << 8 | 1 << 9 | 1 << 10 | 1 << 11 | 1 << 12);
+            ignoreLayers = ~(1 << 7 | 1 << 8 | 1 << 9 | 1 << 10 | 1 << 11 | 1 << 12 | 1 << 13);
             characterLayers = (1 << 7 | 1 << 9);
             unlockedPivotPos = cameraPivotTransform.position;
             lockedPivotPos = unlockedPivotPos + new Vector3(0, lockedPivotPosYLift);

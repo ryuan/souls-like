@@ -24,11 +24,13 @@ namespace RY
             {
                 leftWeaponDamageCollider = damageCollider;
                 leftWeaponDamageCollider.SetCurrentWeaponDamage(weaponHolderSlotManager.leftWeapon.baseDamage);
+                leftWeaponDamageCollider.characterManager = GetComponentInParent<CharacterManager>();
             }
             else
             {
                 rightWeaponDamageCollider = damageCollider;
                 rightWeaponDamageCollider.SetCurrentWeaponDamage(weaponHolderSlotManager.rightWeapon.baseDamage);
+                rightWeaponDamageCollider.characterManager = GetComponentInParent<CharacterManager>();
             }
         }
 

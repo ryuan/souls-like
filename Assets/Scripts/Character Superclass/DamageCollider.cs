@@ -6,7 +6,8 @@ namespace RY
 {
     public class DamageCollider : MonoBehaviour
     {
-        Collider damageCollider;
+        Collider weaponCollider;
+        public CharacterManager characterManager;
 
         float currentWeaponDamage;
         bool shouldAnimate;
@@ -15,22 +16,22 @@ namespace RY
 
         private void Awake()
         {
-            damageCollider = GetComponent<Collider>();
-            damageCollider.gameObject.SetActive(true);
-            damageCollider.enabled = false;
-            damageCollider.isTrigger = true;
+            weaponCollider = GetComponent<Collider>();
+            weaponCollider.gameObject.SetActive(true);
+            weaponCollider.enabled = false;
+            weaponCollider.isTrigger = true;
 
             shouldAnimate = true;
         }
 
         public void EnableDamageCollider()
         {
-            damageCollider.enabled = true;
+            weaponCollider.enabled = true;
         }
 
         public void DisableDamageCollider()
         {
-            damageCollider.enabled = false;
+            weaponCollider.enabled = false;
         }
 
         public void SetCurrentWeaponDamage(float damage)
@@ -48,6 +49,16 @@ namespace RY
             if (other.tag == "Player")
             {
                 PlayerStats playerStats = other.GetComponent<PlayerStats>();
+                PlayerManager playerManager = other.GetComponent<PlayerManager>();
+
+                if (playerManager != null)
+                {
+                    if (playerManager.isParrying)
+                    {
+                        characterManager.GetComponentInChildren<AnimatorManager>().PlayTargetAnimation("Parried", true);
+                        return;
+                    }
+                }
 
                 if (playerStats != null)
                 {
@@ -59,6 +70,16 @@ namespace RY
             if (other.tag == "Enemy")
             {
                 EnemyStats enemyStats = other.GetComponent<EnemyStats>();
+                EnemyManager enemyManager = other.GetComponent<EnemyManager>();
+
+                if (enemyManager != null)
+                {
+                    if (enemyManager.isParrying)
+                    {
+                        characterManager.GetComponentInChildren<AnimatorManager>().PlayTargetAnimation("Parried", true);
+                        return;
+                    }
+                }
 
                 if (enemyStats != null)
                 {

@@ -5,7 +5,7 @@ using UnityEngine;
 namespace RY
 {
     public enum WeaponType {
-        FaithCaster, MagicCaster, MeleeWeapon, PyroCaster
+        FaithCaster, MagicCaster, MeleeWeapon, PyroCaster, ShieldWeapon
     };
 
     [CreateAssetMenu(menuName = "Item/Weapon Item")]
@@ -40,5 +40,8 @@ namespace RY
         public string thLightAtk2;
         public string thHeavyAtk1;
         public string thHeavyAtk2;
+
+        [Header("Weapon Art Animation")]
+        public string weaponArt;
     }
 }

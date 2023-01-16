@@ -131,6 +131,26 @@ namespace RY
 
         #endregion
 
+        public void EnableParrying()
+        {
+            playerManager.isParrying = true;
+        }
+
+        public void DisableParrying()
+        {
+            playerManager.isParrying = false;
+        }
+
+        public void EnableCanBeRiposted()
+        {
+            playerManager.canBeRiposted = true;
+        }
+
+        public void DisableCanBeRiposted()
+        {
+            playerManager.canBeRiposted = false;
+        }
+
         public void AwardSoulsOnDeath()
         {
             // Award player souls to enemy who dealt lethal blow

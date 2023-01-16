@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 68d892ed59de949879a7b6dbc172ffc6, type: 3}
+  m_Name: Unarmed
+  m_EditorClassIdentifier: 
+  itemIcon: {fileID: 0}
+  itemName: Unarmed
+  modelPrefab: {fileID: 7626413826203440076, guid: fcd30d6303ca243c98fafb6b80e50e95,
+    type: 3}
+  isUnarmed: 1
+  weaponType: 2
+  baseDamage: 10
+  critDamageMultiplier: 1.5
+  baseStaminaCost: 5
+  lightAtkStaminaCostMultipler: 1
+  heavyAtkStaminaCostMultipler: 1.3
+  leftHandIdle: Left_Arm_Empty
+  rightHandIdle: Right_Arm_Empty
+  twoHandIdle: Both_Arms_Empty
+  ohLightAtk1: OH_Light_Attack_01
+  ohLightAtk2: OH_Light_Attack_02
+  ohHeavyAtk1: OH_Heavy_Attack_01
+  ohHeavyAtk2: OH_Heavy_Attack_02
+  thLightAtk1: TH_Light_Attack_01
+  thLightAtk2: TH_Light_Attack_02
+  thHeavyAtk1: TH_Heavy_Attack_01
+  thHeavyAtk2: TH_Heavy_Attack_02
