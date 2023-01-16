@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: Enemy_Attack_01
   m_EditorClassIdentifier: 
   actionAnimation: OH_Light_Attack_01
-  attackScore: 3
+  canCombo: 1
+  comboAttackAction: {fileID: 11400000, guid: bf61ac7dea6d04d06928116f20397f50, type: 2}
+  attackChanceWeight: 3
   recoveryTime: 2
-  minAttackAngle: -35
-  maxAttackAngle: 35
-  minDistanceNeededToAttack: 0
-  maxDistanceNeededToAttack: 3
+  minAttackDistance: 0
+  maxAttackDistance: 3

@@ -7,6 +7,8 @@ namespace RY
     [CreateAssetMenu(menuName = "AI/Enemy Actions/Attack Actions")]
     public class EnemyAttackAction : EnemyAction
     {
+        public EnemyAttackAction comboAttackAction;
+
         public int attackChanceWeight = 3;
         public float recoveryTime = 2;
 

@@ -14,14 +14,18 @@ namespace RY
         public NavMeshAgent navMeshAgent;
         public Rigidbody rb;
 
-        [Header("State Machine")]
+        [Header("State Machine Attributes")]
         public State initialState;
         public State currentState;
         public CharacterStats currentTarget;
-        public bool isInteracting;
         public float currentRecoveryTime = 0;
 
-        
+        [Header("State Conditions")]
+        public bool isInteracting;
+        public bool canRotate;
+        public bool canCombo;
+
+
 
         private void Awake()
         {
@@ -48,6 +52,8 @@ namespace RY
             HandleRecoveryTimer();
 
             isInteracting = animatorManager.anim.GetBool("isInteracting");
+            canRotate = animatorManager.anim.GetBool("canRotate");
+            canCombo = animatorManager.anim.GetBool("canCombo");
         }
 
         private void FixedUpdate()

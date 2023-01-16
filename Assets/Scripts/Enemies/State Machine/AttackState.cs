@@ -18,12 +18,12 @@ namespace RY
 
         public override State Tick(EnemyManager enemyManager, EnemyLocomotion enemyLocomotion, EnemyStats enemyStats, EnemyAnimatorManager animatorManager)
         {
-            if (enemyManager.isInteracting)
-            {
-                return combatStanceState;
-            }
-
             enemyLocomotion.HandleRotate();
+
+            if (enemyManager.isInteracting && enemyManager.canCombo == false)
+            {
+                return this;
+            }
 
             if (currentAttack != null)
             {
@@ -47,11 +47,18 @@ namespace RY
                             animatorManager.PlayTargetAnimation(currentAttack.actionAnimation, true);
 
                             enemyManager.isInteracting = true;
-                            enemyManager.currentRecoveryTime = currentAttack.recoveryTime;
 
-                            currentAttack = null;
-
-                            return combatStanceState;
+                            if (currentAttack.comboAttackAction != null)
+                            {
+                                currentAttack = currentAttack.comboAttackAction;
+                                return this;
+                            }
+                            else
+                            {
+                                enemyManager.currentRecoveryTime = currentAttack.recoveryTime;
+                                currentAttack = null;
+                                return combatStanceState;
+                            }
                         }
                     }
                 }
@@ -102,7 +109,6 @@ namespace RY
                         if (tempScore >= randomValue)
                         {
                             currentAttack = enemyAttackAction;
-
                         }
                     }
                 }

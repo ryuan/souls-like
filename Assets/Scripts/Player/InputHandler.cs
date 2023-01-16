@@ -164,7 +164,7 @@ namespace RY
             // RT input handles the RIGHT hand weapon's heavy attack
             if (rt_Input)
             {
-                if (playerManager.canDoCombo)
+                if (playerManager.canCombo)
                 {
                     animatorManager.anim.SetBool("usingRightWeapon", true);
                     playerAttackHandler.HandleWeaponCombo(playerInventory.rightWeapon);

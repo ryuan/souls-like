@@ -13,13 +13,13 @@ namespace RY
         PlayerStats playerStats;
         Animator anim;
 
-        [Header("State Flags")]
+        [Header("State Conditions")]
         public bool isInteracting;
         public bool isGrounded;
         public bool isFalling;
         public bool isJumping;
         public bool canRotate;
-        public bool canDoCombo;
+        public bool canCombo;
         public bool usingRightWeapon;
         public bool usingLeftWeapon;
         public bool isInvulnerable;
@@ -51,7 +51,7 @@ namespace RY
             isInteracting = anim.GetBool("isInteracting");
             anim.applyRootMotion = isInteracting;
             canRotate = anim.GetBool("canRotate");
-            canDoCombo = anim.GetBool("canDoCombo");
+            canCombo = anim.GetBool("canCombo");
             usingRightWeapon = anim.GetBool("usingRightWeapon");
             usingLeftWeapon = anim.GetBool("usingLeftWeapon");
             isInvulnerable = anim.GetBool("isInvulnerable");

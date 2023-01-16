@@ -20,22 +20,22 @@ namespace RY
 
         public void EnableRotation()
         {
-            //anim.SetBool("canRotate", true);
+            anim.SetBool("canRotate", true);
         }
 
         public void DisableRotation()
         {
-            //anim.SetBool("canRotate", false);
+            anim.SetBool("canRotate", false);
         }
 
         public void EnableCombo()
         {
-            //anim.SetBool("canDoCombo", true);
+            anim.SetBool("canCombo", true);
         }
 
         public void DisableCombo()
         {
-            //anim.SetBool("canDoCombo", false);
+            anim.SetBool("canCombo", false);
         }
 
         public void AwardSoulsOnDeath()

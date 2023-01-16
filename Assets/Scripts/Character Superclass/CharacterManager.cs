@@ -19,7 +19,7 @@ namespace RY
         [SerializeField]
         protected Collider riposteCollider;
 
-        [Header("Combat Flags")]
+        [Header("Combat Conditions")]
         public bool canBeRiposted;
         public bool canBeParried;
         public bool isParrying;

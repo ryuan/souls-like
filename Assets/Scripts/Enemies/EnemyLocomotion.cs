@@ -61,20 +61,23 @@ namespace RY
 
         public void HandleRotate()
         {
-            Vector3 targetDir = enemyManager.currentTarget.transform.position - transform.position;
-            targetDir.y = 0;
-            targetDir.Normalize();
-
-            if (targetDir == Vector3.zero)
+            if (enemyManager.canRotate)
             {
-                targetDir = transform.forward;
+                Vector3 targetDir = enemyManager.currentTarget.transform.position - transform.position;
+                targetDir.y = 0;
+                targetDir.Normalize();
+
+                if (targetDir == Vector3.zero)
+                {
+                    targetDir = transform.forward;
+                }
+
+                Quaternion targetRotation = Quaternion.LookRotation(targetDir);
+
+                transform.rotation = Quaternion.Slerp(
+                    transform.rotation, targetRotation, rotationSpeed * Time.deltaTime
+                    );
             }
-
-            Quaternion targetRotation = Quaternion.LookRotation(targetDir);
-
-            transform.rotation = Quaternion.Slerp(
-                transform.rotation, targetRotation, rotationSpeed * Time.deltaTime
-                );
         }
 
         public bool IsWithinViewableAngle(Vector3 targetPosition, float minAngle, float maxAngle)

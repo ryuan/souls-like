@@ -39,7 +39,6 @@ namespace RY
 
 
 
-
         private void Awake()
         {
             inputHandler = GetComponentInParent<InputHandler>();
@@ -224,7 +223,7 @@ namespace RY
 
         private void HandleRBMeleeAction()
         {
-            if (playerManager.canDoCombo)
+            if (playerManager.canCombo)
             {
                 animatorManager.anim.SetBool("usingRightWeapon", true);
                 HandleWeaponCombo(playerInventory.rightWeapon);
