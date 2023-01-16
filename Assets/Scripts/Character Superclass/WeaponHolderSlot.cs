@@ -22,26 +22,28 @@ namespace RY
         {
             UnloadWeaponAndDestroy();
 
-            GameObject model = Instantiate(weaponItem.modelPrefab);
+            currentWeapon = weaponItem;
+            currentWeapon = null;
 
-            if (model != null)
+            if (weaponItem.modelPrefab != null)
             {
+                GameObject model;
+
                 if (parentOverride != null)
                 {
-                    model.transform.parent = parentOverride;
+                    model = Instantiate(weaponItem.modelPrefab, parentOverride);
                 }
                 else
                 {
-                    model.transform.parent = transform;
+                    model = Instantiate(weaponItem.modelPrefab, transform);
                 }
 
                 model.transform.localPosition = Vector3.zero;
                 model.transform.localRotation = Quaternion.identity;
                 model.transform.localScale = Vector3.one;
-            }
 
-            currentWeapon = weaponItem;
-            currentWeaponModel = model;
+                currentWeaponModel = model;
+            }
         }
 
         public WeaponItem GetWeaponInHolderSlot()

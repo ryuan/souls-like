@@ -7,10 +7,10 @@ namespace RY
     public class DamageCollider : MonoBehaviour
     {
         Collider weaponCollider;
-        public CharacterManager characterManager;
+        AnimatorManager animatorManager;
 
         float currentWeaponDamage;
-        bool shouldAnimate;
+        bool shouldAnimate = true;
 
 
 
@@ -21,7 +21,7 @@ namespace RY
             weaponCollider.enabled = false;
             weaponCollider.isTrigger = true;
 
-            shouldAnimate = true;
+            animatorManager = GetComponentInParent<AnimatorManager>();
         }
 
         public void EnableDamageCollider()
@@ -55,7 +55,7 @@ namespace RY
                 {
                     if (playerManager.isParrying)
                     {
-                        characterManager.GetComponentInChildren<AnimatorManager>().PlayTargetAnimation("Parried", true);
+                        animatorManager.PlayTargetAnimation("Parried", true);
                         return;
                     }
                 }
@@ -76,7 +76,7 @@ namespace RY
                 {
                     if (enemyManager.isParrying)
                     {
-                        characterManager.GetComponentInChildren<AnimatorManager>().PlayTargetAnimation("Parried", true);
+                        animatorManager.PlayTargetAnimation("Parried", true);
                         return;
                     }
                 }

@@ -152,14 +152,7 @@ namespace RY
             // or weapon art if (1) LEFT hand weapon is a shield or (2) TWO handed weapon
             if (lt_Input)
             {
-                if (twoHandFlag)
-                {
-
-                }
-                else
-                {
-                    playerAttackHandler.HandleLTAction();
-                }
+                playerAttackHandler.HandleLTAction();
             }
 
             // RB input handles the RIGHT hand weapon's light attack

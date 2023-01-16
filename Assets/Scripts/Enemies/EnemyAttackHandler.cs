@@ -6,6 +6,7 @@ namespace RY
 {
     public class EnemyAttackHandler : MonoBehaviour
     {
+        EnemyManager enemyManager;
         EnemyWeaponHolderSlotManager weaponHolderSlotManager;
 
         DamageCollider leftWeaponDamageCollider;
@@ -15,6 +16,7 @@ namespace RY
 
         private void Awake()
         {
+            enemyManager = GetComponentInParent<EnemyManager>();
             weaponHolderSlotManager = GetComponent<EnemyWeaponHolderSlotManager>();
         }
 
@@ -24,17 +26,15 @@ namespace RY
             {
                 leftWeaponDamageCollider = damageCollider;
                 leftWeaponDamageCollider.SetCurrentWeaponDamage(weaponHolderSlotManager.leftWeapon.baseDamage);
-                leftWeaponDamageCollider.characterManager = GetComponentInParent<CharacterManager>();
             }
             else
             {
                 rightWeaponDamageCollider = damageCollider;
                 rightWeaponDamageCollider.SetCurrentWeaponDamage(weaponHolderSlotManager.rightWeapon.baseDamage);
-                rightWeaponDamageCollider.characterManager = GetComponentInParent<CharacterManager>();
             }
         }
 
-        #region Handle Weapon's Damage Collider
+        #region Animation Events for Damage Collider
 
         public void EnableWeaponDamageCollider()
         {
@@ -49,7 +49,7 @@ namespace RY
 
         #endregion
 
-        #region Handle Weapon's Stamina Drain
+        #region Animation Events for Stamina Drain
 
         public void DrainStaminaLightAttack()
         {
@@ -59,6 +59,30 @@ namespace RY
         public void DrainStaminaHeavyAttack()
         {
             // build later
+        }
+
+        #endregion
+
+        #region Animation Events for Parry & Riposte
+
+        public void EnableParrying()
+        {
+            enemyManager.isParrying = true;
+        }
+
+        public void DisableParrying()
+        {
+            enemyManager.isParrying = false;
+        }
+
+        public void EnableCanBeRiposted()
+        {
+            enemyManager.canBeRiposted = true;
+        }
+
+        public void DisableCanBeRiposted()
+        {
+            enemyManager.canBeRiposted = false;
         }
 
         #endregion

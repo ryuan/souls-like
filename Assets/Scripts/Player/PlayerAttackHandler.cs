@@ -67,7 +67,7 @@ namespace RY
             }
         }
 
-        #region Handle Weapon's Damage Collider (Animator Events)
+        #region Animation Events for Damage Collider
 
         public void EnableWeaponDamageCollider()
         {
@@ -99,7 +99,7 @@ namespace RY
 
         #endregion
 
-        #region Handle Weapon's Stamina Drain (Animator Events)
+        #region Animation Events for Stamina Drain
 
         public void DrainStaminaLightAttack()
         {
@@ -113,17 +113,50 @@ namespace RY
 
         #endregion
 
+        #region Animation Events for Parry & Riposte
+
+        public void EnableParrying()
+        {
+            playerManager.isParrying = true;
+        }
+
+        public void DisableParrying()
+        {
+            playerManager.isParrying = false;
+        }
+
+        public void EnableCanBeRiposted()
+        {
+            playerManager.canBeRiposted = true;
+        }
+
+        public void DisableCanBeRiposted()
+        {
+            playerManager.canBeRiposted = false;
+        }
+
+        #endregion
+
+        #region Animation Events for Spell Casting
+
+        public void CastSpell()
+        {
+            playerInventory.currentSpell.SpellCastSuccessful(animatorManager, playerStats);
+        }
+
+        #endregion
+
         #region Handle Attack Input Actions
 
         public void HandleLTAction()
         {
-            if (playerInventory.leftWeapon.weaponType == WeaponType.ShieldWeapon)
+            if (playerInventory.leftWeapon.weaponType == WeaponType.ShieldWeapon || inputHandler.twoHandFlag)
             {
-                HandleLTWeaponArt(inputHandler.twoHandFlag);
+                HandleLTWeaponArt();
             }
             else if (playerInventory.leftWeapon.weaponType == WeaponType.MeleeWeapon)
             {
-                // Perform light attack
+                HandleLTMeleeAction();
             }
         }
 
@@ -143,7 +176,7 @@ namespace RY
 
         #region Handle Weapon's Melee/Spell Attack Actions
 
-        private void HandleLTWeaponArt(bool isTwoHanding)
+        private void HandleLTWeaponArt()
         {
             if (playerManager.isInteracting)
             {
@@ -151,9 +184,9 @@ namespace RY
             }
 
             // If two-handing weapon, perform weapon art for RIGHT weapon, else perform weapon art for LEFT weapon
-            if (isTwoHanding)
+            if (inputHandler.twoHandFlag)
             {
-                
+                animatorManager.PlayTargetAnimation(playerInventory.rightWeapon.weaponArt, true);
             }
             else
             {
@@ -161,30 +194,32 @@ namespace RY
             }
         }
 
+        private void HandleLTMeleeAction()
+        {
+            // Need to build functionality for LEFT hand weapon handling and animations
+        }
+
         private void HandleRBSpellAction(WeaponItem weapon)
         {
-            if (playerManager.isInteracting == false)
+            if (playerManager.isInteracting)
             {
-                if (weapon.weaponType == WeaponType.FaithCaster)
+                return;
+            }
+
+            if (weapon.weaponType == WeaponType.FaithCaster)
+            {
+                if (playerInventory.currentSpell != null && playerInventory.currentSpell.spellType == SpellType.Faith)
                 {
-                    if (playerInventory.currentSpell != null && playerInventory.currentSpell.spellType == SpellType.Faith)
+                    if (playerStats.currentFocusPoints >= playerInventory.currentSpell.focusPointsCost)
                     {
-                        if (playerStats.currentFocusPoints >= playerInventory.currentSpell.focusPointsCost)
-                        {
-                            playerInventory.currentSpell.SpellCastAttempted(animatorManager, playerStats);
-                        }
-                        else
-                        {
-                            animatorManager.PlayTargetAnimation("Headache", true);
-                        }
+                        playerInventory.currentSpell.SpellCastAttempted(animatorManager, playerStats);
+                    }
+                    else
+                    {
+                        animatorManager.PlayTargetAnimation("Headache", true);
                     }
                 }
             }
-        }
-
-        public void CastSpell()
-        {
-            playerInventory.currentSpell.SpellCastSuccessful(animatorManager, playerStats);
         }
 
         private void HandleRBMeleeAction()
@@ -283,7 +318,7 @@ namespace RY
 
         public void HandleCriticalAttacks()
         {
-            if (playerStats.currentStamina <= 0)
+            if (playerStats.currentStamina <= 0 || playerManager.isInteracting)
             {
                 return;
             }

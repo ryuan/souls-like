@@ -38,26 +38,6 @@ namespace RY
             //anim.SetBool("canDoCombo", false);
         }
 
-        public void EnableParrying()
-        {
-            enemyManager.isParrying = true;
-        }
-
-        public void DisableParrying()
-        {
-            enemyManager.isParrying = false;
-        }
-
-        public void EnableCanBeRiposted()
-        {
-            enemyManager.canBeRiposted = true;
-        }
-
-        public void DisableCanBeRiposted()
-        {
-            enemyManager.canBeRiposted = false;
-        }
-
         public void AwardSoulsOnDeath()
         {
             playerStats.AddSouls(enemyStats.soulCount);

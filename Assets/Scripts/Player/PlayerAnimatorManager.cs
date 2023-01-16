@@ -89,7 +89,7 @@ namespace RY
             anim.SetFloat(vertical, v, 0.1f, Time.deltaTime);
         }
 
-        #region Rotation Animator Events
+        #region Rotation Animation Events
 
         public void EnableRotation()
         {
@@ -103,7 +103,7 @@ namespace RY
 
         #endregion
 
-        #region Combo Animator Events
+        #region Combo Animation Events
 
         public void EnableCombo()
         {
@@ -117,7 +117,7 @@ namespace RY
 
         #endregion
 
-        #region Invulnerability Animator Events
+        #region Invulnerability Animation Events
 
         public void EnableInvulnerable()
         {
@@ -130,26 +130,6 @@ namespace RY
         }
 
         #endregion
-
-        public void EnableParrying()
-        {
-            playerManager.isParrying = true;
-        }
-
-        public void DisableParrying()
-        {
-            playerManager.isParrying = false;
-        }
-
-        public void EnableCanBeRiposted()
-        {
-            playerManager.canBeRiposted = true;
-        }
-
-        public void DisableCanBeRiposted()
-        {
-            playerManager.canBeRiposted = false;
-        }
 
         public void AwardSoulsOnDeath()
         {
