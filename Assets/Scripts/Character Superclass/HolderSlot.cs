@@ -6,7 +6,8 @@ namespace RY
 {
     public class HolderSlot : MonoBehaviour
     {
-        public Transform parentOverride;
+        public Transform handHoldParentOverride;
+        public Transform armHoldParentOverride;
         public bool isLeftHandSlot;
         public bool isRightHandSlot;
         public bool isBackSlot;
@@ -23,15 +24,19 @@ namespace RY
             UnloadWeaponAndDestroy();
 
             currentWeapon = weaponItem;
-            currentWeapon = null;
+            currentWeaponModel = null;
 
             if (weaponItem.modelPrefab != null)
             {
                 GameObject model;
 
-                if (parentOverride != null)
+                if (weaponItem.weaponType == WeaponType.ShieldWeapon && armHoldParentOverride != null)
                 {
-                    model = Instantiate(weaponItem.modelPrefab, parentOverride);
+                    model = Instantiate(weaponItem.modelPrefab, armHoldParentOverride);
+                }
+                else if (handHoldParentOverride != null)
+                {
+                    model = Instantiate(weaponItem.modelPrefab, handHoldParentOverride);
                 }
                 else
                 {
@@ -43,7 +48,7 @@ namespace RY
                 model.transform.localScale = Vector3.one;
 
                 currentWeaponModel = model;
-            }
+            }            
         }
 
         public WeaponItem GetWeaponInHolderSlot()
