@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace RY
 {
-    public class OpenChest : Interactable
+    public class Chest : Interactable
     {
         PlayerLocomotion playerLocomotion;
         PlayerAnimatorManager animatorManager;

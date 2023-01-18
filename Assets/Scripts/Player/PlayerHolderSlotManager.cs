@@ -76,7 +76,6 @@ namespace RY
             {
                 if (inputHandler.twoHandFlag)
                 {
-                    Debug.Log(leftHolderSlot.GetWeaponInHolderSlot());
                     backHolderSlot.LoadWeaponModel(leftHolderSlot.GetWeaponInHolderSlot());
                     leftHolderSlot.UnloadWeaponAndDestroy();
                     animator.CrossFade(weaponItem.twoHandIdle, 0.2f);
