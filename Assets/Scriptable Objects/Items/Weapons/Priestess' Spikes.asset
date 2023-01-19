@@ -23,8 +23,8 @@ MonoBehaviour:
   baseStaminaCost: 25
   lightAtkStaminaCostMultipler: 1
   heavyAtkStaminaCostMultipler: 1.5
-  leftHandIdle: Left_Arm_Idle_01
-  rightHandIdle: Right_Arm_Idle_01
+  leftHandIdle: Left_Hand_Idle_01
+  rightHandIdle: Right_Hand_Idle_01
   twoHandIdle: Both_Arms_Idle_01
   ohLightAtk1: OH_Light_Attack_01
   ohLightAtk2: OH_Light_Attack_02
@@ -34,3 +34,6 @@ MonoBehaviour:
   thLightAtk2: TH_Light_Attack_02
   thHeavyAtk1: TH_Heavy_Attack_01
   thHeavyAtk2: TH_Heavy_Attack_02
+  weaponArt: 
+  ohLeftHandSwap: OH_Left_Hand_Swap_01
+  thLeftHandSwap: TH_Left_Hand_Swap_01

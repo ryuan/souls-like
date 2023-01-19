@@ -12,7 +12,7 @@ namespace RY
         PlayerInventory playerInventory;
         PlayerManager playerManager;
         CameraHandler cameraHandler;
-        PlayerHolderSlotManager weaponHolderSlotManager;
+        PlayerHolderSlotManager holderSlotManager;
         PlayerAnimatorManager animatorManager;
         UIManager uiManager;
 
@@ -65,7 +65,7 @@ namespace RY
             playerInventory = GetComponent<PlayerInventory>();
             playerManager = GetComponent<PlayerManager>();
             cameraHandler = FindObjectOfType<CameraHandler>();
-            weaponHolderSlotManager = GetComponentInChildren<PlayerHolderSlotManager>();
+            holderSlotManager = GetComponentInChildren<PlayerHolderSlotManager>();
             animatorManager = GetComponentInChildren<PlayerAnimatorManager>();
             uiManager = FindObjectOfType<UIManager>();
         }
@@ -259,17 +259,7 @@ namespace RY
         {
             if (y_Input)
             {
-                twoHandFlag = !twoHandFlag;
-
-                if (twoHandFlag)
-                {
-                    weaponHolderSlotManager.LoadWeaponOnHolderSlot(playerInventory.rightWeapon, false);
-                }
-                else
-                {
-                    weaponHolderSlotManager.LoadWeaponOnHolderSlot(playerInventory.leftWeapon, true);
-                    weaponHolderSlotManager.LoadWeaponOnHolderSlot(playerInventory.rightWeapon, false);
-                }
+                holderSlotManager.HandleTwoHanding();
             }
         }
 

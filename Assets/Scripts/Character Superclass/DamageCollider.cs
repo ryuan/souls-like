@@ -50,17 +50,16 @@ namespace RY
             {
                 PlayerStats playerStats = other.GetComponent<PlayerStats>();
                 PlayerManager playerManager = other.GetComponent<PlayerManager>();
+                PlayerLocomotion playerLocomotion = other.GetComponent<PlayerLocomotion>();
 
-                if (playerManager != null)
+                // If parrying, check if this enemy is within a certain angel from player's POV
+                // Give more leeway for parrying from the left side than the right since shield is on left hand
+                if (playerManager.isParrying && playerLocomotion.IsWithinViewableAngle(animatorManager.transform.position, -60, 45))
                 {
-                    if (playerManager.isParrying)
-                    {
-                        animatorManager.PlayTargetAnimation("Parried", true);
-                        return;
-                    }
+                    animatorManager.PlayTargetAnimation("Parried", true);
+                    DisableDamageCollider();
                 }
-
-                if (playerStats != null)
+                else
                 {
                     playerStats.TakeDamage(currentWeaponDamage, shouldAnimate);
                     shouldAnimate = true;
@@ -71,17 +70,16 @@ namespace RY
             {
                 EnemyStats enemyStats = other.GetComponent<EnemyStats>();
                 EnemyManager enemyManager = other.GetComponent<EnemyManager>();
+                EnemyLocomotion enemyLocomotion = other.GetComponent<EnemyLocomotion>();
 
-                if (enemyManager != null)
+                // If parrying, check if this player is within a certain angel from enemy's POV
+                // Give more leeway for parrying from the left side than the right since shield is on left hand
+                if (enemyManager.isParrying && enemyLocomotion.IsWithinViewableAngle(animatorManager.transform.position, -60, 45))
                 {
-                    if (enemyManager.isParrying)
-                    {
-                        animatorManager.PlayTargetAnimation("Parried", true);
-                        return;
-                    }
+                    animatorManager.PlayTargetAnimation("Parried", true);
+                    DisableDamageCollider();
                 }
-
-                if (enemyStats != null)
+                else
                 {
                     enemyStats.TakeDamage(currentWeaponDamage, shouldAnimate);
                     shouldAnimate = true;

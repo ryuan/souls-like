@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace RY
 {
-    public class PlayerLocomotion : MonoBehaviour
+    public class PlayerLocomotion : CharacterLocomotion
     {
         InputHandler inputHandler;
         PlayerManager playerManager;

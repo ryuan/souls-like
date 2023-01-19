@@ -6,6 +6,7 @@ namespace RY
 {
     public class EnemyHolderSlotManager : MonoBehaviour
     {
+        Animator animator;
         EnemyAttackHandler enemyAttackHandler;
 
         HolderSlot leftHolderSlot;
@@ -15,6 +16,7 @@ namespace RY
 
         private void Awake()
         {
+            animator = GetComponent<Animator>();
             enemyAttackHandler = GetComponent<EnemyAttackHandler>();
 
             HolderSlot[] holderSlots = GetComponentsInChildren<HolderSlot>();
@@ -40,6 +42,17 @@ namespace RY
                 enemyAttackHandler.SetCurrentWeaponDamageCollider(
                     leftHolderSlot.GetWeaponDamageCollider(), true
                     );
+
+                #region Handle Left Weapon Idle Animations
+                if (weapon != null)
+                {
+                    animator.CrossFade(weapon.leftHandIdle, 0.2f);
+                }
+                else
+                {
+                    animator.CrossFade("Left_Hand_Empty", 0.2f);
+                }
+                #endregion
             }
             else
             {
@@ -47,6 +60,17 @@ namespace RY
                 enemyAttackHandler.SetCurrentWeaponDamageCollider(
                     rightHolderSlot.GetWeaponDamageCollider(), false
                     );
+
+                #region Handle Right Weapon Idle Animations
+                if (weapon != null)
+                {
+                    animator.CrossFade(weapon.rightHandIdle, 0.2f);
+                }
+                else
+                {
+                    animator.CrossFade("Right_Hand_Empty", 0.2f);
+                }
+                #endregion
             }
         }
     }

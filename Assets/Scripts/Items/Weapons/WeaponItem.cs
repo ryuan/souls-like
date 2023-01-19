@@ -43,5 +43,8 @@ namespace RY
 
         [Header("Weapon Art Animation")]
         public string weaponArt;
+
+        [Header("Two Hand Swap Animation")]
+        public string ohLeftHandSwap;
     }
 }

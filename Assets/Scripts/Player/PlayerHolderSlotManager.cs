@@ -8,6 +8,7 @@ namespace RY
     {
         QuickSlotsUI quickSlotsUI;
         Animator animator;
+        PlayerInventory playerInventory;
         PlayerAttackHandler playerAttackHandler;
         InputHandler inputHandler;
 
@@ -21,6 +22,7 @@ namespace RY
         {
             quickSlotsUI = FindObjectOfType<QuickSlotsUI>();
             animator = GetComponent<Animator>();
+            playerInventory = GetComponentInParent<PlayerInventory>();
             playerAttackHandler = GetComponent<PlayerAttackHandler>();
             inputHandler = GetComponentInParent<InputHandler>();
 
@@ -65,7 +67,7 @@ namespace RY
                     }
                     else
                     {
-                        animator.CrossFade("Left_Arm_Empty", 0.2f);
+                        animator.CrossFade("Left_Hand_Empty", 0.2f);
                     }
                     #endregion
                 }
@@ -76,9 +78,12 @@ namespace RY
             {
                 if (inputHandler.twoHandFlag)
                 {
-                    backHolderSlot.LoadWeaponModel(leftHolderSlot.GetWeaponInHolderSlot());
-                    leftHolderSlot.UnloadWeaponAndDestroy();
-                    animator.CrossFade(weaponItem.twoHandIdle, 0.2f);
+                    if (backHolderSlot.GetWeaponInHolderSlot() == null)
+                    {
+                        backHolderSlot.LoadWeaponModel(leftHolderSlot.GetWeaponInHolderSlot());
+                        leftHolderSlot.UnloadWeaponAndDestroy();
+                        animator.CrossFade(weaponItem.twoHandIdle, 0.2f);
+                    }
                 }
                 else
                 {
@@ -93,7 +98,7 @@ namespace RY
                     }
                     else
                     {
-                        animator.CrossFade("Right_Arm_Empty", 0.2f);
+                        animator.CrossFade("Right_Hand_Empty", 0.2f);
                     }
                     #endregion
                 }
@@ -106,6 +111,43 @@ namespace RY
                 quickSlotsUI.UpdateWeaponQuickSlotsUI(weaponItem, false);
             }
         }
+
+        #region Handle One/Two Handing Weapon Swap
+
+        public void HandleTwoHanding()
+        {
+            if (playerInventory.leftWeapon.isUnarmed)
+            {
+                UpdateTwoHanding();
+            }
+            else
+            {
+                animator.CrossFade(playerInventory.leftWeapon.ohLeftHandSwap, 0.2f);
+            }
+        }
+
+        public void UpdateTwoHanding()
+        {
+            inputHandler.twoHandFlag = !inputHandler.twoHandFlag;
+
+            if (inputHandler.twoHandFlag)
+            {
+                LoadWeaponOnHolderSlot(playerInventory.rightWeapon, false);
+            }
+            else
+            {
+                LoadWeaponOnHolderSlot(playerInventory.leftWeapon, true);
+                LoadWeaponOnHolderSlot(playerInventory.rightWeapon, false);
+            }
+        }
+
+
+        // Animation event for two hand swapping
+        public void SwapBetweenOneAndTwoHanding()
+        {
+            UpdateTwoHanding();
+        }
+
+        #endregion
     }
 }
-

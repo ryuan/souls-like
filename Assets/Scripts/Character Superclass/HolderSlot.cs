@@ -63,6 +63,8 @@ namespace RY
 
         public void UnloadWeaponAndDestroy()
         {
+            currentWeapon = null;
+
             if (currentWeaponModel != null)
             {
                 Destroy(currentWeaponModel);
