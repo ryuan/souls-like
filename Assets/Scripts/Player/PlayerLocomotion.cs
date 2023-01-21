@@ -37,6 +37,10 @@ namespace RY
 
         [Header("Grounding & Falling Detection")]
         [SerializeField]
+        float defaultColliderRadius = 0.3f;
+        [SerializeField]
+        float fallingColliderRadius = 0.1f;
+        [SerializeField]
         float groundDetectionRayStartPoint = 0.5f;
         [SerializeField]
         float minDistanceNeededToBeginFall = 1f;
@@ -70,7 +74,8 @@ namespace RY
             anim = GetComponentInChildren<Animator>();
             rb = GetComponent<Rigidbody>();
 
-            ignoreForGroundCheck = ~(1 << 8 | 1 << 11);
+            GetComponent<CapsuleCollider>().radius = defaultColliderRadius;
+            ignoreForGroundCheck = ~(1 << 8 | 1 << 11 | 1 << 12 | 1 << 13);
         }
 
         #region Helper Functions
@@ -259,6 +264,7 @@ namespace RY
             if (playerManager.isJumping)
             {
                 #region Update grounding/falling state once jump is started
+
                 // Move player forward using velocity
                 Vector3 velo = moveDirection;
                 velo.Normalize();
@@ -282,21 +288,23 @@ namespace RY
 
                         if (transform.position.y <= jumpStartPosY)
                         {
-                            playerManager.isFalling = true;
                             playerManager.isJumping = false;
+                            playerManager.isFalling = true;
                         }
                         else
                         {
-                            playerManager.isFalling = false;
                             playerManager.isJumping = true;
+                            playerManager.isFalling = false;
                         }
                     }
                 }
+
                 #endregion
             }
             else
             {
                 #region Handle Grounding and Falling
+
                 if (playerManager.isFalling)
                 {
                     rb.AddForce(-Vector3.up * fallingSpeed);
@@ -332,6 +340,8 @@ namespace RY
                             inAirTimer = 0;
                         }
 
+                        GetComponent<CapsuleCollider>().radius = defaultColliderRadius;
+
                         playerManager.isFalling = false;
                     }
 
@@ -348,6 +358,8 @@ namespace RY
                 {
                     playerManager.isGrounded = false;
 
+                    Debug.Log(anim.GetBool("isInAir"));
+
                     if (playerManager.isFalling == false)
                     {
                         playerManager.isFalling = true;
@@ -357,11 +369,14 @@ namespace RY
                             animatorManager.PlayTargetAnimation("Falling", true);
                         }
 
+                        GetComponent<CapsuleCollider>().radius = fallingColliderRadius;
+
                         Vector3 vel = rb.velocity;
                         vel.Normalize();
                         rb.velocity = vel * (normalMoveSpeed / 2);
                     }
                 }
+
                 #endregion
             }
         }
