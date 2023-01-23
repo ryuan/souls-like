@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Security.Cryptography.X509Certificates;
+using Mono.Cecil.Cil;
 using UnityEngine;
 
 namespace RY
@@ -75,7 +77,7 @@ namespace RY
             rb = GetComponent<Rigidbody>();
 
             GetComponent<CapsuleCollider>().radius = defaultColliderRadius;
-            ignoreForGroundCheck = ~(1 << 8 | 1 << 11 | 1 << 12 | 1 << 13);
+            ignoreForGroundCheck = ~(1 << 8 | 1 << 9 | 1<< 10 | 1 << 11 | 1 << 12 | 1 << 13);
         }
 
         #region Helper Functions
@@ -255,15 +257,9 @@ namespace RY
             Vector3 origin = transform.position;
             origin.y += groundDetectionRayStartPoint;
 
-            Debug.DrawRay(origin, transform.forward * 0.3f, Color.red);
-            if (Physics.Raycast(origin, transform.forward, out hit, 0.3f))
-            {
-                moveDirection = Vector3.zero;
-            }
-
             if (playerManager.isJumping)
             {
-                #region Update grounding/falling state once jump is started
+                #region Check & Update Current Jump State
 
                 // Move player forward using velocity
                 Vector3 velo = moveDirection;
@@ -273,37 +269,41 @@ namespace RY
                 projectedVelocity.y = rb.velocity.y;    // inhereit y-axis velo from jump animation (set at OnAnimatorMove)
                 rb.velocity = projectedVelocity;
 
-                if (anim.deltaPosition.y < 0)
+                if (anim.deltaPosition.y == 0)
                 {
-                    Debug.DrawRay(origin, -Vector3.up * groundDetectionRayStartPoint, Color.red, 0.1f, false);
-                    if (Physics.Raycast(origin, -Vector3.up, out hit, groundDetectionRayStartPoint, ignoreForGroundCheck))
+                    playerManager.isJumping = false;
+                }
+                else if (anim.deltaPosition.y < 0)
+                {
+                    playerManager.isFalling = true;
+
+                    Vector3 endpoint = transform.position + new Vector3(0, defaultColliderRadius);
+
+                    if (Physics.CheckCapsule(origin, endpoint, defaultColliderRadius, ignoreForGroundCheck))
                     {
-                        playerManager.isGrounded = true;
-                        playerManager.isFalling = false;
                         playerManager.isJumping = false;
                     }
                     else
                     {
-                        playerManager.isGrounded = false;
-
                         if (transform.position.y <= jumpStartPosY)
                         {
                             playerManager.isJumping = false;
-                            playerManager.isFalling = true;
-                        }
-                        else
-                        {
-                            playerManager.isJumping = true;
-                            playerManager.isFalling = false;
                         }
                     }
                 }
 
                 #endregion
             }
-            else
+
+            if (playerManager.isJumping == false)
             {
                 #region Handle Grounding and Falling
+
+                Debug.DrawRay(origin, transform.forward * 0.3f, Color.red);
+                if (Physics.Raycast(origin, transform.forward, out hit, 0.3f))
+                {
+                    moveDirection = Vector3.zero;
+                }
 
                 if (playerManager.isFalling)
                 {
@@ -331,7 +331,12 @@ namespace RY
                     {
                         if (inAirTimer > 0.5f)
                         {
-                            animatorManager.PlayTargetAnimation("Land", true);
+                            animatorManager.PlayTargetAnimation("Land_02", true);
+                            inAirTimer = 0;
+                        }
+                        else if (inAirTimer > 0.1f)
+                        {
+                            animatorManager.PlayTargetAnimation("Land_01", true);
                             inAirTimer = 0;
                         }
                         else
@@ -357,8 +362,6 @@ namespace RY
                 else
                 {
                     playerManager.isGrounded = false;
-
-                    Debug.Log(anim.GetBool("isInAir"));
 
                     if (playerManager.isFalling == false)
                     {
@@ -392,21 +395,34 @@ namespace RY
             {
                 jumpStartPosY = transform.position.y;
 
-                playerManager.isJumping = true;
-                playerManager.isGrounded = false;
-                playerManager.isFalling = false;
-                
-                moveDirection = mainCameraTransform.forward * inputHandler.vertical;
-                moveDirection += mainCameraTransform.right * inputHandler.horizontal;
-                moveDirection.y = 0;
-
-                Quaternion jumpRotation = Quaternion.LookRotation(moveDirection);
-                transform.rotation = jumpRotation;
-
-                playerStats.DrainStamina(jumpCost);
-
-                animatorManager.PlayTargetAnimation("Jump", true);
+                StartCoroutine(StartJumping());
             }
+        }
+
+        IEnumerator StartJumping()
+        {
+            animatorManager.PlayTargetAnimation("Jump", true);
+
+            while (anim.deltaPosition.y <= 0)
+            {
+                playerManager.isJumping = false;
+                yield return null;
+            }
+
+            jumpStartPosY = transform.position.y;
+
+            playerManager.isGrounded = false;
+            playerManager.isFalling = false;
+            playerManager.isJumping = true;
+
+            moveDirection = mainCameraTransform.forward * inputHandler.vertical;
+            moveDirection += mainCameraTransform.right * inputHandler.horizontal;
+            moveDirection.y = 0;
+
+            Quaternion jumpRotation = Quaternion.LookRotation(moveDirection);
+            transform.rotation = jumpRotation;
+
+            playerStats.DrainStamina(jumpCost);
         }
     }
 }
