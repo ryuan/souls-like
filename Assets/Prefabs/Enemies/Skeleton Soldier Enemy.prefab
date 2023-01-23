@@ -5118,7 +5118,9 @@ MonoBehaviour:
   moveSpeedAnimVerticalFloat: 0.85
   rotationSpeed: 20
   maxAttackRange: 1.5
-  groundDetectionRayStartPoint: 0.5
+  groundingSphereCastHeight: 0.5
+  groundingSphereCastForwardDistance: 0.3
+  groundingSphereCastRadius: 0.1
   minDistanceNeededToBeginFall: 1
   ignoreForGroundCheck:
     serializedVersion: 2

@@ -43,11 +43,15 @@ namespace RY
         [SerializeField]
         float fallingColliderRadius = 0.1f;
         [SerializeField]
-        float groundDetectionRayStartPoint = 0.5f;
+        float moveStopCheckSphereRadius = 0.4f;
+        [SerializeField]
+        float groundingSphereCastHeight = 0.5f;
+        [SerializeField]
+        float groundingSphereCastForwardDistance = 0.3f;
+        [SerializeField]
+        float groundingSphereCastRadius = 0.1f;
         [SerializeField]
         float minDistanceNeededToBeginFall = 1f;
-        [SerializeField]
-        float groundDirectionRayDistance = 0.2f;
         [SerializeField]
         LayerMask ignoreForGroundCheck;
         public float inAirTimer;
@@ -255,7 +259,16 @@ namespace RY
         {
             RaycastHit hit;
             Vector3 origin = transform.position;
-            origin.y += groundDetectionRayStartPoint;
+            origin.y += groundingSphereCastHeight;
+
+            Vector3 moveStopCheckSphereCenter = origin;
+            moveStopCheckSphereCenter.y += moveStopCheckSphereRadius;
+            moveStopCheckSphereCenter += transform.forward * moveStopCheckSphereRadius;
+
+            if (Physics.CheckSphere(moveStopCheckSphereCenter, moveStopCheckSphereRadius, ignoreForGroundCheck))
+            {
+                moveDirection = Vector3.zero;
+            }
 
             if (playerManager.isJumping)
             {
@@ -277,7 +290,8 @@ namespace RY
                 {
                     playerManager.isFalling = true;
 
-                    Vector3 endpoint = transform.position + new Vector3(0, defaultColliderRadius);
+                    Vector3 endpoint = transform.position;
+                    endpoint.y += defaultColliderRadius;
 
                     if (Physics.CheckCapsule(origin, endpoint, defaultColliderRadius, ignoreForGroundCheck))
                     {
@@ -299,26 +313,21 @@ namespace RY
             {
                 #region Handle Grounding and Falling
 
-                Debug.DrawRay(origin, transform.forward * 0.3f, Color.red);
-                if (Physics.Raycast(origin, transform.forward, out hit, 0.3f))
-                {
-                    moveDirection = Vector3.zero;
-                }
-
                 if (playerManager.isFalling)
                 {
-                    rb.AddForce(-Vector3.up * fallingSpeed);
+                    rb.AddForce(Vector3.down * fallingSpeed);
                     rb.AddForce(moveDirection * fallingSpeed / 7.5f);
                 }
 
                 Vector3 dir = moveDirection;
                 dir.Normalize();
-                origin = origin + dir * groundDirectionRayDistance;
+                origin = origin + dir * groundingSphereCastForwardDistance;
 
                 targetPosition = transform.position;
 
-                Debug.DrawRay(origin, -Vector3.up * minDistanceNeededToBeginFall, Color.red, 0.1f, false);
-                if (Physics.Raycast(origin, -Vector3.up, out hit, minDistanceNeededToBeginFall, ignoreForGroundCheck))
+                //Debug.DrawRay(origin, Vector3.down * minDistanceNeededToBeginFall, Color.red, 0.1f, false);
+                //if (Physics.Raycast(origin, Vector3.down, out hit, minDistanceNeededToBeginFall, ignoreForGroundCheck))
+                if (Physics.SphereCast(origin, groundingSphereCastRadius, Vector3.down, out hit, minDistanceNeededToBeginFall, ignoreForGroundCheck))
                 {
                     playerManager.isGrounded = true;
 

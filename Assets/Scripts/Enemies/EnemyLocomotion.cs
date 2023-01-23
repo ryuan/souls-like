@@ -9,6 +9,8 @@ namespace RY
     {
         EnemyManager enemyManager;
 
+        Vector3 targetPosition;
+
         [Header("AI Detection Settings")]
         [SerializeField]
         float _detectionFOVAngle = 100;
@@ -20,7 +22,9 @@ namespace RY
         public float maxAttackRange = 1.5f;
 
         [Header("Grounding Detection")]
-        public float groundDetectionRayStartPoint = 0.5f;
+        public float groundingSphereCastHeight = 0.5f;
+        public float groundingSphereCastForwardDistance = 0.3f;
+        public float groundingSphereCastRadius = 0.1f;
         public float minDistanceNeededToBeginFall = 1f;
         public LayerMask ignoreForGroundCheck;
 
@@ -38,19 +42,24 @@ namespace RY
         private void Start()
         {
             detectionLayers = (1 << 9);
-            ignoreForGroundCheck = ~(1 << 8 | 1 << 11);
+            ignoreForGroundCheck = ~(1 << 7 | 1 << 8 | 1 << 10 | 1 << 11 | 1 << 12 | 1 << 13);
         }
 
         public void HandleGrounding()
         {
             RaycastHit hit;
             Vector3 origin = transform.position;
-            origin.y += groundDetectionRayStartPoint;
+            origin.y += groundingSphereCastHeight;
 
-            Vector3 targetPosition = transform.position;
+            Vector3 dir = transform.forward;
+            dir.Normalize();
+            origin = origin + dir * groundingSphereCastForwardDistance;
 
-            Debug.DrawRay(origin, -Vector3.up * minDistanceNeededToBeginFall, Color.red, 0.1f, false);
-            if (Physics.Raycast(origin, -Vector3.up, out hit, minDistanceNeededToBeginFall, ignoreForGroundCheck))
+            targetPosition = transform.position;
+
+            //Debug.DrawRay(origin, Vector3.down * minDistanceNeededToBeginFall, Color.red, 0.1f, false);
+            //if (Physics.Raycast(origin, Vector3.down, out hit, minDistanceNeededToBeginFall, ignoreForGroundCheck))
+            if (Physics.SphereCast(origin, groundingSphereCastRadius, Vector3.down, out hit, minDistanceNeededToBeginFall, ignoreForGroundCheck))
             {
                 Vector3 hitPoint = hit.point;
                 targetPosition.y = hitPoint.y;
