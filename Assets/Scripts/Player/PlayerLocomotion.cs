@@ -325,7 +325,7 @@ namespace RY
 
                 targetPosition = transform.position;
 
-                //Debug.DrawRay(origin, Vector3.down * minDistanceNeededToBeginFall, Color.red, 0.1f, false);
+                Debug.DrawRay(origin, Vector3.down * minDistanceNeededToBeginFall, Color.red, 0.1f, false);
                 //if (Physics.Raycast(origin, Vector3.down, out hit, minDistanceNeededToBeginFall, ignoreForGroundCheck))
                 if (Physics.SphereCast(origin, groundingSphereCastRadius, Vector3.down, out hit, minDistanceNeededToBeginFall, ignoreForGroundCheck))
                 {
@@ -335,6 +335,8 @@ namespace RY
 
                     Vector3 hitPoint = hit.point;
                     targetPosition.y = hitPoint.y;
+
+                    Debug.DrawLine(origin, hitPoint, Color.cyan, 0.1f, false);
 
                     if (playerManager.isFalling)
                     {
@@ -376,16 +378,16 @@ namespace RY
                     {
                         playerManager.isFalling = true;
 
-                        if (playerManager.isInteracting == false)
-                        {
-                            animatorManager.PlayTargetAnimation("Falling", true);
-                        }
-
                         GetComponent<CapsuleCollider>().radius = fallingColliderRadius;
 
                         Vector3 vel = rb.velocity;
                         vel.Normalize();
                         rb.velocity = vel * (normalMoveSpeed / 2);
+                    }
+
+                    if (playerManager.isInteracting == false && inAirTimer > 0.3f)
+                    {
+                        animatorManager.PlayTargetAnimation("Falling", true);
                     }
                 }
 
