@@ -338,7 +338,7 @@ namespace RY
 
                     if (playerManager.isFalling)
                     {
-                        if (inAirTimer > 0.5f)
+                        if (inAirTimer > 0.7f)
                         {
                             animatorManager.PlayTargetAnimation("Land_02", true);
                             inAirTimer = 0;

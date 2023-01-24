@@ -5092,7 +5092,7 @@ MonoBehaviour:
   isParrying: 0
   navMeshAgent: {fileID: 0}
   rb: {fileID: 0}
-  initialState: {fileID: 3041293259812136350}
+  initialState: {fileID: 8411624324757982891}
   currentState: {fileID: 0}
   currentTarget: {fileID: 0}
   currentRecoveryTime: 0

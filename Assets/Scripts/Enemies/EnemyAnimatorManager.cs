@@ -52,6 +52,8 @@ namespace RY
             float delta = Time.deltaTime;
             Vector3 velocity = deltaPosition / delta;
             enemyManager.rb.velocity = velocity;
+
+            enemyManager.transform.rotation = anim.rootRotation;
         }
     }
 }

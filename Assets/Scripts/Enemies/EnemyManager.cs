@@ -49,18 +49,22 @@ namespace RY
 
         private void Update()
         {
+            UpdateConditions();
             HandleRecoveryTimer();
-
-            isInteracting = animatorManager.anim.GetBool("isInteracting");
-            canRotate = animatorManager.anim.GetBool("canRotate");
-            canCombo = animatorManager.anim.GetBool("canCombo");
         }
 
         private void FixedUpdate()
         {
+            UpdateConditions();
             HandleStateMachine();
-
             enemyLocomotion.HandleGrounding();
+        }
+
+        private void UpdateConditions()
+        {
+            isInteracting = animatorManager.anim.GetBool("isInteracting");
+            canRotate = animatorManager.anim.GetBool("canRotate");
+            canCombo = animatorManager.anim.GetBool("canCombo");
         }
 
         private void HandleStateMachine()

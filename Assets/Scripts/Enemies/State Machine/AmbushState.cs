@@ -25,9 +25,9 @@ namespace RY
 
         public override State Tick(EnemyManager enemyManager, EnemyLocomotion enemyLocomotion, EnemyStats enemyStats, EnemyAnimatorManager animatorManager)
         {
-            if (isSleeping && animatorManager.anim.GetBool("isInteracting") == false)
+            if (isSleeping && enemyManager.isInteracting == false)
             {
-                animatorManager.PlayTargetAnimation(sleepAnimation, true);
+                animatorManager.PlayTargetAnimation(sleepAnimation, false);
             }
 
             Collider[] colliders = Physics.OverlapSphere(enemyManager.transform.position, detectionRadius, enemyLocomotion.detectionLayers);
@@ -41,9 +41,14 @@ namespace RY
                 {
                     if (enemyLocomotion.IsWithinViewableAngle(characterStats.transform.position, enemyLocomotion.MinDetectionAngle, enemyLocomotion.MaxDetectionAngle))
                     {
+                        Debug.Log(characterStats.gameObject.name);
                         enemyManager.currentTarget = characterStats;
                         isSleeping = false;
-                        animatorManager.PlayTargetAnimation(wakeAnimation, true);
+                        // In case this enemy is woken by being attacked, don't play wake animation
+                        if (enemyManager.isInteracting == false)
+                        {
+                            animatorManager.PlayTargetAnimation(wakeAnimation, true);
+                        }
                     }
                 }
             }

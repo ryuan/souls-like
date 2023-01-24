@@ -2834,7 +2834,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: -203655887218126122, guid: 379fe12c89cc54325a97d2dda0440f32,
+  m_Motion: {fileID: -4469183485442372851, guid: 5d083fc2869df4f0a8cea1f120593f60,
     type: 3}
   m_Tag: 
   m_SpeedParameter: 
@@ -2898,7 +2898,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Sleep
-  m_Speed: 1
+  m_Speed: 0.8
   m_CycleOffset: 0
   m_Transitions: []
   m_StateMachineBehaviours: []
@@ -2910,7 +2910,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: -203655887218126122, guid: e76a4411bc55f45c188c45f350aace45,
+  m_Motion: {fileID: -203655887218126122, guid: 5d083fc2869df4f0a8cea1f120593f60,
     type: 3}
   m_Tag: 
   m_SpeedParameter: 

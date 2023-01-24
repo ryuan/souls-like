@@ -48,14 +48,7 @@ namespace RY
         {
             float delta = Time.deltaTime;
 
-            isInteracting = anim.GetBool("isInteracting");
-            anim.applyRootMotion = isInteracting;
-            canRotate = anim.GetBool("canRotate");
-            canCombo = anim.GetBool("canCombo");
-            usingRightWeapon = anim.GetBool("usingRightWeapon");
-            usingLeftWeapon = anim.GetBool("usingLeftWeapon");
-            isInvulnerable = anim.GetBool("isInvulnerable");
-            anim.SetBool("isInAir", isFalling);
+            UpdateConditions();
 
             inputHandler.TickInput(delta);
             playerLocomotion.HandleRoll();
@@ -70,9 +63,12 @@ namespace RY
         // Put any functions that call on Unity's physics engine to affect rigidbodies here.
         private void FixedUpdate()
         {
+            UpdateConditions();
+
             playerLocomotion.HandleMovementAndSprint();
             playerLocomotion.HandleRotation();
             playerLocomotion.HandleFalling();
+
             // Need to reset flag in FixedUpdate to match update timing of HandleMovementAndSprint
             inputHandler.sprintFlag = false;
         }
@@ -111,6 +107,18 @@ namespace RY
             {
                 playerLocomotion.inAirTimer += Time.deltaTime;
             }
+        }
+
+        private void UpdateConditions()
+        {
+            isInteracting = anim.GetBool("isInteracting");
+            anim.applyRootMotion = isInteracting;
+            canRotate = anim.GetBool("canRotate");
+            canCombo = anim.GetBool("canCombo");
+            usingRightWeapon = anim.GetBool("usingRightWeapon");
+            usingLeftWeapon = anim.GetBool("usingLeftWeapon");
+            isInvulnerable = anim.GetBool("isInvulnerable");
+            anim.SetBool("isInAir", isFalling);
         }
     }
 }
